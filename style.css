@@ -1,0 +1,46 @@
+canvas {
+    position: absolute;
+    top: 50%;
+    width: 90vh;
+    height: 90vh;
+    box-sizing: border-box;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #303030;
+}
+
+#context-menu {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    padding: 10px;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0 0 0 0;
+    border-radius: 6px;
+    background: #ff9a00;
+    width: auto;
+    height: auto;
+    min-width: 100px;
+}
+
+#context-menu p {
+    margin: 0;
+    padding: 1px;
+    min-height: 20px;
+    width: 100%;
+}
+
+#context-menu p:hover {
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+body {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 98%;
+    width: 98%;
+    box-sizing: border-box;
+}
