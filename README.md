@@ -9,7 +9,7 @@ instantly play it with one's friends.
 
 Wanted to play board games with friends during the quarantine period, but
 couldn't find any good alternatives. Looked at many of them: BoardGameArena,
-Tabletop Simulator, Tabletopia etc. but none of them came close
+Tabletop Simulator, Tabletopia etc. but none of them really gave me what I wanted.
 
 ## Roadmap: how you can contribute
 
@@ -18,6 +18,10 @@ Tabletop Simulator, Tabletopia etc. but none of them came close
 ### Graphics
 
 ### Game state
+
+### Display state
+
+### State representation
 
 ### UI
 
@@ -62,7 +66,7 @@ Finally, the *history* is a sequence of game states.
 ### Some examples of board games in the <Entity, Zone, State> representation
 
 
-## Netcode
+## Display state vs board state
 
 There are really two different types of state here: "display" state, and "game"
 state. The display state is a low-level description of all the objects(pngs) in
