@@ -70,3 +70,26 @@ generateContextMenu = function() {
         alert('TODO: add context menu generation')
     })
 }
+
+/* 
+ * Just a test function for now. In reality we'd interface this properly with the networking code
+ * Loads all assets for the tic-tac-toe game
+*/
+
+function loadGame() {
+    fetch("https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/tic-tac-toe/image_map.json").then(
+        (response) => {
+            // success
+            image_map = response
+        }).catch((err) => {
+            console.warn("Something went wrong", err)
+        })
+    fetch("https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/tic-tac-toe/game_state.json").then(
+        (response) => {
+            // success
+            game_state = response
+        }).catch((err) => {
+            console.warn("Something went wrong", err)
+        })
+    // Now we have game state and image map, let's fetch all the images
+}
