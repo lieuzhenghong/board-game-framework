@@ -1,0 +1,39 @@
+{
+  "play_p1": {
+    "image": "red_rect.png"
+  },
+  "play_p2": {
+    "image": "blue_rect.png"
+  },
+  "board_sq1": {
+    "image": "white_square.png"
+  },
+  "board_sq2": {
+    "image": "white_square.png"
+  },
+  "board_sq3": {
+    "image": "white_square.png"
+  },
+  "board_sq4": {
+    "image": "white_square.png"
+  },
+  "board_sq5": {
+    "image": "white_square.png"
+  },
+  "board_sq6": {
+    "image": "white_square.png"
+  },
+  "board_sq7": {
+    "image": "white_square.png"
+  },
+  "board_sq8": {
+    "image": "white_square.png"
+  },
+  "board_sq9": {
+    "image": "white_square.png"
+  },
+  "piece": {
+    {"state": {"shape": "nought"}, "image": "nought.png"},
+    {"state": {"shape": "cross"}, "image": "cross.png"}
+  }  
+}
