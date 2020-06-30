@@ -51,11 +51,11 @@ An *action* is a function that takes a game state G and returns another:
 For instance, moving an entity from one's hand to the board changes the game
 state from
 
-<p align="center"><img src="/tex/ecf93163b7ae812eecb83fed55c59a71.svg?invert_in_darkmode&sanitize=true" align=middle width=505.30847070000004pt height=16.438356pt/></p>
+<p align="center"><img src="/tex/b8163f21d7f0e6aaf85d05db5c9e747b.svg?invert_in_darkmode&sanitize=true" align=middle width=505.30847070000004pt height=16.438356pt/></p>
 
-and revealing a card up would be 
+and revealing a card by flipping it face-up would be 
 
-<p align="center"><img src="/tex/80bac08ed3c3e6cde6b366cb98120703.svg?invert_in_darkmode&sanitize=true" align=middle width=513.8436006pt height=16.438356pt/></p>
+<p align="center"><img src="/tex/ffe539225135efcb1fce90989a5eb9ea.svg?invert_in_darkmode&sanitize=true" align=middle width=513.8436006pt height=16.438356pt/></p>
 
 Finally, the *history* is a sequence of game states.
 
