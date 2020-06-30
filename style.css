@@ -22,16 +22,16 @@ canvas {
     width: auto;
     height: auto;
     min-width: 100px;
+    z-index: 1;
 }
 
-#context-menu p {
+.menu-item {
     margin: 0;
     padding: 1px;
     min-height: 20px;
     width: 100%;
 }
-
-#context-menu p:hover {
+.menu-item:hover {
     background: rgba(0, 0, 0, 0.2);
     cursor: pointer;
 }
