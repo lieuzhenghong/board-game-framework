@@ -51,11 +51,11 @@ $$f:G \rightarrow G$$
 For instance, moving an entity from one's hand to the board changes the game
 state from
 
-$$\{<card1, Hand, \{face: up\}>\} \rightarrow \{<card2, Hand, \{face: down\}>\}$$
+$$\{<card1, Hand, \{face: up\}>\} \rightarrow \{<card1, Hand, \{face: down\}>\}$$
 
-and revealing a card up would be 
+and revealing a card by flipping it face-up would be 
 
-$$\{<card1, Board, \{face: down\}>\} \rightarrow \{<card2, Board, \{face: up\}>\}$$
+$$\{<card1, Board, \{face: down\}>\} \rightarrow \{<card1, Board, \{face: up\}>\}$$
 
 Finally, the *history* is a sequence of game states.
 
