@@ -1,4 +1,5 @@
 {
+  "data_type": "image_map",
   "play_p1": {
     "image": "red_rect.png"
   },
@@ -33,7 +34,7 @@
     "image": "white_square.png"
   },
   "piece": [
-    {"state": {"shape": "nought"}, "image": "nought.png"},
-    {"state": {"shape": "cross"}, "image": "cross.png"}
-  ]  
+    { "state": { "shape": "nought" }, "image": "nought.png" },
+    { "state": { "shape": "cross" }, "image": "cross.png" }
+  ]
 }
