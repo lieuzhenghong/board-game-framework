@@ -1,145 +1,180 @@
 {
-  "data_type": "game_state",
-  "game_state": {
-    "players": ["player_one", "player_two"],
-    "zones": [
-      {
-        "play_p1": {
-          "move_to_permissions": ["player_one"],
-          "move_from_permissions": ["player_one"],
-          "view_permissions": ["player_one"],
-          "glance_permissions": ["player_one"],
-          "pos": [0, 0]
-        }
-      },
-      {
-        "play_p2": {
-          "move_to_permissions": ["player_two"],
-          "move_from_permissions": ["player_two"],
-          "view_permissions": ["player_two"],
-          "glance_permissions": ["player_two"],
-          "pos": [0, 600]
-        }
-      },
-      {
-        "board_sq1": {
-          "pos": [0, 200]
-        }
-      },
-      {
-        "board_sq2": {
-          "pos": [50, 200]
-        }
-      },
-      {
-        "board_sq3": {
-          "pos": [100, 200]
-        }
-      },
-      {
-        "board_sq4": {
-          "pos": [0, 250]
-        }
-      },
-      {
-        "board_sq5": {
-          "pos": [50, 250]
-        }
-      },
-      {
-        "board_sq6": {
-          "pos": [100, 250]
-        }
-      },
-      {
-        "board_sq7": {
-          "pos": [0, 300]
-        }
-      },
-      {
-        "board_sq8": {
-          "pos": [50, 300]
-        }
-      },
-      {
-        "board_sq9": {
-          "pos": [100, 300]
-        }
-      }
-    ],
-    "entities": [
-      {
-        "type": "piece",
-        "pos": [0, 0],
-        "state": { "shape": "nought" },
-        "zone": "play_p1"
-      },
-      {
-        "type": "piece",
-        "pos": [30, 0],
-        "state": { "shape": "nought" },
-        "zone": "play_p1"
-      },
-      {
-        "type": "piece",
-        "pos": [60, 0],
-        "state": { "shape": "nought" },
-        "zone": "play_p1"
-      },
-      {
-        "type": "piece",
-        "pos": [90, 0],
-        "state": { "shape": "nought" },
-        "zone": "play_p1"
-      },
-      {
-        "type": "piece",
-        "pos": [120, 0],
-        "state": { "shape": "nought" },
-        "zone": "play_p1"
-      },
-      {
-        "type": "piece",
-        "pos": [150, 0],
-        "state": { "shape": "nought" },
-        "zone": "play_p1"
-      },
-      {
-        "type": "piece",
-        "pos": [0, 600],
-        "state": { "shape": "cross" },
-        "zone": "play_p2"
-      },
-      {
-        "type": "piece",
-        "pos": [30, 600],
-        "state": { "shape": "cross" },
-        "zone": "play_p2"
-      },
-      {
-        "type": "piece",
-        "pos": [60, 600],
-        "state": { "shape": "cross" },
-        "zone": "play_p2"
-      },
-      {
-        "type": "piece",
-        "pos": [90, 600],
-        "state": { "shape": "cross" },
-        "zone": "play_p2"
-      },
-      {
-        "type": "piece",
-        "pos": [120, 600],
-        "state": { "shape": "cross" },
-        "zone": "play_p2"
-      },
-      {
-        "type": "piece",
-        "pos": [150, 600],
-        "state": { "shape": "cross" },
-        "zone": "play_p2"
-      }
-    ]
-  }
+    "data_type": "game_state",
+    "game_state": {
+        "players": [
+            "player_one", "player_two"
+        ],
+        "zones": [
+            {
+                "play_p1": {
+                    "move_to_permissions": ["player_one"],
+                    "move_from_permissions": ["player_one"],
+                    "view_permissions": ["player_one"],
+                    "glance_permissions": ["player_one"],
+                    "pos": [0, 0]
+                }
+            },
+            {
+                "play_p2": {
+                    "move_to_permissions": ["player_two"],
+                    "move_from_permissions": ["player_two"],
+                    "view_permissions": ["player_two"],
+                    "glance_permissions": ["player_two"],
+                    "pos": [0, 600]
+                }
+            },
+            {
+                "board_sq1": {
+                    "pos": [0, 200]
+                }
+            },
+            {
+                "board_sq2": {
+                    "pos": [50, 200]
+                }
+            }, {
+                "board_sq3": {
+                    "pos": [100, 200]
+                }
+            }, {
+                "board_sq4": {
+                    "pos": [0, 250]
+                }
+            }, {
+                "board_sq5": {
+                    "pos": [50, 250]
+                }
+            }, {
+                "board_sq6": {
+                    "pos": [100, 250]
+                }
+            }, {
+                "board_sq7": {
+                    "pos": [0, 300]
+                }
+            }, {
+                "board_sq8": {
+                    "pos": [50, 300]
+                }
+            }, {
+                "board_sq9": {
+                    "pos": [100, 300]
+                }
+            }
+        ],
+        "entities": [
+            {
+                "type": "piece",
+                "pos": [
+                    0, 0
+                ],
+                "state": {
+                    "shape": "nought"
+                },
+                "zone": "play_p1"
+            },
+            {
+                "type": "piece",
+                "pos": [
+                    30, 0
+                ],
+                "state": {
+                    "shape": "nought"
+                },
+                "zone": "play_p1"
+            },
+            {
+                "type": "piece",
+                "pos": [
+                    60, 0
+                ],
+                "state": {
+                    "shape": "nought"
+                },
+                "zone": "play_p1"
+            },
+            {
+                "type": "piece",
+                "pos": [
+                    90, 0
+                ],
+                "state": {
+                    "shape": "nought"
+                },
+                "zone": "play_p1"
+            }, {
+                "type": "piece",
+                "pos": [
+                    120, 0
+                ],
+                "state": {
+                    "shape": "nought"
+                },
+                "zone": "play_p1"
+            }, {
+                "type": "piece",
+                "pos": [
+                    150, 0
+                ],
+                "state": {
+                    "shape": "nought"
+                },
+                "zone": "play_p1"
+            }, {
+                "type": "piece",
+                "pos": [
+                    0, 600
+                ],
+                "state": {
+                    "shape": "cross"
+                },
+                "zone": "play_p2"
+            }, {
+                "type": "piece",
+                "pos": [
+                    30, 600
+                ],
+                "state": {
+                    "shape": "cross"
+                },
+                "zone": "play_p2"
+            }, {
+                "type": "piece",
+                "pos": [
+                    60, 600
+                ],
+                "state": {
+                    "shape": "cross"
+                },
+                "zone": "play_p2"
+            }, {
+                "type": "piece",
+                "pos": [
+                    90, 600
+                ],
+                "state": {
+                    "shape": "cross"
+                },
+                "zone": "play_p2"
+            }, {
+                "type": "piece",
+                "pos": [
+                    120, 600
+                ],
+                "state": {
+                    "shape": "cross"
+                },
+                "zone": "play_p2"
+            }, {
+                "type": "piece",
+                "pos": [
+                    150, 600
+                ],
+                "state": {
+                    "shape": "cross"
+                },
+                "zone": "play_p2"
+            }
+        ]
+    }
 }
