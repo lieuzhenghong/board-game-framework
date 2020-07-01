@@ -84,34 +84,87 @@ const generateContextMenu = function () {
  * What should this return:
  */
 
-function loadGame() {
+function loadGame(game_UID) {
   // These URLs are hardcoded for now, but ideally we'd feed loadGame a
   // UID corresponding to the board game.
+  const url_prepend =
+    "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/";
+
   const urls = [
-    "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/tic-tac-toe/image_map.json",
-    "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/tic-tac-toe/game_state.json",
+    url_prepend + game_UID + "/game_state.json",
+    url_prepend + game_UID + "/image_map.json",
   ];
 
   var promises = urls.map((u) => fetch(u).then((response) => response.json()));
 
   // TODO handle error case for when one or more of the promises fails
   Promise.all(promises).then((results) => {
-    console.log(results);
+    const game_state = results.filter((i) => i["data_type"] === "image_map")[0];
+    const image_mapping = results.filter(
+      (i) => i["data_type"] === "image_map"
+    )[0];
+
+    const image_map = image_mapping["image_mapping"];
     // We now have the image map. Use the image map to fetch images.
     // Get the object that has data type image_map
     // TODO check that image_map is not undefined
-    let image_map = results.filter((i) => i["data_type"] === "image_map")[0];
+
     // Really only coding the happy case right now
 
     // Once we have the image map we can fetch all the images it requires
-    // TODO
-    // Consider it an invariant that all images needed by a particular game will be in {game_UID}/img/ folder
 
-    // Some entities can have multiple states, and so we need to check whether
-    // the property is of type Object or of type Array...
+    let image_urls = [];
 
-    // Think a little bit about the return type.
-    return results;
+    Object.keys(image_map).forEach((key, index) => {
+      // key: the name of the object key
+      // index: the ordinal position of the key within the object
+
+      // Some entities can have multiple states, and so we need to check whether
+      // the property is of type Object or of type Array...
+      if (Array.isArray(image_map[key])) {
+        // so this is an entity with more than one state
+        image_map[key].map((state) => {
+          image_urls.push(state["image"]);
+        });
+      } else {
+        image_urls.push(image_map[key]["image"]);
+      }
+    });
+
+    // Now remove duplicates using javascript set and converting back to array
+    // using spread operator
+    image_urls = [...new Set(image_urls)];
+    console.log(image_urls);
+
+    const img_url_dir = url_prepend + game_UID + "/img/";
+
+    var img_promises = image_urls.map((u) =>
+      fetch(img_url_dir + u).then((response) => response.blob())
+    );
+
+    /*
+    The above code works but this doesn't for some reason --- why? 
+    JS is really weird
+    var img_promises = image_urls.map((u) =>
+      fetch(u).then((response) => {
+        response.blob();
+      })
+    );
+    */
+
+    // TODO handle error case for when one or more of the promises fails
+    Promise.all(img_promises).then((results) => {
+      // TODO Check that each promise returns in the right order
+      let images = [];
+      results.map((blob, index) => {
+        // note the brackets around image_urls[index]: computed property names
+        images.push({ [image_urls[index]]: blob });
+      });
+
+      console.log(images);
+
+      return game_state, image_mapping, images;
+    });
   });
 }
 
