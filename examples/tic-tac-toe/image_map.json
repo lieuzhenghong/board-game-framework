@@ -32,8 +32,8 @@
   "board_sq9": {
     "image": "white_square.png"
   },
-  "piece": {
+  "piece": [
     {"state": {"shape": "nought"}, "image": "nought.png"},
     {"state": {"shape": "cross"}, "image": "cross.png"}
-  }  
+  ]  
 }
