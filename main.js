@@ -105,6 +105,7 @@ function loadGame() {
 
     // Once we have the image map we can fetch all the images it requires
     // TODO
+    // Consider it an invariant that all images needed by a particular game will be in {game_UID}/img/ folder
 
     // Some entities can have multiple states, and so we need to check whether
     // the property is of type Object or of type Array...
