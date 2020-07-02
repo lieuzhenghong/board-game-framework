@@ -4,10 +4,10 @@
  * all images.
  */
 function drawCanvas() {
-    if (game.gameState) {
-        for (let entity in game.gameState) {
-            
-        }
+  if (game.gameState) {
+    for (let entity in game.gameState) {
+      console.log(entity);
     }
-    window.requestAnimationFrame(drawCanvas);
+  }
+  window.requestAnimationFrame(drawCanvas);
 }
