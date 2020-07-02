@@ -23,29 +23,27 @@ const _isEqual = (obj1, obj2) => {
 
 function drawCanvas() {
   // TODO I believe this check does absolutely nothing, because in JS empty
-  // objects are Truthy
+  // objects are Truthy.
   if (game.gameState && game.imageMap && game.assets.images) {
     const players = game.gameState.game_state.players;
     const zones = game.gameState.game_state.zones;
     const entities = game.gameState.game_state.entities;
     // First draw all the zones
     zones.forEach((zone, i) => {
-      // Look at
       const zone_name = zone.name;
       const zone_image_name = game.imageMap.image_mapping[zone_name].image;
       // Look for the corresponding image
-      //console.log(zone_image_name);
-      //console.log(game.assets.images);
       const image_blob = game.assets.images[zone_image_name];
-      //console.log(image_blob);
       createImageBitmap(image_blob).then((result) =>
         game.ctx.drawImage(result, zone.pos[0], zone.pos[1])
       );
     });
+    // Now draw all entities
     entities.forEach((entity, i) => {
       // First look up the correct image for the entity's state
       // We want to find an image corresponding to the same exact
-      // state. Assume one exists.
+      // state. Assume one exists. (N.B: this means we must exhaustively specify
+      // every Cartsian product)
 
       const entity_image_states = game.imageMap.image_mapping[entity.type];
 
@@ -53,6 +51,7 @@ function drawCanvas() {
       entity_image_states.forEach((entity_img_state) => {
         // Check that this entity state is identical
         // this is a pretty bad approach because it scales with O(n^2) time
+        // TODO --- optimise this when we have time
         if (_isEqual(entity.state, entity_img_state.state)) {
           const entity_image_name = entity_img_state.image;
           const image_blob = game.assets.images[entity_image_name];
