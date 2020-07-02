@@ -136,13 +136,13 @@ function loadGame(game_UID) {
     // TODO handle error case for when one or more of the promises fails
     Promise.all(img_promises).then((results) => {
       // TODO Check that each promise returns in the right order
-      let images = [];
+      let images = {};
       results.map((blob, index) => {
         // note the brackets around image_urls[index]: computed property names
-        images.push({ [image_urls[index]]: blob });
+        images[image_urls[index]] = blob;
       });
 
-      console.log(images);
+      console.log(images); // Images is a mapping of entity/zone names to PNG blobs.
 
       // return game_state, image_mapping, images;
       game.gameState = game_state;
