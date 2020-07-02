@@ -28,6 +28,7 @@ function drawCanvas() {
     const players = game.gameState.game_state.players;
     const zones = game.gameState.game_state.zones;
     const entities = game.gameState.game_state.entities;
+
     // First draw all the zones
     zones.forEach((zone, i) => {
       const zone_name = zone.name;
@@ -38,6 +39,7 @@ function drawCanvas() {
         game.ctx.drawImage(result, zone.pos[0], zone.pos[1])
       );
     });
+
     // Now draw all entities
     entities.forEach((entity, i) => {
       // First look up the correct image for the entity's state
