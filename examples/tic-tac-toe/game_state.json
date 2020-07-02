@@ -17,7 +17,7 @@
         "move_from_permissions": ["player_two"],
         "view_permissions": ["player_two"],
         "glance_permissions": ["player_two"],
-        "pos": [0, 600]
+        "pos": [0, 400]
       },
       {
         "name": "board_sq1",
@@ -67,7 +67,7 @@
       },
       {
         "type": "piece",
-        "pos": [30, 0],
+        "pos": [50, 0],
         "state": {
           "shape": "nought"
         },
@@ -75,7 +75,7 @@
       },
       {
         "type": "piece",
-        "pos": [60, 0],
+        "pos": [100, 0],
         "state": {
           "shape": "nought"
         },
@@ -83,7 +83,7 @@
       },
       {
         "type": "piece",
-        "pos": [90, 0],
+        "pos": [0, 50],
         "state": {
           "shape": "nought"
         },
@@ -91,7 +91,7 @@
       },
       {
         "type": "piece",
-        "pos": [120, 0],
+        "pos": [50, 50],
         "state": {
           "shape": "nought"
         },
@@ -99,7 +99,7 @@
       },
       {
         "type": "piece",
-        "pos": [150, 0],
+        "pos": [100, 50],
         "state": {
           "shape": "nought"
         },
@@ -107,7 +107,7 @@
       },
       {
         "type": "piece",
-        "pos": [0, 600],
+        "pos": [0, 400],
         "state": {
           "shape": "cross"
         },
@@ -115,7 +115,7 @@
       },
       {
         "type": "piece",
-        "pos": [30, 600],
+        "pos": [50, 400],
         "state": {
           "shape": "cross"
         },
@@ -123,7 +123,7 @@
       },
       {
         "type": "piece",
-        "pos": [60, 600],
+        "pos": [100, 400],
         "state": {
           "shape": "cross"
         },
@@ -131,7 +131,7 @@
       },
       {
         "type": "piece",
-        "pos": [90, 600],
+        "pos": [0, 450],
         "state": {
           "shape": "cross"
         },
@@ -139,7 +139,7 @@
       },
       {
         "type": "piece",
-        "pos": [120, 600],
+        "pos": [50, 450],
         "state": {
           "shape": "cross"
         },
@@ -147,7 +147,7 @@
       },
       {
         "type": "piece",
-        "pos": [150, 600],
+        "pos": [100, 450],
         "state": {
           "shape": "cross"
         },
