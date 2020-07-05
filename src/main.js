@@ -1,5 +1,7 @@
 "use strict";
 
+const virtualCanvasSize = 600;
+
 let game = {
   canvas: {},
   ctx: {},
@@ -50,7 +52,20 @@ function init() {
     });
   }
   loadGame("tic-tac-toe");
+  game.ctx.scale(
+    virtualCanvasSize / game.canvas.width,
+    virtualCanvasSize / game.canvas.height
+  );
 
+  window.addEventListener("resize", function () {
+    game.ctx.setTransform(1, 0, 0, 1, 0, 0);
+    game.canvas.width = game.canvas.clientWidth;
+    game.canvas.height = game.canvas.clientHeight;
+    game.ctx.scale(
+      game.canvas.width / virtualCanvasSize,
+      game.canvas.height / virtualCanvasSize
+    );
+  });
   window.requestAnimationFrame(drawCanvas);
 }
 
