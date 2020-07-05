@@ -6,15 +6,16 @@
     MIT Licensed.
 */
 
-/* Foreign function calls/objects required here:
+/*
+ * External functions and classes:
  *
- * game_core class : new game_core( thegame );
- *    members:
- *      - local_time (timestamp?)
- *    methods:
- *      - update(timestamp)
- *      - stop_update()
- *
+ *     game_core
+ *         methods
+ *             game_core.update( new Date().getTime() ); : update game state based on new time
+ *             game_core.stop_update : stop update loop
+ *         members
+ *             game_core.local_time : datetime
+ *             players.other.instance
  */
 
     var game_server = module.exports = { games : {}, game_count:0 };

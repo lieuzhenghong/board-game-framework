@@ -1,35 +1,26 @@
-/*  Initial server code based on:
- *  Copyright 2012-2016 Sven "underscorediscovery" Bergström
- *
- *      written by : http://underscorediscovery.ca
- *          written for : http://buildnewgames.com/real-time-multiplayer/
- *
- *              MIT Licensed.
- *
- *                  Usage : node app.js
- *
- */
+/*  Copyright 2012-2016 Sven "underscorediscovery" Bergström
+    
+    written by : http://underscorediscovery.ca
+    written for : http://buildnewgames.com/real-time-multiplayer/
+    
+    MIT Licensed.
+
+    Usage : node app.js
+*/
+
     var
         gameport        = process.env.PORT || 4004,
 
-            io              = require('socket.io'),
-            express         = require('express'),
-            UUID            = require('node-uuid'),
+        io              = require('socket.io'),
+        express         = require('express'),
+        UUID            = require('node-uuid'),
 
-            verbose         = false,
-            http            = require('http'),
-            app             = express(),
-            server          = http.createServer(app);
+        verbose         = false,
+        http            = require('http'),
+        app             = express(),
+        server          = http.createServer(app);
 
 /* Express server set up. */
-
-/* Foreign function calls in this file:
- *
- * game_server.findGame(client);
- * game_server.onMessage(client, m);
- * game_server.endGame(client.game.id, client.userid);
- *
- */
 
 //The express server handles passing our content to the browser,
 //As well as routing users where they need to go. This example is bare bones
@@ -48,6 +39,7 @@
         res.sendfile( '/index.html' , { root:__dirname });
     });
 
+
         //This handler will listen for requests on /*, any file from the root of our server.
         //See expressjs documentation for more info on routing.
 
@@ -64,6 +56,7 @@
 
     }); //app.get *
 
+
 /* Socket.IO server set up. */
 
 //Express and socket.io can work together to serve the socket.io client files for you.
@@ -73,13 +66,13 @@
     var sio = io.listen(server);
 
     sio.set('authorization', function (handshakeData, callback) {
-      callback(null, true); // error first callback style
+       callback(null, true); // error first callback style
     });
 
         //Enter the game server code. The game server handles
         //client connections looking for a game, creating games,
         //leaving games, joining games and ending games when they leave.
-    game_server = require('./game.server.js');
+    game_server = require('./src/game.server.js');
 
         //Socket.io will call this function when a client connects,
         //So we can send that client looking for a game to play,

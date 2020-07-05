@@ -17,7 +17,7 @@ window.onload = function(){
 	game = new game_core();
 
 			//Fetch the viewport
-		game.viewport = document.getElementById('viewport');
+		game.viewport = document.getElementById('game-canvas');
 			
 			//Adjust their size
 		game.viewport.width = game.world.width;
