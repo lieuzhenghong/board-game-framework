@@ -12,9 +12,7 @@ class GameState {
     // load state into this object
   }
 
-  applyAction(zone, entity, action) {
-    
-  }
+  applyAction(zone, entity, action) {}
 
   getCurrentStateInfo() {
     // either this method or directly accessing the properties of this object
