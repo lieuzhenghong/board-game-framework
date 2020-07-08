@@ -1,37 +1,31 @@
-/*
+class Entity {
+  // state is itself an Object that list each possible property
+  constructor(...) {
+    this.uid = ...;
+    this.type = ...;
+    this.state = ...;
+    this.zone = ...;
+    this.pos = (... , ...);
+  }
+}
 
 class GameState {
   constructor(jsonFileName) {
     // could also be jsonStr
     this.loadState(jsonFileName);
+    // Zones, images and players are really just convenience functions
+    // The key is really in the entities object
     this.zones = {};
     this.images = {}; // storage for images
     this.players = {}; // an object containing player metadata (UID, maybe even client IP or something)
-    this.entities = {}; // Entity objects need to contain their position and other useful metadata such as png filename
-  }
-
-  loadState(fileName) {
-    // load state into this object
-  }
-
-  applyAction() {}
-
-  getCurrentStateInfo() {
-    // either this method or directly accessing the properties of this object
-  }
-
-  render() {}
-
-*/
-
-class GameState {
-  constructor(jsonFileName) {
-    // could also be jsonStr
-    this.loadState(jsonFileName);
-    this.zones = {};
-    this.images = {}; // storage for images
-    this.players = {}; // an object containing player metadata (UID, maybe even client IP or something)
-    this.entities = {}; // Entity objects need to contain their position and other useful metadata such as png filename.
+    // This entities object must have:
+    // 1. unique entity ID (key)
+    // 2. Type of entity it is
+    // 3. State it's in
+    // 4. Zone it's in
+    // 5. x-y position
+    // 6. [not sure] size of bounding box? position of bounding box? For object detection
+    this.entities = {};
   }
 
   loadState(fileName) {
@@ -40,12 +34,20 @@ class GameState {
 
   applyAction() {
     // There are three types of actions:
-    // 1. Add or remove an entity
-    // 2. Move an entity from one zone to another
-    // 3. Change the state of an entity
+    // 1. Move an entity from one zone to another
+    // 2. Change the state of an entity
+    // 3. Add or remove an entity (I won't implement this rn)
     // An action should take a game state and return another game state
     // but in this case it should simply mutate the existing game state object
     // I would have preferred a functional approach myself: action(GameState) : GameState -> GameState
+  }
+
+  changeEntityState(uid, new_state) {
+    this.entities[uid].state = new_state;
+  }
+
+  moveEntity(uid, new_zone) {
+    this.entities[uid].zone = new_zone;
   }
 
   getCurrentStateInfo() {
