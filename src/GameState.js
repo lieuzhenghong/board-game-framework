@@ -17,6 +17,8 @@ class GameState {
   getCurrentStateInfo() {
     // either this method or directly accessing the properties of this object
   }
+
+  render() {}
 }
 
 // Adding Zone and Entity classes might also be a good idea
