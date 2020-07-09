@@ -23,15 +23,6 @@ function init() {
   // empty object so we can keep adding items to it as the UI grows but maintain
   // organisation and not clutter up the global namespace.
   game.UI.contextMenu = document.getElementById("context-menu");
-  game.canvas.addEventListener("contextmenu", function (e) {
-    e.preventDefault();
-    let menu = document.getElementById("context-menu");
-    menu.style.left = e.pageX + "px"; // set position of contextmenu
-    menu.style.top = e.pageY + "px";
-    menu.style.display = "flex";
-
-    generateContextMenu();
-  });
 
   document.addEventListener("mousedown", function (e) {
     if (e.which === 1) {
@@ -44,6 +35,22 @@ function init() {
       } // this might break later on as we start to need the mouse for other things - feel free to rework
     }
   });
+
+  window.addEventListener('mousedown', function(e) { // not sure if having two separate event listeners on the same event hurts performance
+    if (e.which === 3) {
+      for (let entity of gameState.entities) {
+        if (mouseInside(entity)) { // Entity.hasMouseInside?
+          generateContextMenu(entity);
+          showContextMenu(e.pageX, e.pageY);
+        }
+      } 
+    }
+  });
+
+  window.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  })
+
   game.canvas.addEventListener("mousemove", function (e) {
     let cvsRect = game.canvas.getBoundingClientRect();
     let translated = {
@@ -182,4 +189,15 @@ function loadGame(game_UID) {
       game.assets.images = images;
     });
   });
+}
+
+function mouseInside(entity) {
+  return (mouse.x <= entity.pos.x + gameState.imageMap[entity.image].width && mouse.x >= entity.pos.x && mouse.y >= entity.pos.y && mouse.y <= entity.pos.y + gameState.imageMap[entity.image].height);
+}
+
+function showContextMenu(x, y) {
+  let menu = document.getElementById("context-menu");
+  menu.style.left = x + "px"; // set position of contextmenu
+  menu.style.top = y + "px";
+  menu.style.display = "flex";
 }

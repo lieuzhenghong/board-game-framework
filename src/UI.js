@@ -17,11 +17,23 @@ const addAction = function (text, action) {
   game.UI.contextMenu.appendChild(menuItem);
 };
 
-const generateContextMenu = function () {
+const generateContextMenu = function (arg) {
   game.UI.contextMenu.innerHTML = "";
   // Here there should be some calculations for finding out what object is under the mouse,
   // and then generating a context menu based on that info. (use addAction() method)
   addAction("fixme", function () {
     alert("TODO: add context menu generation");
   });
+  console.log(arg);
 };
+
+function mouseInside(entity) {
+  return (mouse.x <= entity.pos.x + gameState.imageMap[entity.image].width && mouse.x >= entity.pos.x && mouse.y >= entity.pos.y && mouse.y <= entity.pos.y + gameState.imageMap[entity.image].height);
+}
+
+function showContextMenu(x, y) {
+  let menu = document.getElementById("context-menu");
+  menu.style.left = x + "px"; // set position of contextmenu
+  menu.style.top = y + "px";
+  menu.style.display = "flex";
+}
