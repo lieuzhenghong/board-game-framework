@@ -28,7 +28,12 @@ const generateContextMenu = function (arg) {
 };
 
 function mouseInside(entity) {
-  return (mouse.x <= entity.pos.x + gameState.imageMap[entity.image].width && mouse.x >= entity.pos.x && mouse.y >= entity.pos.y && mouse.y <= entity.pos.y + gameState.imageMap[entity.image].height);
+  return (
+    mouse.x <= entity.pos.x + gameState.imageMap[entity.image].width &&
+    mouse.x >= entity.pos.x &&
+    mouse.y >= entity.pos.y &&
+    mouse.y <= entity.pos.y + gameState.imageMap[entity.image].height
+  );
 }
 
 function showContextMenu(x, y) {

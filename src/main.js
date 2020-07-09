@@ -36,20 +36,22 @@ function init() {
     }
   });
 
-  window.addEventListener('mousedown', function(e) { // not sure if having two separate event listeners on the same event hurts performance
+  window.addEventListener("mousedown", function (e) {
+    // not sure if having two separate event listeners on the same event hurts performance
     if (e.which === 3) {
       for (let entity of gameState.entities) {
-        if (mouseInside(entity)) { // Entity.hasMouseInside?
+        if (mouseInside(entity)) {
+          // Entity.hasMouseInside?
           generateContextMenu(entity);
           showContextMenu(e.pageX, e.pageY);
         }
-      } 
+      }
     }
   });
 
-  window.addEventListener('contextmenu', function(e) {
+  window.addEventListener("contextmenu", function (e) {
     e.preventDefault();
-  })
+  });
 
   game.canvas.addEventListener("mousemove", function (e) {
     let cvsRect = game.canvas.getBoundingClientRect();
@@ -192,7 +194,12 @@ function loadGame(game_UID) {
 }
 
 function mouseInside(entity) {
-  return (mouse.x <= entity.pos.x + gameState.imageMap[entity.image].width && mouse.x >= entity.pos.x && mouse.y >= entity.pos.y && mouse.y <= entity.pos.y + gameState.imageMap[entity.image].height);
+  return (
+    mouse.x <= entity.pos.x + gameState.imageMap[entity.image].width &&
+    mouse.x >= entity.pos.x &&
+    mouse.y >= entity.pos.y &&
+    mouse.y <= entity.pos.y + gameState.imageMap[entity.image].height
+  );
 }
 
 function showContextMenu(x, y) {
