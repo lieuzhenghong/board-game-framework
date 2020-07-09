@@ -1,5 +1,24 @@
+'use strict'
+
+interface State {
+
+}
+
+interface Point {
+  x: number,
+  y: number
+}
+
 class Entity {
+
+  uid : number;
+  type: string;
+  state: object; // todo
+  zone: string;
+  pos: Point;
+
   // state is itself an Object that list each possible property
+
   constructor(...) {
     this.uid = ...;
     this.type = ...;
