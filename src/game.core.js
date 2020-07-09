@@ -49,7 +49,9 @@ if('undefined' != typeof(global)) frame_time = 45; //on server we run at 45ms, 2
         //each game that is hosted, and client creates one
         //for itself to play the game.
 /* 
- * The game_core class */
+ * The game_core class
+ */
+
     var game_core = function(game_instance){
         this.instance = game_instance;
         this.server = this.instance !== undefined;
@@ -144,6 +146,7 @@ var game_player = function( game_instance, player_instance ) {
 
     //Store the instance, if any
     this.instance = player_instance;
+    console.log(game_instance)
     this.game = game_instance;
 
     //Set up initial values for our state information
@@ -571,6 +574,30 @@ game_core.prototype.client_reset_positions = function() {
 
 }; //game_core.client_reset_positions
 
+game_core.prototype.client_onreadygame = function(data) {
+
+    var server_time = parseFloat(data.replace('-','.'));
+
+    var player_host = this.players.self.host ?  this.players.self : this.players.other;
+    var player_client = this.players.self.host ?  this.players.other : this.players.self;
+
+    this.local_time = server_time + this.net_latency;
+    console.log('server time is about ' + this.local_time);
+
+        //Store their info colors for clarity. server is always blue
+    player_host.info_color = '#2288cc';
+    player_client.info_color = '#cc8822';
+        
+        //Update their information
+    player_host.state = 'local_pos(hosting)';
+    player_client.state = 'local_pos(joined)';
+
+    this.players.self.state = 'YOU ' + this.players.self.state;
+
+        //Make sure colors are synced up
+     this.socket.send('c.' + this.players.self.color);
+
+}; //client_onreadygame
 game_core.prototype.client_onjoingame = function(data) {
 
         //We are not the host
