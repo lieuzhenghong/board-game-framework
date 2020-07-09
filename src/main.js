@@ -10,6 +10,11 @@ let game = {
   image_map: {},
 };
 
+let mouse = {
+  x: 0,
+  y: 0
+}
+
 function init() {
   game.canvas = document.getElementById("game-canvas");
   game.canvas.width = game.canvas.clientWidth;
@@ -39,6 +44,16 @@ function init() {
       } // this might break later on as we start to need the mouse for other things - feel free to rework
     }
   });
+    game.canvas.addEventListener('mousemove', function(e) {
+      let cvsRect = game.canvas.getBoundingClientRect();
+      let translated = {
+        x: e.clientX - cvsRect.left,
+        y: e.clientY - cvsRect.top
+      }
+      mouse.x = translated.x * virtualCanvasSize / game.canvas.width;
+      mouse.y = translated.y * virtualCanvasSize / game.canvas.height;
+    });
+
   game.ctx = game.canvas.getContext("2d");
 
   var divs = document.getElementsByTagName("div");
@@ -52,6 +67,7 @@ function init() {
     });
   }
   loadGame("tic-tac-toe");
+  
   game.ctx.scale(
     virtualCanvasSize / game.canvas.width,
     virtualCanvasSize / game.canvas.height
