@@ -11,17 +11,53 @@ Wanted to play board games with friends during the quarantine period, but
 couldn't find any good alternatives. Looked at many of them: BoardGameArena,
 Tabletop Simulator, Tabletopia etc. but none of them really gave me what I wanted.
 
-## Roadmap: how you can contribute
+## What we need to do at the minimum for an MVP
+
+1. Get rendering
+2. Get representation of game state to exist and be consistent throughout server and client
+Encapsulate game state and actions into a class
+What the netcode will need to do: take a game state, modify it by an action, check the validity of that action, return a game state
+If we have a game state and action class
+and we have gameState.apply(action) which returns True or False if the new gameState is valid/otherwise or just gameState
+Client sends a list of actions it wants the server to look at
+Server takes list of actions from clients and applies those. It keeps track of which actions it's already applied, and applies only the actions it hasn't already seen before and are valid.
+It modifies the game state to that point and sends back all the actions that are accepted
 
 ### Netcode
+
+We need to build a server that can send and receive game states. This server
+needs to be authoritative (i.e. it should have some way of denying invalid
+game-states sent by the client, and reconcile two mutually incompatible client
+game states)
+
+There needs to be a way to share a link with a friend (to enter the same
+lobby), or to create/join a public lobby.
+
+### Client-side
+
+#### State representation
+
+We are now straightforwardly displaying all entities in all zones to all
+players without checking zone permissions. We need to display or not display
+entities depending on zones' permissions.
+
+- Make sure that every single entity has a "glance" state png in the JSON.
+
+#### Client-side UI
+
+First, we need to find a way to know what object is clicked. We have the
+position but this also means knowing the size of each PNG as it is drawn on the
+canvas. Maybe Shan can handle this.
+
+Do a simple linear search over the game state (or possibly the "visible
+objects" game state, which I will prepare for Shan).
+
+Second, we need to display the context-sensitive UI depending on the object.
 
 ### Graphics
 
 ### Game state
 
-### Display state
-
-### State representation
 
 ### UI
 
@@ -66,34 +102,5 @@ Finally, the *history* is a sequence of game states.
 ### Some examples of board games in the <Entity, Zone, State> representation
 
 
-## Display state vs board state
+## Game state
 
-There are really two different types of state here: "display" state, and "game"
-state. The display state is a low-level description of all the objects(pngs) in
-the frame and their x-y positions, and is constantly synced between clients and
-server.
-
-The *game* state is an authoritative description of the board state. This is
-something that's synced only occasionally when players take actions, and the
-server always holds the authoritative game state.
-
-As an illustration of the difference, consider this (it won't make sense until
-you've read the Formal-ish description):
-
-Suppose there are two zones A and B. There is one entity (a red circle) in zone
-A to begin. When a player picks up the red circle and moves it around, this
-immediately updates the display state for all players. (It should 
-
-Now the player drops the circle in zone B and releases the mouse. This sends an
-action event to the server, which checks if the player has permission to move
-the entity from zone A to zone B.
-
-If yes, then the server updates the game state: entity Red Circle is now in
-zone B.
-
-If no, then the server does not update the game state: entity Red Circle is
-still in zone A. 
-
-But in either case, the *display state* has been updated. So an entity can be
-*physically* in zone B (i.e. drawn in zone B) but its state is actually in zone
-A.
