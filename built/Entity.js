@@ -1,19 +1,19 @@
 class Entity {
-  constructor(uid, type, state, image, zone, pos) {
-    this.uid = uid;
-    this.type = type;
-    this.state = state;
-    this.image = image;
-    this.zone = zone;
-    this.pos = pos;
-  }
-  change_zone(new_zone) {
-    this.zone = new_zone;
-  }
-  change_state(new_state) {
-    // TODO change image as well
-    this.state = new_state;
-    /*
+    constructor(uid, type, state, image, zone, pos) {
+        this.uid = uid;
+        this.type = type;
+        this.state = state;
+        this.image = image;
+        this.zone = zone;
+        this.pos = pos;
+    }
+    change_zone(new_zone) {
+        this.zone = new_zone;
+    }
+    change_state(new_state) {
+        // TODO change image as well
+        this.state = new_state;
+        /*
         const entity_image_states = game.imageMap.image_mapping[entity.type];
         // Looking through each of the entity states in the image map
         entity_image_states.forEach((entity_img_state) => {
@@ -28,13 +28,13 @@ class Entity {
         });
         });
         */
-  }
-  change_pos(new_pos) {
-    this.pos = new_pos;
-  }
-  draw(gameState) {
-    // You need the gameState object
-    let bitmap = gameState.imageMap[this.image];
-    gameState.ctx.drawImage(bitmap, this.pos.x, this.pos.y);
-  }
+    }
+    change_pos(new_pos) {
+        this.pos = new_pos;
+    }
+    draw(gameState) {
+        // You need the gameState object
+        let bitmap = gameState.imageMap[this.image];
+        gameState.ctx.drawImage(bitmap, this.pos.x, this.pos.y);
+    }
 }
