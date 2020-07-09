@@ -1,35 +1,32 @@
-'use strict';
+"use strict";
 class Entity {
-    // state is itself an Object that list each possible property
-    constructor(...) {
-        this.uid = ;
-        ;
-        this.type = ;
-        ;
-        this.state = ;
-        ;
-        this.zone = ;
-        ;
-        this.pos = (..., ...) => ;
+    constructor(uid, type, state, image, zone, pos) {
+        this.uid = uid;
+        this.type = type;
+        this.state = state;
+        this.image = image;
+        this.zone = zone;
+        this.pos = pos;
+    }
+    change_zone(new_zone) {
+        this.zone = new_zone;
+    }
+    change_state(new_state) {
+        this.state = new_state;
+    }
+    draw(gameState) {
+        // You need the gameState object
+        let bitmap = gameState.imageMap[this.image];
+        gameState.ctx.drawImage(bitmap, this.pos.x, this.pos.y);
     }
 }
+class Zone {
+}
 class GameState {
+    // TODO work on this
     constructor(jsonFileName) {
         // could also be jsonStr
         this.loadState(jsonFileName);
-        // Zones, images and players are really just convenience functions
-        // The key is really in the entities object
-        this.zones = {};
-        this.images = {}; // storage for images
-        this.players = {}; // an object containing player metadata (UID, maybe even client IP or something)
-        // This entities object must have:
-        // 1. unique entity ID (key)
-        // 2. Type of entity it is
-        // 3. State it's in
-        // 4. Zone it's in
-        // 5. x-y position
-        // 6. [not sure] size of bounding box? position of bounding box? For object detection
-        this.entities = {};
     }
     loadState(fileName) {
         // load state into this object
@@ -44,10 +41,13 @@ class GameState {
         // I would have preferred a functional approach myself: action(GameState) : GameState -> GameState
     }
     changeEntityState(uid, new_state) {
-        this.entities[uid].state = new_state;
+        // TODO should we check here if the new state is valid
+        this.entities[uid].change_state(new_state);
     }
     moveEntity(uid, new_zone) {
-        this.entities[uid].zone = new_zone;
+        // TODO should we check here if the old zone is permissioned?
+        const old_zone = this.entities[uid].zone;
+        this.entities[uid].change_zone(new_zone);
     }
     getCurrentStateInfo() {
         // either this method or directly accessing the properties of this object
@@ -58,7 +58,7 @@ class GameState {
         // TODO I believe this check does absolutely nothing, because in JS empty
         // objects are Truthy.
         if (game.gameState && game.imageMap && game.assets.images) {
-            const players = this.players;
+            const players = this.playerList;
             const zones = this.zones;
             const entities = this.entities;
             // First draw all the zones

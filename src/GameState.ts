@@ -122,7 +122,7 @@ class GameState {
     // TODO I believe this check does absolutely nothing, because in JS empty
     // objects are Truthy.
     if (game.gameState && game.imageMap && game.assets.images) {
-      const players = this.players;
+      const players = this.playerList;
       const zones = this.zones;
       const entities = this.entities;
 
