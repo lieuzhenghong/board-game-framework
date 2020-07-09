@@ -161,25 +161,9 @@ class GameState {
         );
       });
       // Now draw all entities
-      entities.forEach((entity, i) => {
-        // First look up the correct image for the entity's state
-        // We want to find an image corresponding to the same exact
-        // state. Assume one exists. (N.B: this means we must exhaustively specify
-        // every Cartsian product)
-        const entity_image_states = game.imageMap.image_mapping[entity.type];
-        // Looking through each of the entity states in the image map
-        entity_image_states.forEach((entity_img_state) => {
-          // Check that this entity state is identical
-          // this is a pretty bad approach because it scales with O(n^2) time
-          // TODO --- optimise this when we have time
-          if (_isEqual(entity.state, entity_img_state.state)) {
-            const entity_image_name = entity_img_state.image;
-            const image_blob = game.assets.images[entity_image_name];
-            createImageBitmap(image_blob).then((result) =>
-              game.ctx.drawImage(result, entity.pos[0], entity.pos[1])
-            );
-          }
-        });
+      entities.forEach((entity) => {
+        const entityImage = this.imageMap[entity.image];
+        this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
       });
     }
   }
