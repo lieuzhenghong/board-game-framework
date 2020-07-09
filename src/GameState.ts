@@ -1,99 +1,120 @@
 "use strict";
-type PlayerName = string;
-
-interface Point {
-  x: number;
-  y: number;
-}
-
-type EntUID = number;
-
-interface EntState {
-  [Key: string]: string;
-}
-
-class Entity {
-  uid: EntUID;
-  type: string;
-  state: EntState; // a dictionary of strings
-  image: string;
-  // looking up ImageMap[image] in GameState points to the correct
-  // ImageBitmap
-  zone: string;
-  pos: Point;
-
-  constructor(
-    uid: EntUID,
-    type: string,
-    state: EntState,
-    image: string,
-    zone: string,
-    pos: Point
-  ) {
-    this.uid = uid;
-    this.type = type;
-    this.state = state;
-    this.image = image;
-    this.zone = zone;
-    this.pos = pos;
-  }
-
-  change_zone(new_zone: string) {
-    this.zone = new_zone;
-  }
-
-  change_state(new_state: EntState) {
-    this.state = new_state;
-  }
-
-  draw(gameState: GameState) {
-    // You need the gameState object
-    let bitmap: ImageBitmap = gameState.imageMap[this.image];
-    gameState.ctx.drawImage(bitmap, this.pos.x, this.pos.y);
-  }
-}
-
-class Zone {
-  name: string;
-  image: string;
-  move_to_permissions?: Array<PlayerName>;
-  move_from_permissions?: Array<PlayerName>;
-  view_permissions?: Array<PlayerName>;
-  glance_permissions?: Array<PlayerName>;
-  pos: Point;
-
-  // TODO build a constructor
-}
 
 // ImageMap is a dictionary that maps image names (something.png) to
 // an ImageBitmap file which can then be drawn on canvas
-interface ImageMap {
-  [Key: string]: ImageBitmap;
-}
 
 class GameState {
-  zones: Array<Zone>;
   playerList: Array<PlayerName>; // not creating a Player class for now
+  zones: Array<Zone>;
   imageMap: ImageMap;
   entities: Array<Entity>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
 
   // TODO work on this
-  constructor(jsonFileName) {
-    // could also be jsonStr
-    this.loadState(jsonFileName);
+  constructor(
+    gamestate: object,
+    imagemap: object,
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D
+  ) {
+    // loadState loads players, zones, imageMaps, entities
+    this.loadState(gamestate, imagemap);
+    this.canvas = canvas;
+    this.ctx = ctx;
   }
 
-  loadState(fileName) {
+  async loadState(j: object, im: object) {
     // load state into this object
+    // First load the players
+    let imageMapPromise: Promise<ImageMap> = this.loadImages(im);
+    this.playerList = j["game_state"]["players"];
+    this.zones = j["game_state"]["zones"].map((z: object) => {
+      new Zone(
+        this.playerList,
+        z["name"],
+        z["image"],
+        z["pos"],
+        // the following permissions might be undefined
+        // which will default to all permissions
+        z["move_to_permissions"],
+        z["move_from_permissions"],
+        z["view_permissions"],
+        z["glance_permissions"]
+      );
+    });
+    // Load all images and bitmap them
+    this.imageMap = await imageMapPromise;
+    // Now initialise all entities
+    this.entities = j["game_state"]["entities"].forEach(
+      (e: object, i: number) => {
+        new Entity(i, e["type"], e["state"], e["image"], e["zone"], e["pos"]);
+      }
+    );
+  }
+
+  async loadImages(image_map_json: object): Promise<ImageMap> {
+    let image_urls: Array<string> = [];
+
+    Object.keys(image_map_json).forEach((key, index) => {
+      // key: the name of the object key
+      // index: the ordinal position of the key within the object
+
+      // Some entities can have multiple states, and so we need to check whether
+      // the property is of type Object or of type Array...
+      if (Array.isArray(image_map_json[key])) {
+        // so this is an entity with more than one state
+        image_map_json[key].map((state) => {
+          image_urls.push(state["image"]);
+        });
+      } else {
+        image_urls.push(image_map_json[key]["image"]);
+      }
+    });
+
+    // TODO don't hardcode url_prepend and game UID
+    // get kaminsky to look at how I make the request to the server
+
+    const url_prepend =
+      "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/";
+    const game_UID = "tic_tac_toe";
+    const img_url_dir = url_prepend + game_UID + "/img/";
+
+    // Now remove duplicates using javascript set and converting back to array
+    // using spread operator
+    image_urls = [...new Set(image_urls)];
+    // console.log(image_urls);
+
+    let imageMap: ImageMap = {}; // ImageMap is just a dictionary
+
+    async function fillImageMap(u: string): Promise<[string, ImageBitmap]> {
+      const response = await fetch(img_url_dir + u);
+      const blob: Blob = await response.blob();
+      const imgbitmap: ImageBitmap = await createImageBitmap(blob);
+      //imageMap[u] = imgbitmap;
+      return [u, imgbitmap];
+    }
+
+    let imageMapPromises: Array<Promise<[string, ImageBitmap]>> = [];
+
+    image_urls.map(async (u: string) => {
+      imageMapPromises.push(fillImageMap(u));
+    });
+
+    const imageMapTuples = await Promise.all(imageMapPromises);
+
+    imageMapTuples.forEach((tuple) => {
+      imageMap[tuple[0]] = tuple[1];
+    });
+
+    return imageMap;
   }
 
   applyAction() {
     // There are three types of actions:
     // 1. Move an entity from one zone to another
-    // 2. Change the state of an entity
-    // 3. Add or remove an entity (I won't implement this rn)
+    // 2. Move an entity from one position to another
+    // 3. Change the state of an entity
     // An action should take a game state and return another game state
     // but in this case it should simply mutate the existing game state object
     // I would have preferred a functional approach myself: action(GameState) : GameState -> GameState
@@ -163,5 +184,3 @@ class GameState {
     }
   }
 }
-
-// Adding Zone and Entity classes might also be a good idea

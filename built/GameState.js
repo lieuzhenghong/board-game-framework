@@ -1,41 +1,96 @@
 "use strict";
-class Entity {
-    constructor(uid, type, state, image, zone, pos) {
-        this.uid = uid;
-        this.type = type;
-        this.state = state;
-        this.image = image;
-        this.zone = zone;
-        this.pos = pos;
-    }
-    change_zone(new_zone) {
-        this.zone = new_zone;
-    }
-    change_state(new_state) {
-        this.state = new_state;
-    }
-    draw(gameState) {
-        // You need the gameState object
-        let bitmap = gameState.imageMap[this.image];
-        gameState.ctx.drawImage(bitmap, this.pos.x, this.pos.y);
-    }
-}
-class Zone {
-}
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+// ImageMap is a dictionary that maps image names (something.png) to
+// an ImageBitmap file which can then be drawn on canvas
 class GameState {
     // TODO work on this
-    constructor(jsonFileName) {
-        // could also be jsonStr
-        this.loadState(jsonFileName);
+    constructor(gamestate, imagemap, canvas, ctx) {
+        // loadState loads players, zones, imageMaps, entities
+        this.loadState(gamestate, imagemap);
+        this.canvas = canvas;
+        this.ctx = ctx;
     }
-    loadState(fileName) {
-        // load state into this object
+    loadState(j, im) {
+        return __awaiter(this, void 0, void 0, function* () {
+            // load state into this object
+            // First load the players
+            let imageMapPromise = this.loadImages(im);
+            this.playerList = j["game_state"]["players"];
+            this.zones = j["game_state"]["zones"].map((z) => {
+                new Zone(this.playerList, z["name"], z["image"], z["pos"], 
+                // the following permissions might be undefined
+                // which will default to all permissions
+                z["move_to_permissions"], z["move_from_permissions"], z["view_permissions"], z["glance_permissions"]);
+            });
+            // Load all images and bitmap them
+            this.imageMap = yield imageMapPromise;
+            // Now initialise all entities
+            this.entities = j["game_state"]["entities"].forEach((e, i) => {
+                new Entity(i, e["type"], e["state"], e["image"], e["zone"], e["pos"]);
+            });
+        });
+    }
+    loadImages(image_map_json) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let image_urls = [];
+            Object.keys(image_map_json).forEach((key, index) => {
+                // key: the name of the object key
+                // index: the ordinal position of the key within the object
+                // Some entities can have multiple states, and so we need to check whether
+                // the property is of type Object or of type Array...
+                if (Array.isArray(image_map_json[key])) {
+                    // so this is an entity with more than one state
+                    image_map_json[key].map((state) => {
+                        image_urls.push(state["image"]);
+                    });
+                }
+                else {
+                    image_urls.push(image_map_json[key]["image"]);
+                }
+            });
+            // TODO don't hardcode url_prepend and game UID
+            // get kaminsky to look at how I make the request to the server
+            const url_prepend = "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/";
+            const game_UID = "tic_tac_toe";
+            const img_url_dir = url_prepend + game_UID + "/img/";
+            // Now remove duplicates using javascript set and converting back to array
+            // using spread operator
+            image_urls = [...new Set(image_urls)];
+            // console.log(image_urls);
+            let imageMap = {}; // ImageMap is just a dictionary
+            function fillImageMap(u) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    const response = yield fetch(img_url_dir + u);
+                    const blob = yield response.blob();
+                    const imgbitmap = yield createImageBitmap(blob);
+                    //imageMap[u] = imgbitmap;
+                    return [u, imgbitmap];
+                });
+            }
+            let imageMapPromises = [];
+            image_urls.map((u) => __awaiter(this, void 0, void 0, function* () {
+                imageMapPromises.push(fillImageMap(u));
+            }));
+            const imageMapTuples = yield Promise.all(imageMapPromises);
+            imageMapTuples.forEach((tuple) => {
+                imageMap[tuple[0]] = tuple[1];
+            });
+            return imageMap;
+        });
     }
     applyAction() {
         // There are three types of actions:
         // 1. Move an entity from one zone to another
-        // 2. Change the state of an entity
-        // 3. Add or remove an entity (I won't implement this rn)
+        // 2. Move an entity from one position to another
+        // 3. Change the state of an entity
         // An action should take a game state and return another game state
         // but in this case it should simply mutate the existing game state object
         // I would have preferred a functional approach myself: action(GameState) : GameState -> GameState
