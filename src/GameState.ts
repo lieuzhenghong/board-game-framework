@@ -1,50 +1,88 @@
-'use strict'
-
-interface State {
-
-}
+"use strict";
+type PlayerName = string;
 
 interface Point {
-  x: number,
-  y: number
+  x: number;
+  y: number;
+}
+
+type EntUID = number;
+
+interface EntState {
+  [Key: string]: string;
 }
 
 class Entity {
-
-  uid : number;
+  uid: EntUID;
   type: string;
-  state: object; // todo
+  state: EntState; // a dictionary of strings
+  image: string;
+  // looking up ImageMap[image] in GameState points to the correct
+  // ImageBitmap
   zone: string;
   pos: Point;
 
-  // state is itself an Object that list each possible property
+  constructor(
+    uid: EntUID,
+    type: string,
+    state: EntState,
+    image: string,
+    zone: string,
+    pos: Point
+  ) {
+    this.uid = uid;
+    this.type = type;
+    this.state = state;
+    this.image = image;
+    this.zone = zone;
+    this.pos = pos;
+  }
 
-  constructor(...) {
-    this.uid = ...;
-    this.type = ...;
-    this.state = ...;
-    this.zone = ...;
-    this.pos = (... , ...);
+  change_zone(new_zone: string) {
+    this.zone = new_zone;
+  }
+
+  change_state(new_state: EntState) {
+    this.state = new_state;
+  }
+
+  draw(gameState: GameState) {
+    // You need the gameState object
+    let bitmap: ImageBitmap = gameState.imageMap[this.image];
+    gameState.ctx.drawImage(bitmap, this.pos.x, this.pos.y);
   }
 }
 
+class Zone {
+  name: string;
+  image: string;
+  move_to_permissions?: Array<PlayerName>;
+  move_from_permissions?: Array<PlayerName>;
+  view_permissions?: Array<PlayerName>;
+  glance_permissions?: Array<PlayerName>;
+  pos: Point;
+
+  // TODO build a constructor
+}
+
+// ImageMap is a dictionary that maps image names (something.png) to
+// an ImageBitmap file which can then be drawn on canvas
+interface ImageMap {
+  [Key: string]: ImageBitmap;
+}
+
 class GameState {
+  zones: Array<Zone>;
+  playerList: Array<PlayerName>; // not creating a Player class for now
+  imageMap: ImageMap;
+  entities: Array<Entity>;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+
+  // TODO work on this
   constructor(jsonFileName) {
     // could also be jsonStr
     this.loadState(jsonFileName);
-    // Zones, images and players are really just convenience functions
-    // The key is really in the entities object
-    this.zones = {};
-    this.images = {}; // storage for images
-    this.players = {}; // an object containing player metadata (UID, maybe even client IP or something)
-    // This entities object must have:
-    // 1. unique entity ID (key)
-    // 2. Type of entity it is
-    // 3. State it's in
-    // 4. Zone it's in
-    // 5. x-y position
-    // 6. [not sure] size of bounding box? position of bounding box? For object detection
-    this.entities = {};
   }
 
   loadState(fileName) {
@@ -61,12 +99,16 @@ class GameState {
     // I would have preferred a functional approach myself: action(GameState) : GameState -> GameState
   }
 
-  changeEntityState(uid, new_state) {
-    this.entities[uid].state = new_state;
+  changeEntityState(uid: EntUID, new_state: EntState) {
+    // TODO should we check here if the new state is valid
+    this.entities[uid].change_state(new_state);
   }
 
-  moveEntity(uid, new_zone) {
-    this.entities[uid].zone = new_zone;
+  moveEntity(uid: EntUID, new_zone: string) {
+    // TODO should we check here if the old zone is permissioned?
+    const old_zone = this.entities[uid].zone;
+
+    this.entities[uid].change_zone(new_zone);
   }
 
   getCurrentStateInfo() {
