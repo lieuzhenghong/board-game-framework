@@ -193,8 +193,7 @@ class GameState {
   }
 
   render() {
-    // TODO make sure to render only things we have permissions to render
-    // Work on the JSON file
+    // TODO make sure to render glance. How? Player-dependent.
 
     // TODO I believe this check does absolutely nothing, because in JS empty
     // objects are Truthy.
