@@ -46,6 +46,28 @@ function init() {
           showContextMenu(e.pageX, e.pageY);
         }
       }
+    } else if (e.which === 1) {
+      for (let entity of gameState.entities) {
+        if (mouseInside(entity)) {
+          // Entity.hasMouseInside?
+          entity.isBeingDragged = true;
+        }
+      }
+    }
+  });
+
+  game.canvas.addEventListener("mouseup", function (e) {
+    if (e.which === 1) {
+      for (let entity of gameState.entities) {
+        if (!entity.isBeingDragged) return;
+        else {
+          let newEntityPos = Object.copy(mouse);
+          // Do newEntityPos.x = newEntityPos.x - (newEntityPos.x % (tileSize)); and same for y
+          // to get new position in terms of tile coords on the virtual (600x600) canvas
+          // check validity of and set new entity pos here
+          // if not valid return to the original pos
+        }
+      }
     }
   });
 
