@@ -36,8 +36,8 @@
     },
     "piece": {
       "statemap": [{ "shape": ["nought", "cross"] }],
+      "glance": "nought.png",
       "states": {
-        "glance": "nought.png",
         "['nought']": "nought.png",
         "['cross']": "cross.png"
       }
@@ -50,8 +50,8 @@
           "value": ["J", "Q", "K"]
         }
       ],
+      "glance": "facedown.png",
       "states": {
-        "glance": "facedown.png",
         "['down',*,*]": "facedown.png",
         "['up','D','J']": "diamond_jack.png",
         "['up','D','Q']": "diamond_queen.png",
