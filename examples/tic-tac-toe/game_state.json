@@ -60,97 +60,73 @@
       {
         "type": "piece",
         "pos": [0, 0],
-        "state": {
-          "shape": "nought"
-        },
+        "state": ["nought"],
         "zone": "play_p1"
       },
       {
         "type": "piece",
         "pos": [50, 0],
-        "state": {
-          "shape": "nought"
-        },
+        "state": ["nought"],
         "zone": "play_p1"
       },
       {
         "type": "piece",
         "pos": [100, 0],
-        "state": {
-          "shape": "nought"
-        },
+        "state": ["nought"],
         "zone": "play_p1"
       },
       {
         "type": "piece",
         "pos": [0, 50],
-        "state": {
-          "shape": "nought"
-        },
+        "state": ["nought"],
         "zone": "play_p1"
       },
       {
         "type": "piece",
         "pos": [50, 50],
-        "state": {
-          "shape": "nought"
-        },
+        "state": ["nought"],
         "zone": "play_p1"
       },
       {
         "type": "piece",
         "pos": [100, 50],
-        "state": {
-          "shape": "nought"
-        },
+        "state": ["nought"],
         "zone": "play_p1"
       },
       {
         "type": "piece",
         "pos": [0, 400],
-        "state": {
-          "shape": "cross"
-        },
+        "state": ["cross"],
         "zone": "play_p2"
       },
       {
         "type": "piece",
         "pos": [50, 400],
-        "state": {
-          "shape": "cross"
-        },
+        "state": ["cross"],
         "zone": "play_p2"
       },
       {
         "type": "piece",
         "pos": [100, 400],
-        "state": {
-          "shape": "cross"
-        },
+        "state": ["cross"],
         "zone": "play_p2"
       },
       {
         "type": "piece",
         "pos": [0, 450],
-        "state": {
-          "shape": "cross"
-        },
+        "state": ["cross"],
         "zone": "play_p2"
       },
       {
         "type": "piece",
         "pos": [50, 450],
-        "state": {
-          "shape": "cross"
-        },
+        "state": ["cross"],
         "zone": "play_p2"
       },
       {
         "type": "piece",
         "pos": [100, 450],
-        "state": {
-          "shape": "cross"
-        },
+        "state": ["cross"],
         "zone": "play_p2"
       }
     ]
