@@ -11,6 +11,6 @@ interface ImageMap {
 
 type EntUID = number;
 
-interface EntState {
-  [Key: string]: string;
+interface GSStateMapDict {
+  [Key: string]: EntStateMap;
 }

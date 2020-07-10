@@ -46,12 +46,71 @@ class GameState {
     // Load all images and bitmap them
     this.imageMap = await imageMapPromise;
     // Now initialise all entities
+
+    // Before initialising all entities, we have to compute the
+    // entity state map and entity state list for each type of entity
+
+    function lookUpImage(s: string, d: object): string {
+      return d[s];
+    }
+
     this.entities = j["game_state"]["entities"].forEach(
       (e: object, i: number) => {
-        new Entity(i, e["type"], e["state"], e["image"], e["zone"], e["pos"]);
+        // TODO !!! there is no e["image"] property
+        //new Entity(i, e["type"], e["state"], e["image"], e["zone"], e["pos"]);
+
+        new Entity(
+          i,
+          e["type"],
+          im[e["type"]]["state_list"],
+          im[e["type"]]["states"],
+          e["state"],
+          lookUpImage(e["state"], im[e["type"]]["states"]),
+          im[e["type"]]["glance"],
+          e["zone"],
+          e["pos"]
+        );
       }
     );
   }
+
+  /*
+  generate_state_lists(im: object): GSStateListDict {
+    let gsStateListDict: GSStateListDict = {};
+    Object.keys(im).forEach((key, index) => {
+      // key: the name of the object key
+      // index: the ordinal position of the key within the object
+
+      // here we're dealing with an entity
+      if (im[key] instanceof Object) {
+        // Look for the states object
+        gsStateListDict[key] = im[key]["state_list"];
+      }
+    });
+    return gsStateListDict;
+  }
+  */
+
+  /*
+  generate_state_map(im: object): GSStateMapDict {
+    let gsStateMapDict = {};
+    Object.keys(im).forEach((key, index) => {
+      // key: the name of the object key
+      // index: the ordinal position of the key within the object
+
+      // here we're dealing with an entity
+      if (im[key] instanceof Object) {
+        // Look for the states object
+        const state_list: EntStateList = im[key]["state_list"];
+        // Expands state_map (unpacks wildcards)
+        const state_map: EntStateMap = im[key]["states"];
+        let expanded_state_map = {};
+        
+      }
+    });
+    return gsStateMapDict;
+  }
+  */
 
   async loadImages(image_map_json: object): Promise<ImageMap> {
     let image_urls: Array<string> = [];
@@ -60,15 +119,14 @@ class GameState {
       // key: the name of the object key
       // index: the ordinal position of the key within the object
 
-      // Some entities can have multiple states, and so we need to check whether
-      // the property is of type Object or of type Array...
-      if (Array.isArray(image_map_json[key])) {
-        // so this is an entity with more than one state
-        image_map_json[key].map((state) => {
-          image_urls.push(state["image"]);
+      // here we're dealing with an entity
+      if (image_map_json[key] instanceof Object) {
+        // Look for the states object
+        image_map_json[key]["states"].forEach((stateString: string) => {
+          image_urls.push(image_map_json[key]["states"][stateString]);
         });
       } else {
-        image_urls.push(image_map_json[key]["image"]);
+        image_urls.push(image_map_json[key]);
       }
     });
 
@@ -85,8 +143,6 @@ class GameState {
     image_urls = [...new Set(image_urls)];
     // console.log(image_urls);
 
-    let imageMap: ImageMap = {}; // ImageMap is just a dictionary
-
     async function fillImageMap(u: string): Promise<[string, ImageBitmap]> {
       const response = await fetch(img_url_dir + u);
       const blob: Blob = await response.blob();
@@ -95,13 +151,13 @@ class GameState {
       return [u, imgbitmap];
     }
 
-    let imageMapPromises: Array<Promise<[string, ImageBitmap]>> = [];
-
-    image_urls.map(async (u: string) => {
-      imageMapPromises.push(fillImageMap(u));
-    });
+    const imageMapPromises: Array<Promise<
+      [string, ImageBitmap]
+    >> = image_urls.map(async (u: string) => fillImageMap(u));
 
     const imageMapTuples = await Promise.all(imageMapPromises);
+
+    let imageMap: ImageMap = {}; // ImageMap is just a dictionary
 
     imageMapTuples.forEach((tuple) => {
       imageMap[tuple[0]] = tuple[1];
