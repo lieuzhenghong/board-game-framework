@@ -13,7 +13,7 @@
     "board_sq8": "white_square.png",
     "board_sq9": "white_square.png",
     "piece": {
-      "statemap": [{ "shape": ["nought", "cross"] }],
+      "state_list": [{ "shape": ["nought", "cross"] }],
       "glance": "nought.png",
       "states": {
         "['nought']": "nought.png",
@@ -21,7 +21,7 @@
       }
     },
     "card": {
-      "statemap": [
+      "state_list": [
         { "face": ["down", "up"] },
         { "suit": ["D", "C", "H", "S"] },
         {
