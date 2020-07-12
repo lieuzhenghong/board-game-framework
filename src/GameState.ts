@@ -188,36 +188,39 @@ class GameState {
     this.entities[uid].change_zone(new_zone);
   }
 
-  getCurrentStateInfo() {
-    // either this method or directly accessing the properties of this object
+  _zone_an_entity_belongs_to(zone_string: String): Zone {
+    return this.zones.filter((zone) => zone.name === zone_string)[0];
   }
 
-  render() {
+  render(player_name: string) {
     // TODO make sure to render glance. How? Player-dependent.
 
     // TODO I believe this check does absolutely nothing, because in JS empty
     // objects are Truthy.
-    if (game.gameState && game.imageMap && game.assets.images) {
-      const players = this.playerList;
-      const zones = this.zones;
-      const entities = this.entities;
+    const zones = this.zones;
+    const entities = this.entities;
 
-      // First draw all the zones
-      zones.forEach((zone, i) => {
-        const zone_name = zone.name;
-        const zone_image_name = game.imageMap.image_mapping[zone_name].image;
-        // Look for the corresponding image
-        const image_blob = game.assets.images[zone_image_name];
-        createImageBitmap(image_blob).then((result) =>
-          game.ctx.drawImage(result, zone.pos[0], zone.pos[1])
-        );
-      });
+    // First draw all the zones
+    zones.forEach((zone, i) => {
+      const image_bitmap = this.imageMap[zone["image"]];
+      game.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
+    });
 
-      // Now draw all entities
-      entities.forEach((entity: Entity) => {
+    // Now draw all entities
+    entities.forEach((entity: Entity) => {
+      const ent_zone = this._zone_an_entity_belongs_to(entity.zone);
+      if (
+        ent_zone.view_permissions.includes(player_name) &&
+        ent_zone.glance_permissions.includes(player_name)
+      ) {
         const entityImage: ImageBitmap = this.imageMap[entity.image];
         this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
-      });
-    }
+      } else if (ent_zone.glance_permissions.includes(player_name)) {
+        const entityImage: ImageBitmap = this.imageMap[entity.glance_image];
+        this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
+      } else {
+        // do nothing
+      }
+    });
   }
 }
