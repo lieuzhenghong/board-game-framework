@@ -110,24 +110,59 @@ class GameState {
         });
         return imageMap;
     }
-    applyAction() {
+    applyAction(uid, action_type, player, payload) {
         // There are three types of actions:
         // 1. Move an entity from one zone to another
         // 2. Move an entity from one position to another
         // 3. Change the state of an entity
         // An action should take a game state and return another game state
         // but in this case it should simply mutate the existing game state object
-        // I would have preferred a functional approach myself: action(GameState) : GameState -> GameState
+        switch (action_type) {
+            case "change_state":
+                this.changeEntityState(uid, payload);
+            case "change_zone":
+                this.changeEntityZone(uid, player, payload);
+            case "change_zone":
+                this.changeEntityPos(uid, player, payload);
+        }
     }
     changeEntityState(uid, new_state) {
         // TODO should we check here if the new state is valid
+        // TODO we need to add change_state_permissions I guess
         this.entities[uid].change_state(new_state);
     }
-    moveEntity(uid, new_zone) {
-        // TODO should we check here if the old zone is permissioned?
-        const old_zone = this.entities[uid].zone;
-        this.entities[uid].change_zone(new_zone);
+    changeEntityZone(uid, player, new_zone_name) {
+        // TODO check if the old zone was permissioned
+        // and also check if the new zone was permissioned
+        // Leaving this for now because you need to pass which player
+        // is moving inside the entity zone
+        const old_zone_name = this._entity_by_uid(uid).zone;
+        const old_zone = this._zone_an_entity_belongs_to(old_zone_name);
+        const new_zone = this._zone_an_entity_belongs_to(new_zone_name);
+        if (old_zone.move_from_permissions.includes(player) &&
+            new_zone.move_to_permissions.includes(player))
+            this.entities[uid].change_zone(new_zone_name);
+        else {
+            // do nothing?
+        }
     }
+    changeEntityPos(uid, player, new_pos) {
+        // TODO think about whether "move_from" permissions
+        // means moving in terms of changing state or just moving the object
+        const old_zone_name = this._entity_by_uid(uid).zone;
+        const old_zone = this._zone_an_entity_belongs_to(old_zone_name);
+        if (old_zone.move_from_permissions.includes(player))
+            this.entities[uid].change_pos(new_pos);
+        else {
+            // do nothing?
+        }
+    }
+    // Utility function to get the entity given a EntUID
+    _entity_by_uid(uid) {
+        return this.entities.filter((entity) => entity.uid === uid)[0];
+    }
+    // Utility function to get the zone an entity belongs to given a
+    // name of a zone (string)
     _zone_an_entity_belongs_to(zone_string) {
         return this.zones.filter((zone) => zone.name === zone_string)[0];
     }

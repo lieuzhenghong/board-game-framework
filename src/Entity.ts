@@ -1,3 +1,5 @@
+// An EntState is an array of strings
+// ["up", "D", "J"]
 type EntState = Array<string>;
 
 // An EntStateEnum is an object that maps a property name
@@ -27,7 +29,7 @@ class Entity {
   type: string;
   stateList: EntStateList;
   stateMap: EntStateMap;
-  state: EntState; // a dictionary of strings
+  state: EntState; // an array of strings
   image: string;
   // looking up ImageMap[image] in GameState points to the correct
   // ImageBitmap
