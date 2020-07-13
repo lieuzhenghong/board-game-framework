@@ -1,24 +1,23 @@
-/*
-    Parameters:
-        text: the text the action shows up as in the context menu
-        action: a function to execute on click
-*/
-const addAction = function (text, action) {
-  let menuItem = document.createElement("div");
-  menuItem.classList.add("menu-item");
-  menuItem.innerHTML = text;
-  menuItem.action = action; // add an action property to the menu item, it'll be called on click.
-  menuItem.addEventListener("click", function (e) {
-    menuItem.action(); // execute the action when this item is clicked
-    game.UI.contextMenu.style.display = "none"; // hide the menu on click
-  });
-  game.UI.contextMenu.appendChild(menuItem);
-};
-const generateContextMenu = function () {
-  game.UI.contextMenu.innerHTML = "";
-  // Here there should be some calculations for finding out what object is under the mouse,
-  // and then generating a context menu based on that info. (use addAction() method)
-  addAction("fixme", function () {
-    alert("TODO: add context menu generation");
-  });
-};
+class UIHandler {
+    // Idea: store a finite state machine here so that we can be sensitive
+    // to context.
+    // There are a couple of actions I want to support right now
+    // as an MVP:
+    // == OPTION TYPE 1 ==
+    // Right-click on object to open context menu, then
+    // left-click on an option.
+    // Choice of options:
+    // --> change state of Entity (maybe this is a submenu)
+    // --> enter "change of Zone" mode where the next left click on a new Zone
+    // changes the entity to that zone, if permitted
+    // --> enter "change position" mode where the next left click at any position
+    // moves the entity to that position
+    // We should also implement the following option type:
+    // == OPTION TYPE 2 ==
+    // Left-click an object to enter "drag" mode, then
+    // move the mouse anywhere to move the entity's position.
+    // Left-click again to drop the entity.
+    // Note that this doesn't change the entity's zone.
+    handleRightClick() { }
+    handleLeftClick() { }
+}
