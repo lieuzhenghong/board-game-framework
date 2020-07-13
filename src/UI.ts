@@ -24,7 +24,70 @@ class UIHandler {
   // Left-click again to drop the entity.
   // Note that this doesn't change the entity's zone.
 
-  handleRightClick() {}
+  //             Change State Mode
+  //                    ^
+  //                    |
+  //                    |
+  // Base Mode --> Entity UI Mode -->  Change Position Mode
+  //   |  ^             |
+  //   |  |             |
+  //   v  |             v
+  // Drag mode    Change Zone mode
 
-  handleLeftClick() {}
+  // We will also have a ContextMenu that is generated
+  // and probably also some flags like CurrentlyDraggingEntity
+  // and EntityCurrentlyDragged
+
+  //
+  //                                ________________                _________
+  //                                |               |               |        |
+  // UI [posx, posy, LMB, RMB] ===> |    GameCore   | Action[] ===> | Server |
+  //                                |_______________|          <=== |________|
+  //                                        |
+  //                                        | Action[]
+  //                                        v
+  //                                    GameState
+  //
+  /*
+  // Client UI sends mouse positions/clicks to Client Core
+  // Client Core converts mouse states to actions (by referencing current game state)
+  // Client Core sends actions to Server Core
+  // Server Core accumulates and validates actions from all Client Cores
+  // Server Core sends actions to Client Cores
+  // Client Core converts mouse states into Context UI
+  // Client Core applies actions to GameState
+  // Client Core renders GameState
+  // ClientCore renders Context UI
+*/
+  window: Window;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+
+  constructor(
+    window: Window,
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D
+  ) {
+    this.window = window;
+    this.canvas = canvas;
+    this.ctx = ctx;
+    window.addEventListener("mousedown", this.handleClick);
+  }
+
+  handleClick(e: MouseEvent) {
+    // send a mouse position to the ClientCore object
+    let buttonPressed = e.button; // 0 is left click, 2 is right click
+    const cvsRect = this.canvas.getBoundingClientRect();
+    const translated: Point = {
+      x: e.clientX - cvsRect.x,
+      y: e.clientY - cvsRect.y,
+    };
+    const mouse: Point = {
+      x: (translated.x * virtualCanvasSize) / this.canvas.width,
+      y: (translated.x * virtualCanvasSize) / this.canvas.height,
+    };
+
+    const tuple: [Point, number] = [mouse, buttonPressed];
+    // TODO send this tuple to the ClientCore object
+  }
 }

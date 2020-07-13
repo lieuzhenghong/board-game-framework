@@ -167,9 +167,9 @@ class GameState {
         return this.zones.filter((zone) => zone.name === zone_string)[0];
     }
     render(player_name) {
-        // TODO make sure to render glance. How? Player-dependent.
-        // TODO I believe this check does absolutely nothing, because in JS empty
-        // objects are Truthy.
+        // TODO think about how to render the special UI (e.g. glowing entities,
+        // glowing zones
+        // Need to pass it a UI state?
         const zones = this.zones;
         const entities = this.entities;
         // First draw all the zones
