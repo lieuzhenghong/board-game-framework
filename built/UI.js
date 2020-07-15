@@ -18,6 +18,6 @@ class UIHandler {
             y: (translated.x * virtualCanvasSize) / this.canvas.height,
         };
         const tuple = [mouse, buttonPressed];
-        // TODO send a this tuple to the ClientCore object
+        // TODO send this tuple to the ClientCore object
     }
 }

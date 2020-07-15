@@ -202,8 +202,8 @@ class GameState {
     // is moving inside the entity zone
 
     const old_zone_name: string = this._entity_by_uid(uid).zone;
-    const old_zone: Zone = this._zone_an_entity_belongs_to(old_zone_name);
-    const new_zone: Zone = this._zone_an_entity_belongs_to(new_zone_name);
+    const old_zone: Zone = this.zone_an_entity_belongs_to(old_zone_name);
+    const new_zone: Zone = this.zone_an_entity_belongs_to(new_zone_name);
 
     if (
       old_zone.move_from_permissions.includes(player) &&
@@ -219,7 +219,7 @@ class GameState {
     // TODO think about whether "move_from" permissions
     // means moving in terms of changing state or just moving the object
     const old_zone_name: string = this._entity_by_uid(uid).zone;
-    const old_zone: Zone = this._zone_an_entity_belongs_to(old_zone_name);
+    const old_zone: Zone = this.zone_an_entity_belongs_to(old_zone_name);
 
     if (old_zone.move_from_permissions.includes(player))
       this.entities[uid].change_pos(new_pos);
@@ -235,8 +235,21 @@ class GameState {
 
   // Utility function to get the zone an entity belongs to given a
   // name of a zone (string)
-  _zone_an_entity_belongs_to(zone_string: string): Zone {
+  zone_an_entity_belongs_to(zone_string: string): Zone {
     return this.zones.filter((zone) => zone.name === zone_string)[0];
+  }
+
+  _point_is_in_zone(pt: Point, zone: Zone): Boolean {
+    return (
+      pt.x >= zone.pos.x &&
+      pt.x <= zone.pos.x + this.imageMap[zone.image].width &&
+      pt.y >= zone.pos.y &&
+      pt.y <= zone.pos.y + this.imageMap[zone.image].height
+    );
+  }
+
+  zone_a_point_belongs_to(pt: Point): Zone[] {
+    return this.zones.filter((zone) => this._point_is_in_zone(pt, zone));
   }
 
   render(player_name: string) {
@@ -254,7 +267,7 @@ class GameState {
 
     // Now draw all entities
     entities.forEach((entity: Entity) => {
-      const ent_zone = this._zone_an_entity_belongs_to(entity.zone);
+      const ent_zone = this.zone_an_entity_belongs_to(entity.zone);
       if (
         ent_zone.view_permissions.includes(player_name) &&
         ent_zone.glance_permissions.includes(player_name)
