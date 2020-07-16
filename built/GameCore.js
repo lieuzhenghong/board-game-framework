@@ -100,23 +100,31 @@ class GameCore {
         this.frame_timer.increment(t);
         this.update_id = window.requestAnimationFrame(this.update.bind(this));
     } // update
-    process_json_actions(actions) {
-        for (action in actions) {
-            this.game_state.applyAction(action);
-        }
+    /*
+    process_json_actions(actions: JSON): void {
+      for (const action of actions) {
+        this.game_state.applyAction(action);
+      }
     } // process_json_actions
+    */
     // what does this do?
     stop_update() {
         window.cancelAnimationFrame(this.update_id);
     }
 }
-class ClientGameCore {
+class ClientGameCore extends GameCore {
+    // TODO: ask Kaminsky for help with constructors
+    // Remember to call super() to execute the constructor of the base GameCore class
+    constructor(session_description, initial_state) {
+        super(session_description, initial_state);
+        this._action_queue = [];
+    }
     _add_action_to_server_core_queue(action) {
         this._action_queue.push(action);
     }
     _click_on_entity(pt, et) {
         // check if the point is inside the entity
-        const ib = this.gameState.imageMap[et.image];
+        const ib = super.game_state.imageMap[et.image];
         if (pt.x >= et.pos.x &&
             pt.x <= et.pos.x + ib.width &&
             pt.y >= et.pos.y &&
@@ -130,9 +138,9 @@ class ClientGameCore {
     // Look through all entities and find all entities that were
     // under the cursor and are visible to the player
     _entity_clicked(pt) {
-        return this.gameState.entities.filter((ent) => {
+        return super.game_state.entities.filter((ent) => {
             this._click_on_entity(pt, ent) &&
-                this.gameState
+                super.game_state
                     .zone_an_entity_belongs_to(ent.zone)
                     .glance_permissions.includes(this.player);
         });
@@ -142,29 +150,52 @@ class ClientGameCore {
         // Each entity has a custom context menu
         // Give each entity change state menu, change zone menu, change position
         // For the change state menu, add submenus for each substate using statemap
-        let state_menu_obj = {};
+        let state_menu;
+        state_menu.name = "Change State";
         ent.stateList.forEach((o) => {
-            for (const [key, value] of Object.entries(o)) {
-                state_menu_obj[key] = value;
+            for (const [property, property_values] of Object.entries(o)) {
+                // here's an object entry example:
+                // "face": ["up", "down"]
+                // property = "face"
+                let property_submenu;
+                property_submenu.name = property;
+                for (const property_value of property_values) {
+                    property_submenu.children.push(new MenuItem(property_value, () => this.receive_context_menu_event("Change State", ent.uid, {
+                        [property]: property_value,
+                    })));
+                }
+                state_menu.children.push(property_submenu);
             }
         });
-        let menu_obj = {};
-        /*
-        menu_obj =
-        {
-          "Change Zone": "Change Zone",
-          "Change Position": "Change Position",
-          "Change State": {
-            "face": {"up", "down"},
-            "num": {"J", "Q", "K",
-          }
+        let menu;
+        menu.name = "";
+        menu.children = [
+            new MenuItem("Change Zone", () => this.receive_context_menu_event("Change Zone")),
+            new MenuItem("Change Position", () => this.receive_context_menu_event("Change Position")),
+            new SubMenu("Change State", [state_menu]),
+        ];
+        return menu;
+    }
+    receive_context_menu_event(action_name, ent_uid, new_state) {
+        if (new_state && ent_uid) {
+            // Change object state
+            this._add_action_to_server_core_queue({
+                time: this.local_timer.current_time,
+                action_type: "change_state",
+                entity_uid: ent_uid,
+                payload: new_state,
+            });
         }
-        */
-        menu_obj["Change Zone"] = "Change Zone";
-        menu_obj["Change Position"] = "Change Position";
-        menu_obj["Change State"] = state_menu_obj;
-        // TODO create the context menu
-        // also put onClick handlers
+        else {
+            if (action_name === "Change Zone") {
+                this._ui_state = UIState["Change Zone"];
+            }
+            else if (action_name === "Change Position") {
+                this._ui_state = UIState["Change Position"];
+            }
+            else {
+            }
+        }
     }
     receive_ui_event(ui_action) {
         // We receive the UI action and send actions to the server
@@ -186,12 +217,12 @@ class ClientGameCore {
                 if (click_type === 2 && ents_clicked.length > 0) {
                     // Get the last entity and open up the context menu
                     this._create_context_menu(active_entity);
-                    this._ui_state = "Entity UI";
+                    this._ui_state = UIState["Entity UI"];
                 }
                 // Left click on entity
                 else if (click_type === 0 && ents_clicked.length > 0) {
                     // Get the last entity and start drag mode
-                    this._ui_state = "Drag";
+                    this._ui_state = UIState["Drag"];
                 }
                 else {
                     // pass
@@ -200,62 +231,74 @@ class ClientGameCore {
                 console.log("We are in the drag mode");
                 if (click_type === -1) {
                     // This is a mousemove event. Move the entity
-                    // active_entity.pos = mouse_point;
-                    this._add_action_to_server_core_queue([
-                        "change_pos",
-                        active_entity.uid,
-                        { pos: mouse_point },
-                    ]);
+                    this._add_action_to_server_core_queue({
+                        time: this.local_timer.current_time,
+                        action_type: "change_pos",
+                        entity_uid: active_entity.uid,
+                        payload: { pos: mouse_point },
+                    });
                 }
                 else {
                     // Upon receiving a left or right click (which we have),
                     // we cancel the drag mode.
-                    this._ui_state = "Base";
+                    this._ui_state = UIState["Base"];
                 }
             // TODO think about this
             case "Entity UI":
                 console.log("We are in the Entity UI mode");
                 if (click_type !== -1) {
-                    this._ui_state = "Base";
+                    this._ui_state = UIState["Base"];
                 }
             case "Change Zone":
                 console.log("We are in the change zone mode");
                 // look at what zone the cursor is in
-                const clicked_zones = this.gameState.zone_a_point_belongs_to(mouse_point);
+                const clicked_zones = super.game_state.zone_a_point_belongs_to(mouse_point);
                 if (clicked_zones.length > 0 &&
                     clicked_zones.slice(-1)[0].move_to_permissions.includes(this.player)
                 // short circuit evaluation: if length = 0, we won't try to slice
                 ) {
                     // Send off a changeZone action
                     /*
-                    this.gameState.changeEntityZone(
-                      active_entity.uid,
-                      this.player,
-                      clicked_zones[0].name
                     );
                     */
-                    this._add_action_to_server_core_queue([
-                        "change_zone",
-                        active_entity.uid,
-                        { zone: clicked_zones[0].name },
-                    ]);
+                    this._add_action_to_server_core_queue({
+                        time: this.local_timer.current_time,
+                        action_type: "change_zone",
+                        entity_uid: active_entity.uid,
+                        payload: { zone: clicked_zones[0].name },
+                    });
                 }
                 else {
-                    this._ui_state = "Base";
+                    this._ui_state = UIState["Base"];
                 }
             case "Change Position":
                 console.log("We are in the change position mode");
                 if (click_type === 0) {
                     // TODO send an action to move the entity to the new position
                     // active_entity.pos = mouse_point;
-                    this._add_action_to_server_core_queue([
-                        "change_pos",
-                        active_entity.uid,
-                        { pos: mouse_point },
-                    ]);
+                    this._add_action_to_server_core_queue({
+                        time: this.local_timer.current_time,
+                        action_type: "change_pos",
+                        entity_uid: active_entity.uid,
+                        payload: { pos: mouse_point },
+                    });
                 }
-                this._ui_state = "Base";
+                this._ui_state = UIState["Base"];
         }
     }
-    role_specific_update() { }
+    // Update the game state according to actions received by the server
+    role_specific_update(actions_received) {
+        // First, sort by timestamp
+        actions_received.sort((a, b) => a.time - b.time);
+        actions_received.forEach((action) => {
+            switch (action.action_type) {
+                case "change_zone":
+                    super.game_state.changeEntityZone(action.entity_uid, this.player, action.payload["zone"]);
+                case "change_pos":
+                    super.game_state.changeEntityPos(action.entity_uid, this.player, action.payload["pos"]);
+                case "change_state":
+                    super.game_state.changeEntityStatePartial(action.entity_uid, action.payload);
+            }
+        });
+    }
 }

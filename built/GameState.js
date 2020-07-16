@@ -29,8 +29,6 @@ class GameState {
             return d[s];
         }
         this.entities = j["game_state"]["entities"].forEach((e, i) => {
-            // TODO !!! there is no e["image"] property
-            //new Entity(i, e["type"], e["state"], e["image"], e["zone"], e["pos"]);
             new Entity(i, e["type"], im[e["type"]]["state_list"], im[e["type"]]["states"], e["state"], lookUpImage(e["state"], im[e["type"]]["states"]), im[e["type"]]["glance"], e["zone"], e["pos"]);
         });
     }
@@ -125,6 +123,21 @@ class GameState {
             case "change_zone":
                 this.changeEntityPos(uid, player, payload);
         }
+    }
+    // Change entity's state given a partial property kv pair
+    // e.g. given the key-value pair {"face": "up"},
+    // change the entity's state from ["down", "J"] to ["up", "J"]
+    changeEntityStatePartial(uid, property_kv_pair) {
+        // First, get the StateList of the entity
+        const ent = this._entity_by_uid(uid);
+        // Make a (shallow) copy of the entity's state
+        let new_state = [...ent.state];
+        ent.stateList.forEach((esEnum, i) => {
+            if (Object.keys(ent.stateList)[0] === Object.keys(property_kv_pair)[0]) {
+                new_state[i] = Object.values(property_kv_pair)[0];
+            }
+        });
+        this.entities[uid].change_state(new_state);
     }
     changeEntityState(uid, new_state) {
         // TODO should we check here if the new state is valid
