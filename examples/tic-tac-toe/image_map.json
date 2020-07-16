@@ -1,42 +1,60 @@
 {
   "data_type": "image_map",
   "image_mapping": {
-    "play_p1": {
-      "image": "red_rect.png"
+    "play_p1": "red_rect.png",
+    "play_p2": "blue_rect.png",
+    "board_sq1": "white_square.png",
+    "board_sq2": "white_square.png",
+    "board_sq3": "white_square.png",
+    "board_sq4": "white_square.png",
+    "board_sq5": "white_square.png",
+    "board_sq6": "white_square.png",
+    "board_sq7": "white_square.png",
+    "board_sq8": "white_square.png",
+    "board_sq9": "white_square.png",
+    "piece": {
+      "state_list": [{ "shape": ["nought", "cross"] }],
+      "glance": "nought.png",
+      "states": {
+        "['nought']": "nought.png",
+        "['cross']": "cross.png"
+      }
     },
-    "play_p2": {
-      "image": "blue_rect.png"
-    },
-    "board_sq1": {
-      "image": "white_square.png"
-    },
-    "board_sq2": {
-      "image": "white_square.png"
-    },
-    "board_sq3": {
-      "image": "white_square.png"
-    },
-    "board_sq4": {
-      "image": "white_square.png"
-    },
-    "board_sq5": {
-      "image": "white_square.png"
-    },
-    "board_sq6": {
-      "image": "white_square.png"
-    },
-    "board_sq7": {
-      "image": "white_square.png"
-    },
-    "board_sq8": {
-      "image": "white_square.png"
-    },
-    "board_sq9": {
-      "image": "white_square.png"
-    },
-    "piece": [
-      { "state": { "shape": "nought" }, "image": "nought.png" },
-      { "state": { "shape": "cross" }, "image": "cross.png" }
-    ]
+    "card": {
+      "state_list": [
+        { "face": ["down", "up"] },
+        { "suit": ["D", "C", "H", "S"] },
+        {
+          "value": ["J", "Q", "K"]
+        }
+      ],
+      "glance": "facedown.png",
+      "states": {
+        "['down','D','J']": "facedown.png",
+        "['down','D','Q']": "facedown.png",
+        "['down','D','K']": "facedown.png",
+        "['down','C','J']": "facedown.png",
+        "['down','C','Q']": "facedown.png",
+        "['down','C','K']": "facedown.png",
+        "['down','H','J']": "facedown.png",
+        "['down','H','Q']": "facedown.png",
+        "['down','H','K']": "facedown.png",
+        "['down','S','J']": "facedown.png",
+        "['down','S','Q']": "facedown.png",
+        "['down','S','K']": "facedown.png",
+        "['up','D','J']": "diamond_jack.png",
+        "['up','D','Q']": "diamond_queen.png",
+        "['up','D','K']": "diamond_king.png",
+        "['up','C','J']": "club_jack.png",
+        "['up','C','Q']": "club_queen.png",
+        "['up','C','K']": "club_king.png",
+        "['up','H','J']": "heart_jack.png",
+        "['up','H','Q']": "heart_queen.png",
+        "['up','H','K']": "heart_king.png",
+        "['up','S','J']": "spade_jack.png",
+        "['up','S','Q']": "spade_queen.png",
+        "['up','S','K']": "spade_king.png"
+      }
+    }
   }
 }
