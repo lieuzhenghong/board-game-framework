@@ -15,5 +15,13 @@ interface GSStateMapDict {
   [Key: string]: EntStateMap;
 }
 
-// Point (x,y) and whether it's left or rightclick
-type UIAction = [Point, number];
+// actiontype as string,
+// Point (x,y) and
+// and whether it's left or rightclick (if actiontype == "mousedown")
+type UIAction = [string, Point, number?];
+
+// The first string is the type of action: e.g. change_zone, change_pos
+// second is the affected entity UID,
+// third is the properties of the entity that will change
+// e.g. {pos: (x, y)}
+type ServerAction = [string, EntUID, object];

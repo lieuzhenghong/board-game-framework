@@ -101,6 +101,7 @@ abstract class GameCore {
   private update_id;
   private viewport;
 
+  t;
   // GameCore methods
   public constructor(
     session_description: JSON,
@@ -230,8 +231,13 @@ class ClientGameCore {
     | "Entity UI"
     | "Change Zone"
     | "Change Position";
+  _action_queue: ServerAction[];
   gameState: GameState;
   player: PlayerName;
+
+  _add_action_to_server_core_queue(action: ServerAction): void {
+    this._action_queue.push(action);
+  }
 
   _click_on_entity(pt: Point, et: Entity): Boolean {
     // check if the point is inside the entity
@@ -296,9 +302,11 @@ class ClientGameCore {
     // but do not update the GameState here.
     // So let's see how to see what action you get given a UI action
     //
-    const click_point: Point = ui_action[0];
-    const click_type: number = ui_action[1];
-    const ents_clicked: Entity[] = this._entity_clicked(click_point);
+    const action_type: String = ui_action[0];
+    const mouse_point: Point = ui_action[1];
+    const click_type: number = ui_action[2]; // = -1 if not click
+
+    const ents_clicked: Entity[] = this._entity_clicked(mouse_point);
     const [active_entity] = ents_clicked.slice(-1);
 
     // How do we handle multiple entities being in the same click field?
@@ -322,29 +330,38 @@ class ClientGameCore {
           // pass
         }
       case "Drag":
-        // If we receive another left or right click (which we have),
-        // we cancel out the drag mode.
-        // TODO think about the mouse drag event
         console.log("We are in the drag mode");
-        // TODO move the active entity to the new position
-        // TODO Send off an action that changes the entity's position to server
-        // active_entity.pos = click_point;
-        this._ui_state = "Base";
+        if (click_type === -1) {
+          // This is a mousemove event. Move the entity
+          // active_entity.pos = mouse_point;
+          this._add_action_to_server_core_queue([
+            "change_pos",
+            active_entity.uid,
+            { pos: mouse_point },
+          ]);
+        } else {
+          // Upon receiving a left or right click (which we have),
+          // we cancel the drag mode.
+          this._ui_state = "Base";
+        }
       // TODO think about this
       case "Entity UI":
         console.log("We are in the Entity UI mode");
-      // TODO change zone
+        if (click_type !== -1) {
+          this._ui_state = "Base";
+        }
       case "Change Zone":
         console.log("We are in the change zone mode");
         // look at what zone the cursor is in
         const clicked_zones = this.gameState.zone_a_point_belongs_to(
-          click_point
+          mouse_point
         );
         if (
           clicked_zones.length > 0 &&
-          clicked_zones[0].move_to_permissions.includes(this.player)
+          clicked_zones.slice(-1)[0].move_to_permissions.includes(this.player)
+          // short circuit evaluation: if length = 0, we won't try to slice
         ) {
-          // TODO Send off a changeZone action
+          // Send off a changeZone action
           /*
           this.gameState.changeEntityZone(
             active_entity.uid,
@@ -352,6 +369,11 @@ class ClientGameCore {
             clicked_zones[0].name
           );
           */
+          this._add_action_to_server_core_queue([
+            "change_zone",
+            active_entity.uid,
+            { zone: clicked_zones[0].name },
+          ]);
         } else {
           this._ui_state = "Base";
         }
@@ -359,7 +381,12 @@ class ClientGameCore {
         console.log("We are in the change position mode");
         if (click_type === 0) {
           // TODO send an action to move the entity to the new position
-          // active_entity.pos = click_point;
+          // active_entity.pos = mouse_point;
+          this._add_action_to_server_core_queue([
+            "change_pos",
+            active_entity.uid,
+            { pos: mouse_point },
+          ]);
         }
         this._ui_state = "Base";
     }

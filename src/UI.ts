@@ -2,6 +2,7 @@ class UIHandler {
   window: Window;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  clientCore: ClientGameCore;
 
   constructor(
     window: Window,
@@ -11,12 +12,15 @@ class UIHandler {
     this.window = window;
     this.canvas = canvas;
     this.ctx = ctx;
-    window.addEventListener("mousedown", this.handleClick);
+    window.addEventListener("click", this._handle_mouse_event);
+    window.addEventListener("mousemove", this._handle_mouse_event);
   }
 
-  handleClick(e: MouseEvent) {
-    // send a mouse position to the ClientCore object
-    let buttonPressed = e.button; // 0 is left click, 2 is right click
+  _handle_mouse_event(e: MouseEvent): UIAction {
+    // send a UIAction to the ClientCore object
+    // a UIAction is the [event type : String, Point, button_clicked]
+
+    let tuple: UIAction;
     const cvsRect = this.canvas.getBoundingClientRect();
     const translated: Point = {
       x: e.clientX - cvsRect.x,
@@ -27,7 +31,13 @@ class UIHandler {
       y: (translated.x * virtualCanvasSize) / this.canvas.height,
     };
 
-    const tuple: UIAction = [mouse, buttonPressed];
+    if (e.type === "click") {
+      tuple = [e.type, mouse, e.button];
+    } else {
+      tuple = [e.type, mouse, -1];
+    }
     // TODO send this tuple to the ClientCore object
+    this.clientCore.receive_ui_event(tuple);
+    return tuple;
   }
 }

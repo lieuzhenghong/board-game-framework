@@ -3,11 +3,13 @@ class UIHandler {
         this.window = window;
         this.canvas = canvas;
         this.ctx = ctx;
-        window.addEventListener("mousedown", this.handleClick);
+        window.addEventListener("click", this._handle_mouse_event);
+        window.addEventListener("mousemove", this._handle_mouse_event);
     }
-    handleClick(e) {
-        // send a mouse position to the ClientCore object
-        let buttonPressed = e.button; // 0 is left click, 2 is right click
+    _handle_mouse_event(e) {
+        // send a UIAction to the ClientCore object
+        // a UIAction is the [event type : String, Point, button_clicked]
+        let tuple;
         const cvsRect = this.canvas.getBoundingClientRect();
         const translated = {
             x: e.clientX - cvsRect.x,
@@ -17,7 +19,14 @@ class UIHandler {
             x: (translated.x * virtualCanvasSize) / this.canvas.width,
             y: (translated.x * virtualCanvasSize) / this.canvas.height,
         };
-        const tuple = [mouse, buttonPressed];
+        if (e.type === "click") {
+            tuple = [e.type, mouse, e.button];
+        }
+        else {
+            tuple = [e.type, mouse, -1];
+        }
         // TODO send this tuple to the ClientCore object
+        this.clientCore.receive_ui_event(tuple);
+        return tuple;
     }
 }
