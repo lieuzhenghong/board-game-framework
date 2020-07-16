@@ -107,7 +107,7 @@ class GameCore {
     } // process_json_actions
     // what does this do?
     stop_update() {
-        window.cancelAnimationFrame(this.updateid);
+        window.cancelAnimationFrame(this.update_id);
     }
 }
 class ClientGameCore {
@@ -208,11 +208,8 @@ class ClientGameCore {
                     ]);
                 }
                 else {
-                    // If we receive another left or right click (which we have),
-                    // we cancel out the drag mode.
-                    // TODO think about the mouse drag event
-                    // TODO move the active entity to the new position
-                    // TODO Send off an action that changes the entity's position to server
+                    // Upon receiving a left or right click (which we have),
+                    // we cancel the drag mode.
                     this._ui_state = "Base";
                 }
             // TODO think about this
@@ -229,7 +226,7 @@ class ClientGameCore {
                     clicked_zones.slice(-1)[0].move_to_permissions.includes(this.player)
                 // short circuit evaluation: if length = 0, we won't try to slice
                 ) {
-                    // TODO Send off a changeZone action
+                    // Send off a changeZone action
                     /*
                     this.gameState.changeEntityZone(
                       active_entity.uid,

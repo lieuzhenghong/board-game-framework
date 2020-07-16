@@ -150,7 +150,7 @@ abstract class GameCore {
 
   // what does this do?
   public stop_update(): void {
-    window.cancelAnimationFrame(this.updateid);
+    window.cancelAnimationFrame(this.update_id);
   }
 
   public create_ping_timer = setInterval(
