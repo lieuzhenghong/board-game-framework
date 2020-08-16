@@ -1,3 +1,6 @@
+import { ClientGameCore } from "./GameCore";
+import { UIHandler } from "./UI";
+
 async function fetchJSON(url: string): Promise<JSON> {
   const response = await fetch(url);
   return response.json();
@@ -41,3 +44,5 @@ async function init() {
     clientGameCore
   );
 }
+
+init();

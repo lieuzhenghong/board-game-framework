@@ -1,3 +1,5 @@
+import { ClientGameCore } from "./GameCore";
+import { UIHandler } from "./UI";
 async function fetchJSON(url) {
     const response = await fetch(url);
     return response.json();
@@ -27,3 +29,4 @@ async function init() {
     const virtualClientSize = 600;
     const uiHandler = new UIHandler(window, canvas, ctx, virtualClientSize, clientGameCore);
 }
+init();

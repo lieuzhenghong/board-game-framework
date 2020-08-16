@@ -1,3 +1,5 @@
+import { ClientGameCore } from "./GameCore";
+
 class UIHandler {
   window: Window;
   canvas: HTMLCanvasElement;
@@ -46,3 +48,5 @@ class UIHandler {
     return tuple;
   }
 }
+
+export { UIHandler };

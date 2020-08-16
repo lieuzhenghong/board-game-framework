@@ -242,8 +242,6 @@ class ClientGameCore extends GameCore {
   private _actions_received_: ServerAction[];
   player: PlayerName;
 
-  // TODO: ask Kaminsky for help with constructors
-  // Remember to call super() to execute the constructor of the base GameCore class
   constructor(
     session_description: JSON,
     initial_state: GameState | string,
@@ -472,3 +470,5 @@ class ClientGameCore extends GameCore {
     });
   }
 }
+
+export { ClientGameCore };

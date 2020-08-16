@@ -302,3 +302,4 @@ class ClientGameCore extends GameCore {
         });
     }
 }
+export { ClientGameCore };

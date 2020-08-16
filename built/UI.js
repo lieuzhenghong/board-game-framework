@@ -32,3 +32,4 @@ class UIHandler {
         return tuple;
     }
 }
+export { UIHandler };
