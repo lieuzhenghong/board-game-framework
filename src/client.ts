@@ -6,6 +6,7 @@
     MIT Licensed.
 */
 
+/*
 //A window global for our game root variable.
 var game = {};
 
@@ -30,3 +31,4 @@ window.onload = function () {
   //Finally, start the loop
   game.update(new Date().getTime());
 }; //window.onload
+*/
