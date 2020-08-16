@@ -10,24 +10,34 @@ class GameState {
   entities: Array<Entity>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  rootURL: string;
+  gameUID: string;
 
   // TODO work on this
   constructor(
-    gamestate: object,
-    imagemap: object,
+    gameStateJSON: JSON,
+    imageMapJSON: JSON,
+    rootURL: string,
+    gameUID: string,
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D
   ) {
     // loadState loads players, zones, imageMaps, entities
-    this.loadState(gamestate, imagemap);
+    this.loadState(gameStateJSON, imageMapJSON);
     this.canvas = canvas;
     this.ctx = ctx;
+    this.rootURL = rootURL;
+    this.gameUID = gameUID;
   }
 
-  async loadState(j: object, im: object) {
+  async loadState(j: JSON, im: JSON) {
     // load state into this object
     // First load the players
-    let imageMapPromise: Promise<ImageMap> = this.loadImages(im);
+    let imageMapPromise: Promise<ImageMap> = this.loadImages(
+      im,
+      this.rootURL,
+      this.gameUID
+    );
     this.playerList = j["game_state"]["players"];
     this.zones = j["game_state"]["zones"].map((z: object) => {
       new Zone(
@@ -71,45 +81,11 @@ class GameState {
     );
   }
 
-  /*
-  generate_state_lists(im: object): GSStateListDict {
-    let gsStateListDict: GSStateListDict = {};
-    Object.keys(im).forEach((key, index) => {
-      // key: the name of the object key
-      // index: the ordinal position of the key within the object
-
-      // here we're dealing with an entity
-      if (im[key] instanceof Object) {
-        // Look for the states object
-        gsStateListDict[key] = im[key]["state_list"];
-      }
-    });
-    return gsStateListDict;
-  }
-  */
-
-  /*
-  generate_state_map(im: object): GSStateMapDict {
-    let gsStateMapDict = {};
-    Object.keys(im).forEach((key, index) => {
-      // key: the name of the object key
-      // index: the ordinal position of the key within the object
-
-      // here we're dealing with an entity
-      if (im[key] instanceof Object) {
-        // Look for the states object
-        const state_list: EntStateList = im[key]["state_list"];
-        // Expands state_map (unpacks wildcards)
-        const state_map: EntStateMap = im[key]["states"];
-        let expanded_state_map = {};
-        
-      }
-    });
-    return gsStateMapDict;
-  }
-  */
-
-  async loadImages(image_map_json: object): Promise<ImageMap> {
+  generateImageURLs(
+    image_map_json: JSON,
+    rootURL: string,
+    gameUID: string
+  ): Array<string> {
     let image_urls: Array<string> = [];
 
     Object.keys(image_map_json).forEach((key, index) => {
@@ -117,6 +93,8 @@ class GameState {
       // index: the ordinal position of the key within the object
 
       // here we're dealing with an entity
+      image_urls.push(image_map_json[key]["glance"]); // Load the glance image
+
       if (image_map_json[key] instanceof Object) {
         // Look for the states object
         image_map_json[key]["states"].forEach((stateString: string) => {
@@ -127,25 +105,27 @@ class GameState {
       }
     });
 
-    // TODO don't hardcode url_prepend and game UID
-    // get kaminsky to look at how I make the request to the server
-
-    const url_prepend =
-      "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/";
-    const game_UID = "tic_tac_toe";
-    const img_url_dir = url_prepend + game_UID + "/img/";
-
-    // Now remove duplicates using javascript set and converting back to array
-    // using spread operator
     image_urls = [...new Set(image_urls)];
-    // console.log(image_urls);
 
-    async function fillImageMap(u: string): Promise<[string, ImageBitmap]> {
-      const response = await fetch(img_url_dir + u);
+    // And finally modify the relative filepaths to become absolute paths
+    const img_url_dir = rootURL + gameUID + "/img/";
+    const abs_image_urls = image_urls.map((url) => img_url_dir + url);
+
+    return abs_image_urls;
+  }
+
+  async loadImages(
+    image_map_json: JSON,
+    rootURL: string,
+    gameUID: string
+  ): Promise<ImageMap> {
+    const image_urls = this.generateImageURLs(image_map_json, rootURL, gameUID);
+
+    async function fillImageMap(url: string): Promise<[string, ImageBitmap]> {
+      const response = await fetch(url);
       const blob: Blob = await response.blob();
       const imgbitmap: ImageBitmap = await createImageBitmap(blob);
-      //imageMap[u] = imgbitmap;
-      return [u, imgbitmap];
+      return [url, imgbitmap];
     }
 
     const imageMapPromises: Array<Promise<

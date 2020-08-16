@@ -73,7 +73,7 @@ class Timer {
 // I'm intending this to eventually be extended by GameClientCore and GameServerCore.
 class GameCore {
     // GameCore methods
-    constructor(session_description, initial_state) {
+    constructor(session_description, initial_state, canvas, ctx) {
         this.create_ping_timer = setInterval(function () {
             this.last_ping_time = new Date().getTime() - this.fake_lag;
             this.socket.send("p." + this.last_ping_time);
@@ -84,7 +84,7 @@ class GameCore {
         }
         if (typeof initial_state === "string") {
             initial_state = JSON.parse(initial_state);
-            this.game_state = new GameState(initial_state["gamestate"], initial_state["imagemap"], null, null);
+            this.game_state = new GameState(initial_state["gameStateJSON"], initial_state["imageMapJSON"], initial_state["rootURL"], initial_state["gameUID"], canvas, ctx);
         }
         this.local_timer.current_time = 0.016;
         this.frame_timer.current_time = 0;
@@ -115,8 +115,8 @@ class GameCore {
 class ClientGameCore extends GameCore {
     // TODO: ask Kaminsky for help with constructors
     // Remember to call super() to execute the constructor of the base GameCore class
-    constructor(session_description, initial_state) {
-        super(session_description, initial_state);
+    constructor(session_description, initial_state, canvas, ctx) {
+        super(session_description, initial_state, canvas, ctx);
         this._action_queue_ = [];
     }
     _add_action_to_server_core_queue(action) {
@@ -206,10 +206,10 @@ class ClientGameCore extends GameCore {
         const mouse_point = ui_action[1];
         const click_type = ui_action[2]; // = -1 if not click
         const ents_clicked = this._entity_clicked(mouse_point);
-        const [active_entity] = ents_clicked.slice(-1);
         // How do we handle multiple entities being in the same click field?
         // How do we know which entity is "on top"?
         // Entities are rendered bottom-to-top first
+        const [active_entity] = ents_clicked.slice(-1);
         switch (this._ui_state_) {
             case "Base":
                 console.log("We are in the base mode");

@@ -105,7 +105,9 @@ abstract class GameCore {
   // GameCore methods
   public constructor(
     session_description: JSON,
-    initial_state: GameState | JSON
+    initial_state: string | GameState,
+    canvas: HTMLCanvasElement | null,
+    ctx: CanvasRenderingContext2D | null
   ) {
     this.session_description = session_description;
 
@@ -115,10 +117,12 @@ abstract class GameCore {
     if (typeof initial_state === "string") {
       initial_state = JSON.parse(initial_state);
       this.game_state = new GameState(
-        initial_state["gamestate"],
-        initial_state["imagemap"],
-        null,
-        null
+        initial_state["gameStateJSON"],
+        initial_state["imageMapJSON"],
+        initial_state["rootURL"],
+        initial_state["gameUID"],
+        canvas,
+        ctx
       );
     }
     this.local_timer.current_time = 0.016;
@@ -240,8 +244,13 @@ class ClientGameCore extends GameCore {
 
   // TODO: ask Kaminsky for help with constructors
   // Remember to call super() to execute the constructor of the base GameCore class
-  constructor(session_description: JSON, initial_state: GameState | JSON) {
-    super(session_description, initial_state);
+  constructor(
+    session_description: JSON,
+    initial_state: GameState | string,
+    canvas: HTMLCanvasElement,
+    ctx: CanvasRenderingContext2D
+  ) {
+    super(session_description, initial_state, canvas, ctx);
     this._action_queue_ = [];
   }
 
@@ -353,11 +362,11 @@ class ClientGameCore extends GameCore {
     const click_type: number = ui_action[2]; // = -1 if not click
 
     const ents_clicked: Entity[] = this._entity_clicked(mouse_point);
-    const [active_entity] = ents_clicked.slice(-1);
 
     // How do we handle multiple entities being in the same click field?
     // How do we know which entity is "on top"?
     // Entities are rendered bottom-to-top first
+    const [active_entity] = ents_clicked.slice(-1);
 
     switch (this._ui_state_) {
       case "Base":
