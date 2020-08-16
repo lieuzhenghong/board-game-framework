@@ -1,8 +1,10 @@
 class UIHandler {
-    constructor(window, canvas, ctx) {
+    constructor(window, canvas, ctx, virtualCanvasSize, clientCore) {
         this.window = window;
         this.canvas = canvas;
         this.ctx = ctx;
+        this.virtualCanvasSize = virtualCanvasSize;
+        this.clientCore = clientCore;
         window.addEventListener("click", this._handle_mouse_event);
         window.addEventListener("mousemove", this._handle_mouse_event);
     }
@@ -16,8 +18,8 @@ class UIHandler {
             y: e.clientY - cvsRect.y,
         };
         const mouse = {
-            x: (translated.x * virtualCanvasSize) / this.canvas.width,
-            y: (translated.x * virtualCanvasSize) / this.canvas.height,
+            x: (translated.x * this.virtualCanvasSize) / this.canvas.width,
+            y: (translated.x * this.virtualCanvasSize) / this.canvas.height,
         };
         if (e.type === "click") {
             tuple = [e.type, mouse, e.button];

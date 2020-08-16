@@ -3,15 +3,20 @@ class UIHandler {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
   clientCore: ClientGameCore;
+  virtualCanvasSize: number;
 
   constructor(
     window: Window,
     canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
+    ctx: CanvasRenderingContext2D,
+    virtualCanvasSize: number,
+    clientCore: ClientGameCore
   ) {
     this.window = window;
     this.canvas = canvas;
     this.ctx = ctx;
+    this.virtualCanvasSize = virtualCanvasSize;
+    this.clientCore = clientCore;
     window.addEventListener("click", this._handle_mouse_event);
     window.addEventListener("mousemove", this._handle_mouse_event);
   }
@@ -27,8 +32,8 @@ class UIHandler {
       y: e.clientY - cvsRect.y,
     };
     const mouse: Point = {
-      x: (translated.x * virtualCanvasSize) / this.canvas.width,
-      y: (translated.x * virtualCanvasSize) / this.canvas.height,
+      x: (translated.x * this.virtualCanvasSize) / this.canvas.width,
+      y: (translated.x * this.virtualCanvasSize) / this.canvas.height,
     };
 
     if (e.type === "click") {
