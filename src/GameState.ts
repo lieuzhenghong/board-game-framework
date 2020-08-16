@@ -189,7 +189,7 @@ class GameState {
   // Change entity's state given a partial property kv pair
   // e.g. given the key-value pair {"face": "up"},
   // change the entity's state from ["down", "J"] to ["up", "J"]
-  changeEntityStatePartial(uid: EntUID, property_kv_pair: object) {
+  changeEntityStatePartial(uid: EntUID, property_kv_pair: object): void {
     // First, get the StateList of the entity
     const ent = this._entity_by_uid(uid);
     // Make a (shallow) copy of the entity's state
@@ -202,13 +202,17 @@ class GameState {
     this.entities[uid].change_state(new_state);
   }
 
-  changeEntityState(uid: EntUID, new_state: EntState) {
+  changeEntityState(uid: EntUID, new_state: EntState): void {
     // TODO should we check here if the new state is valid
     // TODO we need to add change_state_permissions I guess
     this.entities[uid].change_state(new_state);
   }
 
-  changeEntityZone(uid: EntUID, player: PlayerName, new_zone_name: string) {
+  changeEntityZone(
+    uid: EntUID,
+    player: PlayerName,
+    new_zone_name: string
+  ): void {
     // TODO check if the old zone was permissioned
     // and also check if the new zone was permissioned
     // Leaving this for now because you need to pass which player
@@ -228,7 +232,7 @@ class GameState {
     }
   }
 
-  changeEntityPos(uid: EntUID, player: PlayerName, new_pos: Point) {
+  changeEntityPos(uid: EntUID, player: PlayerName, new_pos: Point): void {
     // TODO think about whether "move_from" permissions
     // means moving in terms of changing state or just moving the object
     const old_zone_name: string = this._entity_by_uid(uid).zone;
@@ -275,7 +279,7 @@ class GameState {
     // First draw all the zones
     zones.forEach((zone, i) => {
       const image_bitmap = this.imageMap[zone["image"]];
-      game.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
+      this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
     });
 
     // Now draw all entities

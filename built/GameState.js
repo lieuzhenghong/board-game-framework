@@ -197,7 +197,7 @@ class GameState {
         // First draw all the zones
         zones.forEach((zone, i) => {
             const image_bitmap = this.imageMap[zone["image"]];
-            game.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
+            this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
         });
         // Now draw all entities
         entities.forEach((entity) => {

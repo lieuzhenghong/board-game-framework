@@ -13,11 +13,8 @@ class Entity {
         this.zone = new_zone;
     }
     change_state(new_state) {
-        // TODO change image as well
         this.state = new_state;
         const stateString = this.state.toString();
-        // Look through each entity state in the ImageMap
-        // memory issues?
         this.image = this.stateMap[stateString];
     }
     change_pos(new_pos) {

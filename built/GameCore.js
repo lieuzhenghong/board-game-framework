@@ -117,10 +117,10 @@ class ClientGameCore extends GameCore {
     // Remember to call super() to execute the constructor of the base GameCore class
     constructor(session_description, initial_state) {
         super(session_description, initial_state);
-        this._action_queue = [];
+        this._action_queue_ = [];
     }
     _add_action_to_server_core_queue(action) {
-        this._action_queue.push(action);
+        this._action_queue_.push(action);
     }
     _click_on_entity(pt, et) {
         // check if the point is inside the entity
@@ -188,10 +188,10 @@ class ClientGameCore extends GameCore {
         }
         else {
             if (action_name === "Change Zone") {
-                this._ui_state = UIState["Change Zone"];
+                this._ui_state_ = UIState["Change Zone"];
             }
             else if (action_name === "Change Position") {
-                this._ui_state = UIState["Change Position"];
+                this._ui_state_ = UIState["Change Position"];
             }
             else {
             }
@@ -210,19 +210,19 @@ class ClientGameCore extends GameCore {
         // How do we handle multiple entities being in the same click field?
         // How do we know which entity is "on top"?
         // Entities are rendered bottom-to-top first
-        switch (this._ui_state) {
+        switch (this._ui_state_) {
             case "Base":
                 console.log("We are in the base mode");
                 // Right click on entity
                 if (click_type === 2 && ents_clicked.length > 0) {
                     // Get the last entity and open up the context menu
                     this._create_context_menu(active_entity);
-                    this._ui_state = UIState["Entity UI"];
+                    this._ui_state_ = UIState["Entity UI"];
                 }
                 // Left click on entity
                 else if (click_type === 0 && ents_clicked.length > 0) {
                     // Get the last entity and start drag mode
-                    this._ui_state = UIState["Drag"];
+                    this._ui_state_ = UIState["Drag"];
                 }
                 else {
                     // pass
@@ -241,13 +241,13 @@ class ClientGameCore extends GameCore {
                 else {
                     // Upon receiving a left or right click (which we have),
                     // we cancel the drag mode.
-                    this._ui_state = UIState["Base"];
+                    this._ui_state_ = UIState["Base"];
                 }
             // TODO think about this
             case "Entity UI":
                 console.log("We are in the Entity UI mode");
                 if (click_type !== -1) {
-                    this._ui_state = UIState["Base"];
+                    this._ui_state_ = UIState["Base"];
                 }
             case "Change Zone":
                 console.log("We are in the change zone mode");
@@ -269,7 +269,7 @@ class ClientGameCore extends GameCore {
                     });
                 }
                 else {
-                    this._ui_state = UIState["Base"];
+                    this._ui_state_ = UIState["Base"];
                 }
             case "Change Position":
                 console.log("We are in the change position mode");
@@ -283,14 +283,14 @@ class ClientGameCore extends GameCore {
                         payload: { pos: mouse_point },
                     });
                 }
-                this._ui_state = UIState["Base"];
+                this._ui_state_ = UIState["Base"];
         }
     }
     // Update the game state according to actions received by the server
-    role_specific_update(actions_received) {
+    role_specific_update() {
         // First, sort by timestamp
-        actions_received.sort((a, b) => a.time - b.time);
-        actions_received.forEach((action) => {
+        this._actions_received_.sort((a, b) => a.time - b.time);
+        this._actions_received_.forEach((action) => {
             switch (action.action_type) {
                 case "change_zone":
                     super.game_state.changeEntityZone(action.entity_uid, this.player, action.payload["zone"]);

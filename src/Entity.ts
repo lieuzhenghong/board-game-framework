@@ -60,20 +60,17 @@ class Entity {
     this.pos = pos;
   }
 
-  change_zone(new_zone: string) {
+  change_zone(new_zone: string): void {
     this.zone = new_zone;
   }
 
-  change_state(new_state: EntState) {
-    // TODO change image as well
+  change_state(new_state: EntState): void {
     this.state = new_state;
     const stateString = this.state.toString();
-    // Look through each entity state in the ImageMap
-    // memory issues?
     this.image = this.stateMap[stateString];
   }
 
-  change_pos(new_pos: Point) {
+  change_pos(new_pos: Point): void {
     this.pos = new_pos;
   }
 
