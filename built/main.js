@@ -101,15 +101,6 @@ function loadGame(game_UID) {
         console.log(image_urls);
         const img_url_dir = url_prepend + game_UID + "/img/";
         var img_promises = image_urls.map((u) => fetch(img_url_dir + u).then((response) => response.blob()));
-        /*
-        The above code works but this doesn't for some reason --- why?
-        JS is really weird
-        var img_promises = image_urls.map((u) =>
-          fetch(u).then((response) => {
-            response.blob();
-          })
-        );
-        */
         // TODO handle error case for when one or more of the promises fails
         Promise.all(img_promises).then((results) => {
             // TODO Check that each promise returns in the right order
