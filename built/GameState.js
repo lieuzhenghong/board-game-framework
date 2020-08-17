@@ -7,11 +7,13 @@ export class GameState {
     // TODO work on this
     constructor(gameStateJSON, imageMapJSON, rootURL, gameUID, canvas, ctx) {
         // loadState loads players, zones, imageMaps, entities
-        this.loadState(gameStateJSON, imageMapJSON);
         this.canvas = canvas;
         this.ctx = ctx;
         this.rootURL = rootURL;
         this.gameUID = gameUID;
+        // Take note: this.loadState depends on this.rootURL and this.gameUID
+        // so it must be called after assignment of this.rootURL and this.gameUID
+        this.loadState(gameStateJSON, imageMapJSON);
     }
     async loadState(j, im) {
         // load state into this object
@@ -38,19 +40,20 @@ export class GameState {
     }
     generateImageURLs(image_map_json, rootURL, gameUID) {
         let image_urls = [];
-        Object.keys(image_map_json).forEach((key, index) => {
+        const image_mapping = image_map_json["image_mapping"];
+        Object.keys(image_mapping).forEach((key, index) => {
             // key: the name of the object key
             // index: the ordinal position of the key within the object
             // here we're dealing with an entity
-            image_urls.push(image_map_json[key]["glance"]); // Load the glance image
-            if (image_map_json[key] instanceof Object) {
+            image_urls.push(image_mapping[key]["glance"]); // Load the glance image
+            if (image_mapping[key] instanceof Object) {
                 // Look for the states object
-                image_map_json[key]["states"].forEach((stateString) => {
-                    image_urls.push(image_map_json[key]["states"][stateString]);
+                Object.keys(image_mapping[key]["states"]).forEach((stateString) => {
+                    image_urls.push(image_mapping[key]["states"][stateString]);
                 });
             }
             else {
-                image_urls.push(image_map_json[key]);
+                image_urls.push(image_mapping[key]);
             }
         });
         image_urls = [...new Set(image_urls)];
@@ -60,6 +63,7 @@ export class GameState {
         return abs_image_urls;
     }
     async loadImages(image_map_json, rootURL, gameUID) {
+        console.log("Loading Images...");
         const image_urls = this.generateImageURLs(image_map_json, rootURL, gameUID);
         async function fillImageMap(url) {
             const response = await fetch(url);
@@ -73,6 +77,7 @@ export class GameState {
         imageMapTuples.forEach((tuple) => {
             imageMap[tuple[0]] = tuple[1];
         });
+        console.log(imageMap);
         return imageMap;
     }
     applyAction(uid, action_type, player, payload) {
