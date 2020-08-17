@@ -1,5 +1,5 @@
-import { Point } from "./Interfaces";
-import { ClientGameCore } from "./GameCore";
+import { Point } from "./Interfaces.js";
+import { ClientGameCore } from "./GameCore.js";
 
 // actiontype as string,
 // Point (x,y) and

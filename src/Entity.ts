@@ -1,5 +1,5 @@
-import { GameState } from "./GameState";
-import { Point } from "./Interfaces";
+import { GameState } from "./GameState.js";
+import { Point } from "./Interfaces.js";
 
 export type EntUID = number;
 

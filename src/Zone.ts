@@ -1,4 +1,4 @@
-import { PlayerName, Point } from "./Interfaces";
+import { PlayerName, Point } from "./Interfaces.js";
 
 export class Zone {
   name: string;

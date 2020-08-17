@@ -1,8 +1,8 @@
 "use strict";
 
-import { PlayerName, ImageMap, Point } from "./Interfaces";
-import { Zone } from "./Zone";
-import { Entity, EntState, EntUID } from "./Entity";
+import { PlayerName, ImageMap, Point } from "./Interfaces.js";
+import { Zone } from "./Zone.js";
+import { Entity, EntState, EntUID } from "./Entity.js";
 
 // ImageMap is a dictionary that maps image names (something.png) to
 // an ImageBitmap file which can then be drawn on canvas

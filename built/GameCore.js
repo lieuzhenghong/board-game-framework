@@ -1,5 +1,5 @@
-import { GameState } from "./GameState";
-import { UIState } from "./UI";
+import { GameState } from "./GameState.js";
+import { UIState } from "./UI.js";
 /*  Copyright 2012-2016 Sven "underscorediscovery" Bergström
     
     written by : http://underscorediscovery.ca

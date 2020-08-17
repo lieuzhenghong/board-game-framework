@@ -1,5 +1,5 @@
-import { ClientGameCore } from "./GameCore";
-import { UIHandler } from "./UI";
+import { ClientGameCore } from "./GameCore.js";
+import { UIHandler } from "./UI.js";
 
 async function fetchJSON(url: string): Promise<JSON> {
   const response = await fetch(url);

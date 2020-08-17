@@ -1,4 +1,4 @@
-import { EntStateMap, EntUID } from "./Entity";
+import { EntStateMap, EntUID } from "./Entity.js";
 
 export type PlayerName = string;
 

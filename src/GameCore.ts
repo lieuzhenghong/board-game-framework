@@ -1,7 +1,7 @@
-import { GameState } from "./GameState";
-import { Entity, EntUID, EntStateEnum } from "./Entity";
-import { UIState, UIAction } from "./UI";
-import { Point, PlayerName, ServerAction } from "./Interfaces";
+import { GameState } from "./GameState.js";
+import { Entity, EntUID, EntStateEnum } from "./Entity.js";
+import { UIState, UIAction } from "./UI.js";
+import { Point, PlayerName, ServerAction } from "./Interfaces.js";
 
 /*  Copyright 2012-2016 Sven "underscorediscovery" Bergström
     

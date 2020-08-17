@@ -1,6 +1,6 @@
 "use strict";
-import { Zone } from "./Zone";
-import { Entity } from "./Entity";
+import { Zone } from "./Zone.js";
+import { Entity } from "./Entity.js";
 // ImageMap is a dictionary that maps image names (something.png) to
 // an ImageBitmap file which can then be drawn on canvas
 export class GameState {
