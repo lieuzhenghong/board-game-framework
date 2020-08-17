@@ -1,7 +1,9 @@
 "use strict";
+import { Zone } from "./Zone";
+import { Entity } from "./Entity";
 // ImageMap is a dictionary that maps image names (something.png) to
 // an ImageBitmap file which can then be drawn on canvas
-class GameState {
+export class GameState {
     // TODO work on this
     constructor(gameStateJSON, imageMapJSON, rootURL, gameUID, canvas, ctx) {
         // loadState loads players, zones, imageMaps, entities

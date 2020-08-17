@@ -1,3 +1,8 @@
+import { GameState } from "./GameState";
+import { Entity, EntUID, EntStateEnum } from "./Entity";
+import { UIState, UIAction } from "./UI";
+import { Point, PlayerName, ServerAction } from "./Interfaces";
+
 /*  Copyright 2012-2016 Sven "underscorediscovery" Bergström
     
     written by : http://underscorediscovery.ca
@@ -60,8 +65,6 @@ if ("undefined" != typeof global) frame_time = 45; //on server we run at 45ms, 2
 //for itself to play the game.
 /*
  * The game_core class */
-
-//import GameState from "./GameState";
 
 class Timer {
   public dt: number = new Date().getTime();

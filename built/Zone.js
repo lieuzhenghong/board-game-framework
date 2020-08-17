@@ -1,4 +1,4 @@
-class Zone {
+export class Zone {
     // TODO build a constructor
     constructor(playerList, name, image, pos, move_to_permissions, move_from_permissions, view_permissions, glance_permissions) {
         this.name = name;

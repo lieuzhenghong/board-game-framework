@@ -1,4 +1,4 @@
-class Entity {
+export class Entity {
     constructor(uid, type, stateList, stateMap, state, image, glance_image, zone, pos) {
         this.uid = uid;
         this.type = type;

@@ -1,3 +1,5 @@
+import { GameState } from "./GameState";
+import { UIState } from "./UI";
 /*  Copyright 2012-2016 Sven "underscorediscovery" Bergström
     
     written by : http://underscorediscovery.ca
@@ -50,7 +52,6 @@ if ("undefined" != typeof global)
 //for itself to play the game.
 /*
  * The game_core class */
-//import GameState from "./GameState";
 class Timer {
     constructor() {
         this.dt = new Date().getTime();
@@ -113,8 +114,6 @@ class GameCore {
     }
 }
 class ClientGameCore extends GameCore {
-    // TODO: ask Kaminsky for help with constructors
-    // Remember to call super() to execute the constructor of the base GameCore class
     constructor(session_description, initial_state, canvas, ctx) {
         super(session_description, initial_state, canvas, ctx);
         this._action_queue_ = [];

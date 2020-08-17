@@ -1,6 +1,20 @@
+import { Point } from "./Interfaces";
 import { ClientGameCore } from "./GameCore";
 
-class UIHandler {
+// actiontype as string,
+// Point (x,y) and
+// and whether it's left or rightclick (if actiontype == "mousedown")
+export type UIAction = [string, Point, number?];
+
+export enum UIState {
+  "Base" = "Base",
+  "Drag" = "Drag",
+  "Entity UI" = "Entity UI",
+  "Change Zone" = "Change Zone",
+  "Change Position" = "Change Position",
+}
+
+export class UIHandler {
   window: Window;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -48,5 +62,3 @@ class UIHandler {
     return tuple;
   }
 }
-
-export { UIHandler };

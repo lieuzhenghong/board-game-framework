@@ -1,11 +1,16 @@
+import { GameState } from "./GameState";
+import { Point } from "./Interfaces";
+
+export type EntUID = number;
+
 // An EntState is an array of strings
 // ["up", "D", "J"]
-type EntState = Array<string>;
+export type EntState = Array<string>;
 
 // An EntStateEnum is an object that maps a property name
 // to all possible properties
 // e.g. {"face": ["up", "down"]}
-interface EntStateEnum {
+export interface EntStateEnum {
   [Key: string]: Array<string>;
 }
 
@@ -16,15 +21,15 @@ statelist = [
   {"suit": ["R", "B", "G"]}
 ]
 */
-type EntStateList = Array<EntStateEnum>;
+export type EntStateList = Array<EntStateEnum>;
 
 // EntStateMap maps each possible entity state into a string which is a
 // png image filename
-type EntStateMap = {
+export type EntStateMap = {
   [Key: string]: string;
 };
 
-class Entity {
+export class Entity {
   uid: EntUID;
   type: string;
   stateList: EntStateList;

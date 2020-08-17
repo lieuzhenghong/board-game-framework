@@ -1,9 +1,13 @@
 "use strict";
 
+import { PlayerName, ImageMap, Point } from "./Interfaces";
+import { Zone } from "./Zone";
+import { Entity, EntState, EntUID } from "./Entity";
+
 // ImageMap is a dictionary that maps image names (something.png) to
 // an ImageBitmap file which can then be drawn on canvas
 
-class GameState {
+export class GameState {
   playerList: Array<PlayerName>; // not creating a Player class for now
   zones: Array<Zone>;
   imageMap: ImageMap;
