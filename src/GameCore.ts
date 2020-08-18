@@ -128,11 +128,11 @@ abstract class GameCore {
         ctx
       );
     }
-    this.local_timer = new Timer;
+    this.local_timer = new Timer();
     this.local_timer.current_time = 0.016;
-    this.frame_timer = new Timer;
+    this.frame_timer = new Timer();
     this.frame_timer.current_time = 0;
-    this.physics_timer = new Timer;
+    this.physics_timer = new Timer();
     this.server = session_description !== undefined;
 
     this.local_timer.initialize(4);
