@@ -1,4 +1,6 @@
-class Zone {
+import { PlayerName, Point } from "./Interfaces.js";
+
+export class Zone {
   name: string;
   image: string;
   move_to_permissions: Array<PlayerName>;

@@ -1,42 +1,24 @@
 {
   "data_type": "image_map",
   "image_mapping": {
-    "play_p1": {
-      "image": "red_rect.png"
-    },
-    "play_p2": {
-      "image": "blue_rect.png"
-    },
-    "board_sq1": {
-      "image": "white_square.png"
-    },
-    "board_sq2": {
-      "image": "white_square.png"
-    },
-    "board_sq3": {
-      "image": "white_square.png"
-    },
-    "board_sq4": {
-      "image": "white_square.png"
-    },
-    "board_sq5": {
-      "image": "white_square.png"
-    },
-    "board_sq6": {
-      "image": "white_square.png"
-    },
-    "board_sq7": {
-      "image": "white_square.png"
-    },
-    "board_sq8": {
-      "image": "white_square.png"
-    },
-    "board_sq9": {
-      "image": "white_square.png"
-    },
-    "piece": [
-      { "state": { "shape": "nought" }, "image": "nought.png" },
-      { "state": { "shape": "cross" }, "image": "cross.png" }
-    ]
+    "play_p1": "red_rect.png",
+    "play_p2": "blue_rect.png",
+    "board_sq1": "white_square.png",
+    "board_sq2": "white_square.png",
+    "board_sq3": "white_square.png",
+    "board_sq4": "white_square.png",
+    "board_sq5": "white_square.png",
+    "board_sq6": "white_square.png",
+    "board_sq7": "white_square.png",
+    "board_sq8": "white_square.png",
+    "board_sq9": "white_square.png",
+    "piece": {
+      "state_list": [{ "shape": ["nought", "cross"] }],
+      "glance": "nought.png",
+      "states": {
+        "['nought']": "nought.png",
+        "['cross']": "cross.png"
+      }
+    }
   }
 }
