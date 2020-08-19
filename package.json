@@ -1,6 +1,7 @@
 {
+  "type": "module",
   "name": "boardgame-engine",
-  "author": "Lieuzhen Zhong",
+  "author": "Lieu Zheng Hong",
   "description": "A framework for multiplayer 2d boardgame playing",
   "license": "MIT",
   "version": "1.0.0",
@@ -10,6 +11,6 @@
     "socket.io": "^0.9.19"
   },
   "engine": {
-    "node": "0.10.x"
+    "node": "0.14.x"
   }
 }

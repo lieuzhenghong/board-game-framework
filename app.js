@@ -8,6 +8,9 @@
     Usage : node app.js
 */
 
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
 var
     gameport = process.env.PORT || 4004,
 
@@ -72,6 +75,7 @@ sio.set('authorization', function (handshakeData, callback) {
 //Enter the game server code. The game server handles
 //client connections looking for a game, creating games,
 //leaving games, joining games and ending games when they leave.
+
 game_server = require('./built/game.server.js');
 
 //Socket.io will call this function when a client connects,
