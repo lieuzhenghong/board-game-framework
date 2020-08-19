@@ -452,6 +452,7 @@ class ClientGameCore extends GameCore {
   // Update the game state according to actions received by the server
   role_specific_update(): void {
     // First, sort by timestamp
+    this.process_actions_from_server();
     this._actions_received_.sort((a, b) => a.time - b.time);
     this._actions_received_.forEach((action) => {
       switch (action.action_type) {
@@ -474,6 +475,13 @@ class ClientGameCore extends GameCore {
           );
       }
     });
+  }
+
+  process_actions_from_server(): void {
+    this._action_queue_.forEach((action) => {
+      this._actions_received_.push(action)
+    })
+    this._action_queue_ = [] // Clear those actions from the to be processed queue.
   }
 }
 

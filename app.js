@@ -36,7 +36,7 @@ console.log('\t :: Express :: Listening on port ' + gameport);
 //By default, we forward the / path to index.html automatically.
 app.get('/', function (req, res) {
     console.log('trying to load %s', __dirname + '/index.html');
-    res.sendfile('/src/index.html', { root: __dirname });
+    res.sendfile('/index.html', { root: __dirname });
 });
 
 
@@ -72,7 +72,7 @@ sio.set('authorization', function (handshakeData, callback) {
 //Enter the game server code. The game server handles
 //client connections looking for a game, creating games,
 //leaving games, joining games and ending games when they leave.
-game_server = require('./src/game.server.js');
+game_server = require('./built/game.server.js');
 
 //Socket.io will call this function when a client connects,
 //So we can send that client looking for a game to play,
