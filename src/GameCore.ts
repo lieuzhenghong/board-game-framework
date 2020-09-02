@@ -3,14 +3,6 @@ import { Entity, EntUID, EntStateEnum } from "./Entity.js";
 import { UIState, UIAction } from "./UI.js";
 import { Point, PlayerName, ServerAction } from "./Interfaces.js";
 
-/*  Copyright 2012-2016 Sven "underscorediscovery" Bergström
-    
-    written by : http://underscorediscovery.ca
-    written for : http://buildnewgames.com/real-time-multiplayer/
-    
-    MIT Licensed.
-*/
-
 //The main update loop runs on requestAnimationFrame,
 //Which falls back to a setTimeout loop on the server
 //Code below is from Three.js, and sourced from links below
@@ -104,7 +96,6 @@ abstract class GameCore {
   private update_id;
   private viewport;
 
-  t;
   // GameCore methods
   public constructor(
     session_description: JSON,
@@ -128,6 +119,7 @@ abstract class GameCore {
         ctx
       );
     }
+    // Why do we need so many timers??
     this.local_timer = new Timer();
     this.local_timer.current_time = 0.016;
     this.frame_timer = new Timer();
@@ -141,6 +133,7 @@ abstract class GameCore {
 
   abstract role_specific_update(): void;
 
+  // What does this do? I feel like this frame timer thing should not be here
   public update(t: any): void {
     //Work out the delta time
     this.local_timer.increment(t);
@@ -172,6 +165,17 @@ abstract class GameCore {
     }.bind(this),
     1000
   );
+}
+
+class ServerGameCore extends GameCore {
+  // TODO
+  // The ServerGameCore is an object on a Node.js server.
+  // It should receive a list of actions from all clients.
+  // Its job is to take all of these actions and return
+  // the authoritative state of
+  role_specific_update(): void {
+    // pass
+  }
 }
 
 class ClientGameCore extends GameCore {
@@ -479,9 +483,9 @@ class ClientGameCore extends GameCore {
 
   process_actions_from_server(): void {
     this._action_queue_.forEach((action) => {
-      this._actions_received_.push(action)
-    })
-    this._action_queue_ = [] // Clear those actions from the to be processed queue.
+      this._actions_received_.push(action);
+    });
+    this._action_queue_ = []; // Clear those actions from the to be processed queue.
   }
 }
 
