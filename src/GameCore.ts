@@ -95,6 +95,7 @@ abstract class GameCore {
   private server: boolean;
   private update_id;
   private viewport;
+  private socket;
 
   // GameCore methods
   public constructor(
@@ -158,13 +159,19 @@ abstract class GameCore {
     window.cancelAnimationFrame(this.update_id);
   }
 
+  /*
+  // TODO implement this
+  // Not needed for MVP
   public create_ping_timer = setInterval(
     function () {
+      console.log(this);
+
       this.last_ping_time = new Date().getTime() - this.fake_lag;
       this.socket.send("p." + this.last_ping_time);
     }.bind(this),
     1000
   );
+  */
 }
 
 class ServerGameCore extends GameCore {
