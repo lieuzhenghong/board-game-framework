@@ -33,8 +33,8 @@ export class UIHandler {
     this.ctx = ctx;
     this.virtualCanvasSize = virtualCanvasSize;
     this.clientCore = clientCore;
-    window.addEventListener("click", this._handle_mouse_event);
-    window.addEventListener("mousemove", this._handle_mouse_event);
+    window.addEventListener("click", this._handle_mouse_event.bind(this));
+    //window.addEventListener("mousemove", this._handle_mouse_event.bind(this));
   }
 
   _handle_mouse_event(e: MouseEvent): UIAction {

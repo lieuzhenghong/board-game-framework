@@ -86,7 +86,7 @@ class Timer {
 // I'm intending this to eventually be extended by GameClientCore and GameServerCore.
 abstract class GameCore {
   // GameCore members
-  protected game_state: GameState;
+  public game_state: GameState;
   private session_description: JSON;
   protected local_timer: Timer;
   private physics_timer: Timer;
@@ -267,6 +267,7 @@ class ClientGameCore extends GameCore {
   ) {
     super(session_description, initial_state, canvas, ctx);
     this._action_queue_ = [];
+    this._actions_received_ = [];
   }
 
   _add_action_to_server_core_queue(action: ServerAction): void {
@@ -292,9 +293,10 @@ class ClientGameCore extends GameCore {
   // Look through all entities and find all entities that were
   // under the cursor and are visible to the player
   _entity_clicked(pt: Point): Entity[] {
-    return super.game_state.entities.filter((ent) => {
+    console.log(this);
+    return this.game_state.entities.filter((ent) => {
       this._click_on_entity(pt, ent) &&
-        super.game_state
+        this.game_state
           .zone_an_entity_belongs_to(ent.zone)
           .glance_permissions.includes(this.player);
     });
@@ -372,11 +374,15 @@ class ClientGameCore extends GameCore {
     // but do not update the GameState here.
     // So let's see how to see what action you get given a UI action
     //
+    console.log("Called!");
     const action_type: String = ui_action[0];
     const mouse_point: Point = ui_action[1];
     const click_type: number = ui_action[2]; // = -1 if not click
+    console.log("Everything OK so far");
 
     const ents_clicked: Entity[] = this._entity_clicked(mouse_point);
+
+    console.log("Everything OK so far");
 
     // How do we handle multiple entities being in the same click field?
     // How do we know which entity is "on top"?

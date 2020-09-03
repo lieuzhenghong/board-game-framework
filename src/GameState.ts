@@ -34,11 +34,13 @@ export class GameState {
     // Take note: this.loadState depends on this.rootURL and this.gameUID
     // so it must be called after assignment of this.rootURL and this.gameUID
     this.loadState(gameStateJSON, imageMapJSON);
+    console.log("GameState object initialised");
   }
 
   async loadState(j: JSON, im: JSON) {
     // load state into this object
     // First load the players
+    console.log(this);
     let imageMapPromise: Promise<ImageMap> = this.loadImages(
       im,
       this.rootURL,
@@ -115,6 +117,7 @@ export class GameState {
     });
 
     image_urls = [...new Set(image_urls)];
+    console.log(image_urls);
 
     // And finally modify the relative filepaths to become absolute paths
     const img_url_dir = rootURL + gameUID + "/img/";
