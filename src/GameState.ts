@@ -37,7 +37,7 @@ export class GameState {
     console.log("GameState object initialised");
   }
 
-  async loadState(j: JSON, im: JSON) {
+  loadState(j: JSON, im: JSON) {
     // load state into this object
     // First load the players
     console.log("Loading state...");
@@ -63,9 +63,13 @@ export class GameState {
         z["glance_permissions"]
       );
     });
+    console.log("Initialised zones...");
+
     // Load all images and bitmap them
-    this.imageMap = await imageMapPromise;
-    // Now initialise all entities
+    imageMapPromise.then((e) => {
+      console.log("This is inside imageMapPromise");
+      this.imageMap = e;
+    });
 
     // Before initialising all entities, we have to compute the
     // entity state map and entity state list for each type of entity
