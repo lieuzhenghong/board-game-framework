@@ -110,6 +110,7 @@ abstract class GameCore {
       this.game_state = initial_state;
     }
     if (typeof initial_state === "string") {
+      console.log(`Initial state: ${initial_state}`);
       initial_state = JSON.parse(initial_state);
       this.game_state = new GameState(
         initial_state["gameStateJSON"],
@@ -276,7 +277,7 @@ class ClientGameCore extends GameCore {
 
   _click_on_entity(pt: Point, et: Entity): Boolean {
     // check if the point is inside the entity
-    const ib: ImageBitmap = super.game_state.imageMap[et.image];
+    const ib: ImageBitmap = this.game_state.imageMap[et.image];
 
     if (
       pt.x >= et.pos.x &&
@@ -379,6 +380,7 @@ class ClientGameCore extends GameCore {
     const mouse_point: Point = ui_action[1];
     const click_type: number = ui_action[2]; // = -1 if not click
     console.log("Everything OK so far");
+    console.log(this);
 
     const ents_clicked: Entity[] = this._entity_clicked(mouse_point);
 

@@ -66,11 +66,15 @@ export class GameState {
     console.log("Initialised zones...");
 
     // Load all images and bitmap them
+    // TODO
+    // Fix bad code here
     imageMapPromise.then((e) => {
       console.log("This is inside imageMapPromise");
       this.imageMap = e;
+      console.log(this.imageMap);
     });
 
+    console.log(this.imageMap);
     // Before initialising all entities, we have to compute the
     // entity state map and entity state list for each type of entity
 
@@ -78,32 +82,43 @@ export class GameState {
       return d[s];
     }
 
-    this.entities = j["game_state"]["entities"].forEach(
-      (e: object, i: number) => {
+    console.log("Hello!");
+    console.log(j);
+    // FIXME: think about refactoring with JSON Schema
+    // And also handle objects that have only one state
+    let entities = [];
+
+    j["game_state"]["entities"].forEach((e: object, i: number) => {
+      console.log(im["image_mapping"]);
+      console.log(e["type"]);
+      console.log(im["image_mapping"][e["type"]]);
+      const image_map_entity = im["image_mapping"][e["type"]]; // "piece" : {...}
+      console.log(e["state"], image_map_entity["states"]);
+      entities.push(
         new Entity(
-          i,
-          e["type"],
-          im[e["type"]]["state_list"],
-          im[e["type"]]["states"],
-          e["state"],
-          lookUpImage(e["state"], im[e["type"]]["states"]),
-          im[e["type"]]["glance"],
+          i, // 0
+          e["type"], // "piece"
+          image_map_entity["state_list"], // [{'shape': ["nought", "cross"]}]
+          image_map_entity["states"], // {"['nought']" : "nought.png", "['cross']: "cross.png"}
+          e["state"], // ['nought'] Should be an array of Strings, also called EntState
+          image_map_entity["states"][e["state"]],
+          image_map_entity["glance"],
           e["zone"],
           e["pos"]
-        );
-      }
-    );
+        )
+      );
+    });
+
+    this.entities = entities;
 
     console.log("Should have finished initialising entities:");
     console.log(this);
     console.log(this.entities);
   }
 
-  generateImageURLs(
-    image_map_json: JSON,
-    rootURL: string,
-    gameUID: string
-  ): Array<string> {
+  // Extract Unique images from the image_map_json
+  generateImageNames(image_map_json: JSON): Array<string> {
+    // TODO : replace references to urls with something more sensible
     let image_urls: Array<string> = [];
     const image_mapping = image_map_json["image_mapping"];
 
@@ -126,13 +141,34 @@ export class GameState {
       }
     });
 
-    image_urls = [...new Set(image_urls)];
+    return [...new Set(image_urls)];
+  }
 
+  generateImageURLs(
+    image_map_json: JSON,
+    rootURL: string,
+    gameUID: string
+  ): Array<string> {
+    // Generate Image URLS
+    // TODO write docstring
+
+    const image_names = this.generateImageNames(image_map_json);
     // And finally modify the relative filepaths to become absolute paths
-    const img_url_dir = rootURL + gameUID + "/img/";
-    const abs_image_urls = image_urls.map((url) => img_url_dir + url);
+    const abs_image_urls = image_names.map((name) =>
+      this.generateImageURLFromImageName(name, rootURL, gameUID)
+    );
 
     return abs_image_urls;
+  }
+
+  generateImageURLFromImageName(
+    image_name: string,
+    rootURL: string,
+    gameUID: string
+  ): string {
+    const img_url_dir = rootURL + gameUID + "/img/";
+    const abs_image_url = img_url_dir + image_name;
+    return abs_image_url;
   }
 
   async loadImages(
@@ -142,18 +178,26 @@ export class GameState {
   ): Promise<ImageMap> {
     console.log("Loading Images...");
 
-    const image_urls = this.generateImageURLs(image_map_json, rootURL, gameUID);
+    const image_names = this.generateImageNames(image_map_json);
 
-    async function fillImageMap(url: string): Promise<[string, ImageBitmap]> {
-      const response = await fetch(url);
+    async function fillImageMap(
+      name: string,
+      rootURL: string,
+      gameUID: string
+    ): Promise<[string, ImageBitmap]> {
+      const response = await fetch(
+        this.generateImageURLFromImageName(name, rootURL, gameUID)
+      );
       const blob: Blob = await response.blob();
       const imgbitmap: ImageBitmap = await createImageBitmap(blob);
-      return [url, imgbitmap];
+      return [name, imgbitmap];
     }
 
     const imageMapPromises: Array<Promise<
       [string, ImageBitmap]
-    >> = image_urls.map(async (u: string) => fillImageMap(u));
+    >> = image_names.map(async (u: string) =>
+      fillImageMap.bind(this)(u, rootURL, gameUID)
+    );
 
     const imageMapTuples = await Promise.all(imageMapPromises);
 

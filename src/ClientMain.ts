@@ -31,7 +31,15 @@ async function init() {
     gameUID: gameUID,
   });
 
-  const clientGameCore = new ClientGameCore(null, initialState, canvas, ctx);
+  console.log("Pre construction");
+  const clientGameCore = await new ClientGameCore(
+    null,
+    initialState,
+    canvas,
+    ctx
+  );
+  console.log("Post Construction");
+  console.log(clientGameCore.game_state);
 
   // Initialise UI Handler for the ClientGameCore
   // The UI Handler handles mouse clicks and passes these UI events to ClientGameCore
