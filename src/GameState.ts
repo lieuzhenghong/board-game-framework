@@ -40,12 +40,14 @@ export class GameState {
   async loadState(j: JSON, im: JSON) {
     // load state into this object
     // First load the players
+    console.log("Loading state...");
     console.log(this);
     let imageMapPromise: Promise<ImageMap> = this.loadImages(
       im,
       this.rootURL,
       this.gameUID
     );
+    console.log(j);
     this.playerList = j["game_state"]["players"];
     this.zones = j["game_state"]["zones"].map((z: object) => {
       new Zone(
@@ -87,6 +89,10 @@ export class GameState {
         );
       }
     );
+
+    console.log("Should have finished initialising entities:");
+    console.log(this);
+    console.log(this.entities);
   }
 
   generateImageURLs(
@@ -102,10 +108,10 @@ export class GameState {
       // index: the ordinal position of the key within the object
 
       // here we're dealing with an entity
-      image_urls.push(image_mapping[key]["glance"]); // Load the glance image
 
       if (image_mapping[key] instanceof Object) {
         // Look for the states object
+        image_urls.push(image_mapping[key]["glance"]); // Load the glance image
         Object.keys(image_mapping[key]["states"]).forEach(
           (stateString: string) => {
             image_urls.push(image_mapping[key]["states"][stateString]);
@@ -117,7 +123,6 @@ export class GameState {
     });
 
     image_urls = [...new Set(image_urls)];
-    console.log(image_urls);
 
     // And finally modify the relative filepaths to become absolute paths
     const img_url_dir = rootURL + gameUID + "/img/";
