@@ -11,6 +11,7 @@ export class GameState {
   playerList: Array<PlayerName>; // not creating a Player class for now
   zones: Array<Zone>;
   imageMap: ImageMap;
+  // imageMap: Promise<ImageMap>;
   entities: Array<Entity>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -33,15 +34,24 @@ export class GameState {
     this.gameUID = gameUID;
     // Take note: this.loadState depends on this.rootURL and this.gameUID
     // so it must be called after assignment of this.rootURL and this.gameUID
-    this.loadState(gameStateJSON, imageMapJSON);
+    //this.loadState(gameStateJSON, imageMapJSON);
+    // this.imageMap = this.blabla(); // I think this would block
     console.log("GameState object initialised");
   }
 
-  loadState(j: JSON, im: JSON) {
+  /*
+  async blabla() {
+    const result = await getImageMap();
+    return result;
+  }
+  */
+
+  async loadState(j: JSON, im: JSON) {
     // load state into this object
     // First load the players
     console.log("Loading state...");
     console.log(this);
+    // this.imageMap = this.loadimages(im,this.rootURL,this.gameUID);
     let imageMapPromise: Promise<ImageMap> = this.loadImages(
       im,
       this.rootURL,
@@ -49,32 +59,38 @@ export class GameState {
     );
     console.log(j);
     this.playerList = j["game_state"]["players"];
-    this.zones = j["game_state"]["zones"].map((z: object) => {
-      new Zone(
-        this.playerList,
-        z["name"],
-        z["image"],
-        z["pos"],
-        // the following permissions might be undefined
-        // which will default to all permissions
-        z["move_to_permissions"],
-        z["move_from_permissions"],
-        z["view_permissions"],
-        z["glance_permissions"]
+    let zones = [];
+    j["game_state"]["zones"].forEach((z: object) => {
+      zones.push(
+        new Zone(
+          this.playerList,
+          z["name"],
+          z["image"],
+          z["pos"],
+          // the following permissions might be undefined
+          // which will default to all permissions
+          z["move_to_permissions"],
+          z["move_from_permissions"],
+          z["view_permissions"],
+          z["glance_permissions"]
+        )
       );
     });
+
+    this.zones = zones;
     console.log("Initialised zones...");
+    console.log(this.zones);
 
     // Load all images and bitmap them
     // TODO
     // Fix bad code here
-    imageMapPromise.then((e) => {
+    const secondPromise = imageMapPromise.then((e) => {
       console.log("This is inside imageMapPromise");
       this.imageMap = e;
       console.log(this.imageMap);
     });
 
-    console.log(this.imageMap);
+    console.log(this.imageMap); // undefined
     // Before initialising all entities, we have to compute the
     // entity state map and entity state list for each type of entity
 
@@ -111,6 +127,11 @@ export class GameState {
     console.log("Should have finished initialising entities:");
     console.log(this);
     console.log(this.entities);
+
+    const tmp = await secondPromise;
+    console.log("Second promise done!");
+    console.log(this.imageMap);
+    return tmp;
   }
 
   // Extract Unique images from the image_map_json
@@ -319,17 +340,25 @@ export class GameState {
     // TODO think about how to render the special UI (e.g. glowing entities,
     // glowing zones
     // Need to pass it a UI state?
+    console.log("Render function called!");
     const zones = this.zones;
     const entities = this.entities;
 
     // First draw all the zones
     zones.forEach((zone, i) => {
+      console.log("This inside zones.forEach function:");
+      console.log(this);
+      console.log(this.imageMap);
       const image_bitmap = this.imageMap[zone["image"]];
       this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
     });
 
+    console.log("Zones should be drawn");
+
     // Now draw all entities
     entities.forEach((entity: Entity) => {
+      // Show the entity if and only if the entity is in a
+      // zone that the player has permission to glance or view
       const ent_zone = this.zone_an_entity_belongs_to(entity.zone);
       if (
         ent_zone.view_permissions.includes(player_name) &&
@@ -344,5 +373,7 @@ export class GameState {
         // do nothing
       }
     });
+
+    console.log("Entities should be drawn");
   }
 }

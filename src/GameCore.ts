@@ -471,6 +471,7 @@ class ClientGameCore extends GameCore {
   // Update the game state according to actions received by the server
   role_specific_update(): void {
     // First, sort by timestamp
+    console.log("Role specific update called!");
     this.process_actions_from_server();
     this._actions_received_.sort((a, b) => a.time - b.time);
     this._actions_received_.forEach((action) => {
@@ -494,6 +495,8 @@ class ClientGameCore extends GameCore {
           );
       }
     });
+    console.log("Stuff updated, now rendering..");
+    this.game_state.render(this.player);
   }
 
   process_actions_from_server(): void {
