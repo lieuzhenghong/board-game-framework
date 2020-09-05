@@ -30,18 +30,26 @@ export class GameState {
   ) {
     // loadState loads players, zones, imageMaps, entities
     this.canvas = canvas;
+    this.initialiseCanvas();
     this.ctx = ctx;
     this.rootURL = rootURL;
     this.gameUID = gameUID;
     this.imageMap = imageMap;
     this.zones = this.initialiseZones(gameStateJSON, imageMapJSON);
     this.entities = this.initialiseEntities(gameStateJSON, imageMapJSON);
+
     /*
     this.loadImages(imageMapJSON, rootURL, gameUID).then((value) => {
       this.imageMap = value;
       console.log("GameState object initialised");
     });
     */
+  }
+
+  initialiseCanvas() {
+    // Do nothing for now
+    if (this.canvas !== null) {
+    }
   }
 
   initialiseEntities(gameStateJSON: JSON, imageMapJSON: JSON): Array<Entity> {
@@ -61,7 +69,7 @@ export class GameState {
           image_map_entity["states"][e["state"].toString()], // "nought.png", a String
           image_map_entity["glance"],
           e["zone"],
-          e["pos"]
+          { x: e["pos"][0], y: e["pos"][1] }
         )
       );
     });
@@ -75,12 +83,15 @@ export class GameState {
     this.playerList = j["game_state"]["players"];
     let zones: Array<Zone> = [];
     j["game_state"]["zones"].forEach((z: object) => {
+      const pos: Point = z["pos"];
       zones.push(
         new Zone(
           this.playerList,
           z["name"],
           im["image_mapping"][z["name"]], // get the image associated with the name
-          z["pos"],
+          { x: pos[0], y: pos[1] },
+          //new Point(z["pos"][0], z["pos"][1]),
+          // z["pos"],
           // the following permissions might be undefined
           // which will default to all permissions
           z["move_to_permissions"],
@@ -205,10 +216,12 @@ export class GameState {
     // Need to pass it a UI state?
 
     console.log("Render function called!");
+    /*
     console.log(this.canvas.clientWidth);
     console.log(this.canvas.clientHeight);
     console.log(this.canvas.width);
     console.log(this.canvas.height);
+    */
 
     //this.canvas.width = this.canvas.clientWidth;
     // this.canvas.height = this.canvas.clientHeight;
@@ -222,11 +235,7 @@ export class GameState {
     // First draw all the zones
     zones.forEach((zone, i) => {
       const image_bitmap = this.imageMap[zone["image"]];
-      // TODO FIXME why doesn't this work?
-      // zone.pos.x is undefined
-      // this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
-      this.ctx.drawImage(image_bitmap, zone.pos[0], zone.pos[1]);
-      console.log(`Drawing ${zone.image} at ${zone.pos[0]} and ${zone.pos[1]}`);
+      this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
     });
 
     console.log("Zones should be drawn");
@@ -241,17 +250,10 @@ export class GameState {
         ent_zone.glance_permissions.includes(player_name)
       ) {
         const entityImage: ImageBitmap = this.imageMap[entity.image];
-        // this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
-        this.ctx.drawImage(entityImage, entity.pos[0], entity.pos[1]);
-        console.log(
-          `Drawing ${entity.image} at ${entity.pos[0]} and ${entity.pos[1]}`
-        );
+        this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
       } else if (ent_zone.glance_permissions.includes(player_name)) {
         const entityImage: ImageBitmap = this.imageMap[entity.glance_image];
-        this.ctx.drawImage(entityImage, entity.pos[0], entity.pos[1]);
-        console.log(
-          `Drawing ${entity.image} at ${entity.pos[0]} and ${entity.pos[1]}`
-        );
+        this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
       } else {
       }
     });
