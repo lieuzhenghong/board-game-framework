@@ -33,11 +33,13 @@ export class UIHandler {
     this.ctx = ctx;
     this.virtualCanvasSize = virtualCanvasSize;
     this.clientCore = clientCore;
-    window.addEventListener("click", this._handle_mouse_event.bind(this));
+    window.addEventListener("contextmenu", (e) => e.preventDefault());
+    // window.addEventListener("click", this._handle_mouse_event_.bind(this));
+    window.addEventListener("mousedown", this._handle_mouse_event_.bind(this));
     //window.addEventListener("mousemove", this._handle_mouse_event.bind(this));
   }
 
-  _handle_mouse_event(e: MouseEvent): UIAction {
+  _handle_mouse_event_(e: MouseEvent): UIAction {
     // send a UIAction to the ClientCore object
     // a UIAction is the [event type : String, Point, button_clicked]
 
@@ -52,7 +54,10 @@ export class UIHandler {
       y: (translated.x * this.virtualCanvasSize) / this.canvas.height,
     };
 
-    if (e.type === "click") {
+    console.log(e.type);
+
+    //if (e.type === "click") {
+    if (e.type === "mousedown") {
       tuple = [e.type, mouse, e.button];
     } else {
       tuple = [e.type, mouse, -1];
