@@ -89,19 +89,16 @@ export class GameState {
     let entities = [];
 
     j["game_state"]["entities"].forEach((e: object, i: number) => {
-      console.log(im["image_mapping"]);
-      console.log(e["type"]);
-      console.log(im["image_mapping"][e["type"]]);
       const image_map_entity = im["image_mapping"][e["type"]]; // "piece" : {...}
-      console.log(e["state"], image_map_entity["states"]);
+      // This is the important console.log
       entities.push(
         new Entity(
           i, // 0
           e["type"], // "piece"
           image_map_entity["state_list"], // [{'shape': ["nought", "cross"]}]
           image_map_entity["states"], // {"['nought']" : "nought.png", "['cross']: "cross.png"}
-          e["state"], // ['nought'] Should be an array of Strings, also called EntState
-          image_map_entity["states"][e["state"]],
+          e["state"], // ["nought"] Should be an array of Strings, also called EntState
+          image_map_entity["states"][e["state"].toString()], // "nought.png", a String
           image_map_entity["glance"],
           e["zone"],
           e["pos"]
