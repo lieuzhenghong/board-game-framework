@@ -202,6 +202,7 @@ class ClientGameCore extends GameCore {
     this.player = player;
     this._action_queue_ = [];
     this._actions_received_ = [];
+    this._ui_state_ = UIState.Base;
   }
 
   _add_action_to_server_core_queue(action: ServerAction): void {
@@ -308,22 +309,20 @@ class ClientGameCore extends GameCore {
     // but do not update the GameState here.
     // So let's see how to see what action you get given a UI action
     //
-    console.log("Called!");
+    console.log("Receiving UI event");
     const action_type: String = ui_action[0];
     const mouse_point: Point = ui_action[1];
     const click_type: number = ui_action[2]; // = -1 if not click
-    console.log("Everything OK so far");
-    console.log(this);
-
+    console.log(click_type);
     const ents_clicked: Entity[] = this._entity_clicked(mouse_point);
-
-    console.log("Everything OK so far");
+    console.log("Entity clicked: ", ents_clicked);
 
     // How do we handle multiple entities being in the same click field?
     // How do we know which entity is "on top"?
     // Entities are rendered bottom-to-top first
     const [active_entity] = ents_clicked.slice(-1);
 
+    // TODO we need to debounce!
     switch (this._ui_state_) {
       case "Base":
         console.log("We are in the base mode");
@@ -340,6 +339,7 @@ class ClientGameCore extends GameCore {
         } else {
           // pass
         }
+        break;
       case "Drag":
         console.log("We are in the drag mode");
         if (click_type === -1) {
@@ -355,6 +355,7 @@ class ClientGameCore extends GameCore {
           // we cancel the drag mode.
           this._ui_state_ = UIState["Base"];
         }
+        break;
       // TODO think about this
       case "Entity UI":
         console.log("We are in the Entity UI mode");
@@ -364,7 +365,7 @@ class ClientGameCore extends GameCore {
       case "Change Zone":
         console.log("We are in the change zone mode");
         // look at what zone the cursor is in
-        const clicked_zones = super.game_state.zone_a_point_belongs_to(
+        const clicked_zones = this.game_state.zone_a_point_belongs_to(
           mouse_point
         );
         if (
@@ -385,6 +386,7 @@ class ClientGameCore extends GameCore {
         } else {
           this._ui_state_ = UIState["Base"];
         }
+        break;
       case "Change Position":
         console.log("We are in the change position mode");
         if (click_type === 0) {
@@ -398,6 +400,7 @@ class ClientGameCore extends GameCore {
           });
         }
         this._ui_state_ = UIState["Base"];
+        break;
     }
   }
 
@@ -410,19 +413,19 @@ class ClientGameCore extends GameCore {
     this._actions_received_.forEach((action) => {
       switch (action.action_type) {
         case "change_zone":
-          super.game_state.changeEntityZone(
+          this.game_state.changeEntityZone(
             action.entity_uid,
             this.player,
             action.payload["zone"]
           );
         case "change_pos":
-          super.game_state.changeEntityPos(
+          this.game_state.changeEntityPos(
             action.entity_uid,
             this.player,
             action.payload["pos"]
           );
         case "change_state":
-          super.game_state.changeEntityStatePartial(
+          this.game_state.changeEntityStatePartial(
             action.entity_uid,
             action.payload
           );
