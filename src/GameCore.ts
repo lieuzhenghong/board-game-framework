@@ -1,7 +1,7 @@
 import { GameState } from "./GameState.js";
 import { Entity, EntUID, EntStateEnum } from "./Entity.js";
 import { UIState, UIAction } from "./UI.js";
-import { Point, PlayerName, ServerAction } from "./Interfaces.js";
+import { ImageMap, Point, PlayerName, ServerAction } from "./Interfaces.js";
 
 //The main update loop runs on requestAnimationFrame,
 //Which falls back to a setTimeout loop on the server
@@ -101,6 +101,7 @@ abstract class GameCore {
   public constructor(
     session_description: JSON,
     initial_state: string | GameState,
+    imageMap: ImageMap | null,
     canvas: HTMLCanvasElement | null,
     ctx: CanvasRenderingContext2D | null
   ) {
@@ -115,6 +116,7 @@ abstract class GameCore {
       this.game_state = new GameState(
         initial_state["gameStateJSON"],
         initial_state["imageMapJSON"],
+        imageMap,
         initial_state["rootURL"],
         initial_state["gameUID"],
         canvas,
@@ -144,16 +146,8 @@ abstract class GameCore {
 
     //schedule the next update
     this.frame_timer.increment(t);
-    this.update_id = window.requestAnimationFrame(this.update.bind(this));
+    // this.update_id = window.requestAnimationFrame(this.update.bind(this));
   } // update
-
-  /*
-  process_json_actions(actions: JSON): void {
-    for (const action of actions) {
-      this.game_state.applyAction(action);
-    }
-  } // process_json_actions
-  */
 
   // what does this do?
   public stop_update(): void {
@@ -263,10 +257,11 @@ class ClientGameCore extends GameCore {
   constructor(
     session_description: JSON,
     initial_state: GameState | string,
+    imageMap: ImageMap,
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D
   ) {
-    super(session_description, initial_state, canvas, ctx);
+    super(session_description, initial_state, imageMap, canvas, ctx);
     this._action_queue_ = [];
     this._actions_received_ = [];
   }

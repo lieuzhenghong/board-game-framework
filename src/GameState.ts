@@ -22,6 +22,7 @@ export class GameState {
   constructor(
     gameStateJSON: JSON,
     imageMapJSON: JSON,
+    imageMap: ImageMap,
     rootURL: string,
     gameUID: string,
     canvas: HTMLCanvasElement,
@@ -32,16 +33,15 @@ export class GameState {
     this.ctx = ctx;
     this.rootURL = rootURL;
     this.gameUID = gameUID;
-    // Take note: this.loadState depends on this.rootURL and this.gameUID
-    // so it must be called after assignment of this.rootURL and this.gameUID
-    //this.loadState(gameStateJSON, imageMapJSON);
-    // this.imageMap = this.blabla(); // I think this would block
+    this.imageMap = imageMap;
     this.zones = this.initialiseZones(gameStateJSON, imageMapJSON);
     this.entities = this.initialiseEntities(gameStateJSON, imageMapJSON);
+    /*
     this.loadImages(imageMapJSON, rootURL, gameUID).then((value) => {
       this.imageMap = value;
       console.log("GameState object initialised");
     });
+    */
   }
 
   initialiseEntities(gameStateJSON: JSON, imageMapJSON: JSON): Array<Entity> {
@@ -91,102 +91,6 @@ export class GameState {
       );
     });
     return zones;
-  }
-
-  // Extract Unique images from the image_map_json
-  generateImageNames(image_map_json: JSON): Array<string> {
-    // TODO : replace references to urls with something more sensible
-    let image_urls: Array<string> = [];
-    const image_mapping = image_map_json["image_mapping"];
-
-    Object.keys(image_mapping).forEach((key, index) => {
-      // key: the name of the object key
-      // index: the ordinal position of the key within the object
-
-      // here we're dealing with an entity
-
-      if (image_mapping[key] instanceof Object) {
-        // Look for the states object
-        image_urls.push(image_mapping[key]["glance"]); // Load the glance image
-        Object.keys(image_mapping[key]["states"]).forEach(
-          (stateString: string) => {
-            image_urls.push(image_mapping[key]["states"][stateString]);
-          }
-        );
-      } else {
-        image_urls.push(image_mapping[key]);
-      }
-    });
-
-    return [...new Set(image_urls)];
-  }
-
-  generateImageURLs(
-    image_map_json: JSON,
-    rootURL: string,
-    gameUID: string
-  ): Array<string> {
-    // Generate Image URLS
-    // TODO write docstring
-
-    const image_names = this.generateImageNames(image_map_json);
-    // And finally modify the relative filepaths to become absolute paths
-    const abs_image_urls = image_names.map((name) =>
-      this.generateImageURLFromImageName(name, rootURL, gameUID)
-    );
-
-    return abs_image_urls;
-  }
-
-  generateImageURLFromImageName(
-    image_name: string,
-    rootURL: string,
-    gameUID: string
-  ): string {
-    const img_url_dir = rootURL + gameUID + "/img/";
-    const abs_image_url = img_url_dir + image_name;
-    return abs_image_url;
-  }
-
-  async loadImages(
-    image_map_json: JSON,
-    rootURL: string,
-    gameUID: string
-  ): Promise<ImageMap> {
-    console.log("Loading Images...");
-
-    const image_names = this.generateImageNames(image_map_json);
-
-    async function fillImageMap(
-      name: string,
-      rootURL: string,
-      gameUID: string
-    ): Promise<[string, ImageBitmap]> {
-      const response = await fetch(
-        this.generateImageURLFromImageName(name, rootURL, gameUID)
-      );
-      const blob: Blob = await response.blob();
-      const imgbitmap: ImageBitmap = await createImageBitmap(blob);
-      return [name, imgbitmap];
-    }
-
-    const imageMapPromises: Array<Promise<
-      [string, ImageBitmap]
-    >> = image_names.map(async (u: string) =>
-      fillImageMap.bind(this)(u, rootURL, gameUID)
-    );
-
-    const imageMapTuples = await Promise.all(imageMapPromises);
-
-    let imageMap: ImageMap = {}; // ImageMap is just a dictionary
-
-    imageMapTuples.forEach((tuple) => {
-      imageMap[tuple[0]] = tuple[1];
-    });
-
-    console.log(imageMap);
-
-    return imageMap;
   }
 
   applyAction(
@@ -305,9 +209,6 @@ export class GameState {
 
     // First draw all the zones
     zones.forEach((zone, i) => {
-      console.log("This inside zones.forEach function:");
-      console.log(this);
-      console.log(this.imageMap);
       const image_bitmap = this.imageMap[zone["image"]];
       this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
     });
@@ -329,7 +230,6 @@ export class GameState {
         const entityImage: ImageBitmap = this.imageMap[entity.glance_image];
         this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
       } else {
-        // do nothing
       }
     });
 
