@@ -13,7 +13,7 @@
         "name": "play_p2",
         "move_to_permissions": ["player_two"],
         "move_from_permissions": ["player_two"],
-        "pos": [0, 400]
+        "pos": [0, 350]
       },
       {
         "name": "board_sq1",
@@ -29,15 +29,15 @@
       },
       {
         "name": "board_sq4",
-        "pos": [0, 250]
+        "pos": [0, 200]
       },
       {
         "name": "board_sq5",
-        "pos": [50, 250]
+        "pos": [50, 200]
       },
       {
         "name": "board_sq6",
-        "pos": [100, 250]
+        "pos": [100, 200]
       },
       {
         "name": "board_sq7",
