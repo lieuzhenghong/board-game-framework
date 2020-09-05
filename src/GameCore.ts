@@ -191,6 +191,7 @@ class ClientGameCore extends GameCore {
   player: PlayerName;
 
   constructor(
+    player: PlayerName,
     session_description: JSON,
     initial_state: GameState | string,
     imageMap: ImageMap,
@@ -198,6 +199,7 @@ class ClientGameCore extends GameCore {
     ctx: CanvasRenderingContext2D
   ) {
     super(session_description, initial_state, imageMap, canvas, ctx);
+    this.player = player;
     this._action_queue_ = [];
     this._actions_received_ = [];
   }
@@ -427,6 +429,7 @@ class ClientGameCore extends GameCore {
       }
     });
     console.log("Stuff updated, now rendering..");
+    console.log("The current player is ", this.player);
     this.game_state.render(this.player);
   }
 

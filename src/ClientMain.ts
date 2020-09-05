@@ -122,7 +122,10 @@ async function init() {
   });
 
   console.log("Pre construction");
+  // TODO when in the multiplayer server make sure to pass each player
+  // their player name
   const clientGameCore = new ClientGameCore(
+    "player_one",
     null,
     initialState,
     imageMap,

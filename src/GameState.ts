@@ -203,14 +203,29 @@ export class GameState {
     // TODO think about how to render the special UI (e.g. glowing entities,
     // glowing zones
     // Need to pass it a UI state?
+
     console.log("Render function called!");
+    console.log(this.canvas.clientWidth);
+    console.log(this.canvas.clientHeight);
+    console.log(this.canvas.width);
+    console.log(this.canvas.height);
+
+    //this.canvas.width = this.canvas.clientWidth;
+    // this.canvas.height = this.canvas.clientHeight;
+    this.canvas.width = 150;
+    this.canvas.height = 500;
+
     const zones = this.zones;
     const entities = this.entities;
 
     // First draw all the zones
     zones.forEach((zone, i) => {
       const image_bitmap = this.imageMap[zone["image"]];
-      this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
+      // TODO FIXME why doesn't this work?
+      // zone.pos.x is undefined
+      // this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
+      this.ctx.drawImage(image_bitmap, zone.pos[0], zone.pos[1]);
+      console.log(`Drawing ${zone.image} at ${zone.pos[0]} and ${zone.pos[1]}`);
     });
 
     console.log("Zones should be drawn");
@@ -225,10 +240,17 @@ export class GameState {
         ent_zone.glance_permissions.includes(player_name)
       ) {
         const entityImage: ImageBitmap = this.imageMap[entity.image];
-        this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
+        // this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
+        this.ctx.drawImage(entityImage, entity.pos[0], entity.pos[1]);
+        console.log(
+          `Drawing ${entity.image} at ${entity.pos[0]} and ${entity.pos[1]}`
+        );
       } else if (ent_zone.glance_permissions.includes(player_name)) {
         const entityImage: ImageBitmap = this.imageMap[entity.glance_image];
-        this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
+        this.ctx.drawImage(entityImage, entity.pos[0], entity.pos[1]);
+        console.log(
+          `Drawing ${entity.image} at ${entity.pos[0]} and ${entity.pos[1]}`
+        );
       } else {
       }
     });
