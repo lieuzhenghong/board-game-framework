@@ -36,77 +36,21 @@ export class GameState {
     // so it must be called after assignment of this.rootURL and this.gameUID
     //this.loadState(gameStateJSON, imageMapJSON);
     // this.imageMap = this.blabla(); // I think this would block
-    console.log("GameState object initialised");
+    this.zones = this.initialiseZones(gameStateJSON, imageMapJSON);
+    this.entities = this.initialiseEntities(gameStateJSON, imageMapJSON);
+    this.loadImages(imageMapJSON, rootURL, gameUID).then((value) => {
+      this.imageMap = value;
+      console.log("GameState object initialised");
+    });
   }
 
-  /*
-  async blabla() {
-    const result = await getImageMap();
-    return result;
-  }
-  */
-
-  async loadState(j: JSON, im: JSON) {
-    // load state into this object
-    // First load the players
-    console.log("Loading state...");
-    console.log(this);
-    // this.imageMap = this.loadimages(im,this.rootURL,this.gameUID);
-    let imageMapPromise: Promise<ImageMap> = this.loadImages(
-      im,
-      this.rootURL,
-      this.gameUID
-    );
-    console.log(j);
-    this.playerList = j["game_state"]["players"];
-    let zones = [];
-    j["game_state"]["zones"].forEach((z: object) => {
-      zones.push(
-        new Zone(
-          this.playerList,
-          z["name"],
-          z["image"],
-          z["pos"],
-          // the following permissions might be undefined
-          // which will default to all permissions
-          z["move_to_permissions"],
-          z["move_from_permissions"],
-          z["view_permissions"],
-          z["glance_permissions"]
-        )
-      );
-    });
-
-    this.zones = zones;
-    console.log("Initialised zones...");
-    console.log(this.zones);
-
-    // Load all images and bitmap them
-    // TODO
-    // Fix bad code here
-    const secondPromise = imageMapPromise.then((e) => {
-      console.log("This is inside imageMapPromise");
-      this.imageMap = e;
-      console.log(this.imageMap);
-    });
-
-    console.log(this.imageMap); // undefined
-    // Before initialising all entities, we have to compute the
-    // entity state map and entity state list for each type of entity
-
-    function lookUpImage(s: string, d: object): string {
-      return d[s];
-    }
-
-    console.log("Hello!");
-    console.log(j);
-    // FIXME: think about refactoring with JSON Schema
-    // And also handle objects that have only one state
+  initialiseEntities(gameStateJSON: JSON, imageMapJSON: JSON): Array<Entity> {
+    const j = gameStateJSON;
+    const im = imageMapJSON;
     let entities = [];
 
     j["game_state"]["entities"].forEach((e: object, i: number) => {
       const image_map_entity = im["image_mapping"][e["type"]]; // "piece" : {...}
-      // This is the important console.log
       entities.push(
         new Entity(
           i, // 0
@@ -122,16 +66,31 @@ export class GameState {
       );
     });
 
-    this.entities = entities;
+    return entities;
+  }
 
-    console.log("Should have finished initialising entities:");
-    console.log(this);
-    console.log(this.entities);
-
-    const tmp = await secondPromise;
-    console.log("Second promise done!");
-    console.log(this.imageMap);
-    return tmp;
+  initialiseZones(gameStateJSON: JSON, imageMapJSON: JSON): Array<Zone> {
+    const j = gameStateJSON;
+    const im = imageMapJSON;
+    this.playerList = j["game_state"]["players"];
+    let zones: Array<Zone> = [];
+    j["game_state"]["zones"].forEach((z: object) => {
+      zones.push(
+        new Zone(
+          this.playerList,
+          z["name"],
+          im["image_mapping"][z["name"]], // get the image associated with the name
+          z["pos"],
+          // the following permissions might be undefined
+          // which will default to all permissions
+          z["move_to_permissions"],
+          z["move_from_permissions"],
+          z["view_permissions"],
+          z["glance_permissions"]
+        )
+      );
+    });
+    return zones;
   }
 
   // Extract Unique images from the image_map_json
