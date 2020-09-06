@@ -2,7 +2,7 @@ import { GameState } from "./GameState.js";
 import { Entity, EntUID, EntStateEnum } from "./Entity.js";
 import { UIState, UIAction } from "./UI.js";
 import { ImageMap, Point, PlayerName, ServerAction } from "./Interfaces.js";
-import { Menu, MenuItem, SubMenu } from "./Menu.js";
+import { drawMenu, MenuItem, SubMenu } from "./Menu.js";
 
 //The main update loop runs on requestAnimationFrame,
 //Which falls back to a setTimeout loop on the server
@@ -344,7 +344,8 @@ class ClientGameCore extends GameCore {
         // Right click on entity
         if (click_type === 2 && ents_clicked.length > 0) {
           // Get the last entity and open up the context menu
-          this._create_context_menu_(active_entity);
+          const menu = this._create_context_menu_(active_entity);
+          drawMenu(menu, mouse_point); // Side effect of drawing DOM element
           this._ui_state_ = UIState["Entity UI"];
         }
         // Left click on entity
