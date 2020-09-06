@@ -2,6 +2,7 @@ import { GameState } from "./GameState.js";
 import { Entity, EntUID, EntStateEnum } from "./Entity.js";
 import { UIState, UIAction } from "./UI.js";
 import { ImageMap, Point, PlayerName, ServerAction } from "./Interfaces.js";
+import { Menu, MenuItem, SubMenu } from "./Menu.js";
 
 //The main update loop runs on requestAnimationFrame,
 //Which falls back to a setTimeout loop on the server
@@ -251,40 +252,44 @@ class ClientGameCore extends GameCore {
     // Give each entity change state menu, change zone menu, change position
     // For the change state menu, add submenus for each substate using statemap
 
-    let state_menu: SubMenu;
-
-    state_menu.name = "Change State";
+    // Build from bottom-up: first build the menu items for each property submenu
+    let property_submenus: SubMenu[] = [];
     ent.stateList.forEach((o: EntStateEnum) => {
       for (const [property, property_values] of Object.entries(o)) {
         // here's an object entry example:
         // "face": ["up", "down"]
         // property = "face"
-        let property_submenu: SubMenu;
-        property_submenu.name = property;
-        for (const property_value of property_values) {
-          property_submenu.children.push(
-            new MenuItem(property_value, () =>
+        const property_menu_items = property_values.map(
+          (property_value) =>
+            new MenuItem(property_value, () => {
               this.receive_context_menu_event("Change State", ent.uid, {
                 [property]: property_value,
-              })
-            )
-          );
-        }
-        state_menu.children.push(property_submenu);
+              });
+            })
+        );
+
+        const property_submenu = new SubMenu(property, property_menu_items);
+        property_submenus.push(property_submenu);
       }
     });
 
-    let menu: SubMenu;
-    menu.name = "";
-    menu.children = [
+    // Generate the change state SubMenu
+    const state_menu = new SubMenu("Change State", property_submenus);
+
+    // Generate the root SubMenu
+    const menu_name = "";
+    const menu_children = [
       new MenuItem("Change Zone", () =>
         this.receive_context_menu_event("Change Zone")
       ),
       new MenuItem("Change Position", () =>
         this.receive_context_menu_event("Change Position")
       ),
-      new SubMenu("Change State", [state_menu]),
+      state_menu,
     ];
+
+    const menu = new SubMenu(menu_name, menu_children);
+    console.log(menu);
 
     return menu;
   }
@@ -294,6 +299,8 @@ class ClientGameCore extends GameCore {
     ent_uid?: EntUID,
     new_state?: object
   ) {
+    console.log("Receive context menu event called!");
+    console.log(action_name, ent_uid, new_state);
     if (new_state && ent_uid) {
       // Change object state
       this._add_action_to_server_core_queue({
