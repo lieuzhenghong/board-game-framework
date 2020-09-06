@@ -209,9 +209,13 @@ class ClientGameCore extends GameCore {
     this._action_queue_.push(action);
   }
 
-  _click_on_entity(pt: Point, et: Entity): Boolean {
+  _click_on_entity_(pt: Point, et: Entity): Boolean {
     // check if the point is inside the entity
     const ib: ImageBitmap = this.game_state.imageMap[et.image];
+
+    // console.log(pt.x, pt.y);
+    // console.log(et.pos.x, pt.x, et.pos.x + ib.width);
+    // console.log(et.pos.y, pt.y, et.pos.y + ib.height);
 
     if (
       pt.x >= et.pos.x &&
@@ -219,22 +223,24 @@ class ClientGameCore extends GameCore {
       pt.y >= et.pos.y &&
       pt.y <= et.pos.y + ib.height
     ) {
+      console.log(`Entity clicked: ${et.type} of ${et.uid}`);
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   // Look through all entities and find all entities that were
   // under the cursor and are visible to the player
   _entity_clicked(pt: Point): Entity[] {
-    console.log(this);
-    return this.game_state.entities.filter((ent) => {
-      this._click_on_entity(pt, ent) &&
+    const c = this.game_state.entities.filter((ent) => {
+      return (
+        this._click_on_entity_(pt, ent) &&
         this.game_state
           .zone_an_entity_belongs_to(ent.zone)
-          .glance_permissions.includes(this.player);
+          .glance_permissions.includes(this.player)
+      );
     });
+    return c;
   }
 
   // Create context menu of entity

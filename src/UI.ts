@@ -49,10 +49,20 @@ export class UIHandler {
       x: e.clientX - cvsRect.x,
       y: e.clientY - cvsRect.y,
     };
+
+    // Fix me --- handle canvas scaling in the future
+    /*
     const mouse: Point = {
       x: (translated.x * this.virtualCanvasSize) / this.canvas.width,
       y: (translated.x * this.virtualCanvasSize) / this.canvas.height,
     };
+    */
+    const mouse: Point = {
+      x: translated.x,
+      y: translated.y,
+    };
+
+    console.log(mouse);
 
     console.log(e.type);
 
