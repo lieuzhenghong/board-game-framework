@@ -208,7 +208,7 @@ class ClientGameCore extends GameCore {
     this._ui_state_ = UIState.Base;
   }
 
-  _add_action_to_server_core_queue(action: ServerAction): void {
+  _add_action_to_server_core_queue_(action: ServerAction): void {
     this._action_queue_.push(action);
   }
 
@@ -234,7 +234,7 @@ class ClientGameCore extends GameCore {
 
   // Look through all entities and find all entities that were
   // under the cursor and are visible to the player
-  _entity_clicked(pt: Point): Entity[] {
+  _entity_clicked_(pt: Point): Entity[] {
     const c = this.game_state.entities.filter((ent) => {
       return (
         this._click_on_entity_(pt, ent) &&
@@ -247,7 +247,7 @@ class ClientGameCore extends GameCore {
   }
 
   // Create context menu of entity
-  _create_context_menu(ent: Entity) {
+  _create_context_menu_(ent: Entity) {
     // Each entity has a custom context menu
     // Give each entity change state menu, change zone menu, change position
     // For the change state menu, add submenus for each substate using statemap
@@ -303,7 +303,7 @@ class ClientGameCore extends GameCore {
     console.log(action_name, ent_uid, new_state);
     if (new_state && ent_uid) {
       // Change object state
-      this._add_action_to_server_core_queue({
+      this._add_action_to_server_core_queue_({
         time: this.local_timer.current_time,
         action_type: "change_state",
         entity_uid: ent_uid,
@@ -329,7 +329,7 @@ class ClientGameCore extends GameCore {
     const mouse_point: Point = ui_action[1];
     const click_type: number = ui_action[2]; // = -1 if not click
     console.log(click_type);
-    const ents_clicked: Entity[] = this._entity_clicked(mouse_point);
+    const ents_clicked: Entity[] = this._entity_clicked_(mouse_point);
     console.log("Entity clicked: ", ents_clicked);
 
     // How do we handle multiple entities being in the same click field?
@@ -344,7 +344,7 @@ class ClientGameCore extends GameCore {
         // Right click on entity
         if (click_type === 2 && ents_clicked.length > 0) {
           // Get the last entity and open up the context menu
-          this._create_context_menu(active_entity);
+          this._create_context_menu_(active_entity);
           this._ui_state_ = UIState["Entity UI"];
         }
         // Left click on entity
@@ -359,7 +359,7 @@ class ClientGameCore extends GameCore {
         console.log("We are in the drag mode");
         if (click_type === -1) {
           // This is a mousemove event. Move the entity
-          this._add_action_to_server_core_queue({
+          this._add_action_to_server_core_queue_({
             time: this.local_timer.current_time,
             action_type: "change_pos",
             entity_uid: active_entity.uid,
@@ -392,7 +392,7 @@ class ClientGameCore extends GameCore {
           /*
           );
           */
-          this._add_action_to_server_core_queue({
+          this._add_action_to_server_core_queue_({
             time: this.local_timer.current_time,
             action_type: "change_zone",
             entity_uid: active_entity.uid,
@@ -407,7 +407,7 @@ class ClientGameCore extends GameCore {
         if (click_type === 0) {
           // TODO send an action to move the entity to the new position
           // active_entity.pos = mouse_point;
-          this._add_action_to_server_core_queue({
+          this._add_action_to_server_core_queue_({
             time: this.local_timer.current_time,
             action_type: "change_pos",
             entity_uid: active_entity.uid,
