@@ -21,6 +21,7 @@ function fixed(value: number, digits: number) {
 var frame_time = 60 / 1000; // run the local game at 16ms/ 60hz
 if ("undefined" != typeof global) frame_time = 45; //on server we run at 45ms, 22hz
 
+/*
 (function () {
   var lastTime = 0;
   var vendors = ["ms", "moz", "webkit", "o"];
@@ -50,6 +51,7 @@ if ("undefined" != typeof global) frame_time = 45; //on server we run at 45ms, 2
     };
   }
 })();
+*/
 
 //Now the main game class. This gets created on
 //both server and client. Server creates one for

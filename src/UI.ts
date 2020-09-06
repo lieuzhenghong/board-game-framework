@@ -36,7 +36,7 @@ export class UIHandler {
     window.addEventListener("contextmenu", (e) => e.preventDefault());
     // window.addEventListener("click", this._handle_mouse_event_.bind(this));
     window.addEventListener("mousedown", this._handle_mouse_event_.bind(this));
-    //window.addEventListener("mousemove", this._handle_mouse_event.bind(this));
+    // window.addEventListener("mousemove", this._handle_mouse_event_.bind(this));
   }
 
   _handle_mouse_event_(e: MouseEvent): UIAction {
