@@ -149,7 +149,7 @@ abstract class GameCore {
 
     //schedule the next update
     this.frame_timer.increment(t);
-    // this.update_id = window.requestAnimationFrame(this.update.bind(this));
+    this.update_id = window.requestAnimationFrame(this.update.bind(this));
   } // update
 
   // what does this do?
@@ -192,6 +192,7 @@ class ClientGameCore extends GameCore {
   private _action_queue_: ServerAction[];
   private _actions_received_: ServerAction[];
   player: PlayerName;
+  private _dragged_entity_: Entity;
 
   constructor(
     player: PlayerName,
@@ -352,6 +353,8 @@ class ClientGameCore extends GameCore {
         else if (click_type === 0 && ents_clicked.length > 0) {
           // Get the last entity and start drag mode
           this._ui_state_ = UIState["Drag"];
+          this._dragged_entity_ = active_entity;
+          console.log(`Starting to drag entity: ${active_entity}`);
         } else {
           // pass
         }
@@ -370,6 +373,18 @@ class ClientGameCore extends GameCore {
           // Upon receiving a left or right click (which we have),
           // we cancel the drag mode.
           this._ui_state_ = UIState["Base"];
+          // I am adding this to allow left click-left click movement
+          console.log("Adding action to server core queue");
+          console.log(`Moving entity: ${this._dragged_entity_}`);
+          this._add_action_to_server_core_queue_({
+            time: this.local_timer.current_time,
+            action_type: "change_pos",
+            entity_uid: this._dragged_entity_.uid,
+            payload: { pos: mouse_point },
+          });
+          // Reset the dragged entity
+          this._dragged_entity_ = null;
+          console.log(this._action_queue_);
         }
         break;
       // TODO think about this
@@ -425,6 +440,9 @@ class ClientGameCore extends GameCore {
     // First, sort by timestamp
     console.log("Role specific update called!");
     this.process_actions_from_server();
+    console.log(
+      `Actions processed. Current actions: ${this._actions_received_} `
+    );
     this._actions_received_.sort((a, b) => a.time - b.time);
     this._actions_received_.forEach((action) => {
       switch (action.action_type) {
@@ -447,15 +465,18 @@ class ClientGameCore extends GameCore {
           );
       }
     });
-    console.log("Stuff updated, now rendering..");
-    console.log("The current player is ", this.player);
+    // console.log("Stuff updated, now rendering..");
+    // console.log("The current player is ", this.player);
     this.game_state.render(this.player);
   }
 
   process_actions_from_server(): void {
+    console.log("Called! Emptying action queue");
+    console.log(this._action_queue_);
     this._action_queue_.forEach((action) => {
       this._actions_received_.push(action);
     });
+    console.log(this._actions_received_);
     this._action_queue_ = []; // Clear those actions from the to be processed queue.
   }
 }

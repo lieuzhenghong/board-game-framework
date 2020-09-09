@@ -215,7 +215,7 @@ export class GameState {
     // glowing zones
     // Need to pass it a UI state?
 
-    console.log("Render function called!");
+    // console.log("Render function called!");
     /*
     console.log(this.canvas.clientWidth);
     console.log(this.canvas.clientHeight);
@@ -238,7 +238,7 @@ export class GameState {
       this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
     });
 
-    console.log("Zones should be drawn");
+    // console.log("Zones should be drawn");
 
     // Now draw all entities
     entities.forEach((entity: Entity) => {
@@ -258,6 +258,6 @@ export class GameState {
       }
     });
 
-    console.log("Entities should be drawn");
+    // console.log("Entities should be drawn");
   }
 }
