@@ -227,7 +227,6 @@ class ClientGameCore extends GameCore {
       pt.y >= et.pos.y &&
       pt.y <= et.pos.y + ib.height
     ) {
-      console.log(`Entity clicked: ${et.type} of ${et.uid}`);
       return true;
     }
     return false;
@@ -331,12 +330,13 @@ class ClientGameCore extends GameCore {
     const click_type: number = ui_action[2]; // = -1 if not click
     console.log(click_type);
     const ents_clicked: Entity[] = this._entity_clicked_(mouse_point);
-    console.log("Entity clicked: ", ents_clicked);
+    console.log("Entities clicked: ", ents_clicked);
 
     // How do we handle multiple entities being in the same click field?
     // How do we know which entity is "on top"?
     // Entities are rendered bottom-to-top first
-    const [active_entity] = ents_clicked.slice(-1);
+    const [active_entity] = ents_clicked.slice(-1); // Could be undefined
+    // console.log("Active entity: ", active_entity.uid);
 
     // TODO we need to debounce!
     switch (this._ui_state_) {
@@ -369,7 +369,7 @@ class ClientGameCore extends GameCore {
             entity_uid: active_entity.uid,
             payload: { pos: mouse_point },
           });
-        } else {
+        } else if (click_type === 0) {
           // Upon receiving a left or right click (which we have),
           // we cancel the drag mode.
           this._ui_state_ = UIState["Base"];
@@ -385,6 +385,9 @@ class ClientGameCore extends GameCore {
           // Reset the dragged entity
           this._dragged_entity_ = null;
           console.log(this._action_queue_);
+        } else {
+          // Cancel the drag mode on right click
+          this._ui_state_ = UIState["Base"];
         }
         break;
       // TODO think about this
@@ -438,7 +441,7 @@ class ClientGameCore extends GameCore {
   // Update the game state according to actions received by the server
   role_specific_update(): void {
     // First, sort by timestamp
-    console.log("Role specific update called!");
+    // console.log("Role specific update called!");
     this.process_actions_from_server();
     console.log(
       `Actions processed. Current actions: ${this._actions_received_} `
@@ -467,16 +470,15 @@ class ClientGameCore extends GameCore {
     });
     // console.log("Stuff updated, now rendering..");
     // console.log("The current player is ", this.player);
+    // Clear all actions
+    this._actions_received_ = [];
     this.game_state.render(this.player);
   }
 
   process_actions_from_server(): void {
-    console.log("Called! Emptying action queue");
-    console.log(this._action_queue_);
     this._action_queue_.forEach((action) => {
       this._actions_received_.push(action);
     });
-    console.log(this._actions_received_);
     this._action_queue_ = []; // Clear those actions from the to be processed queue.
   }
 }
