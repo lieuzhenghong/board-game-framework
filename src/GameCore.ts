@@ -370,21 +370,29 @@ class ClientGameCore extends GameCore {
             payload: { pos: mouse_point },
           });
         } else if (click_type === 0) {
-          // Upon receiving a left or right click (which we have),
-          // we cancel the drag mode.
-          this._ui_state_ = UIState["Base"];
-          // I am adding this to allow left click-left click movement
+          // Left click moves an object
           console.log("Adding action to server core queue");
           console.log(`Moving entity: ${this._dragged_entity_}`);
+          // Let's calculate the position to move the object to
+          // Instead of moving the object to the mouse position,
+          // we should move the *center* of the object to the mouse position
+          // This means that we should actually move the object slightly
+          // up and to the left of the point that was clicked.
+          const dragged_entity_img = this.game_state.imageMap[
+            this._dragged_entity_.image
+          ];
+          const dx = -dragged_entity_img.width / 2;
+          const dy = -dragged_entity_img.height / 2;
           this._add_action_to_server_core_queue_({
             time: this.local_timer.current_time,
             action_type: "change_pos",
             entity_uid: this._dragged_entity_.uid,
-            payload: { pos: mouse_point },
+            payload: { pos: { x: mouse_point.x + dx, y: mouse_point.y + dy } },
           });
           // Reset the dragged entity
           this._dragged_entity_ = null;
           console.log(this._action_queue_);
+          this._ui_state_ = UIState["Base"];
         } else {
           // Cancel the drag mode on right click
           this._ui_state_ = UIState["Base"];
