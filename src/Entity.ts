@@ -75,6 +75,7 @@ export class Entity {
     this.stateList = stateList;
     this.stateMap = stateMap;
     this.image = image;
+    this.glance_image = glance_image;
     this.zone = zone;
     this.pos = pos;
   }
