@@ -17,31 +17,31 @@
       {
         "type": "card",
         "pos": [100, 100],
-        "state": ["facedown", "1"],
+        "state": ["faceup", "1"],
         "zone": "deck"
       },
       {
         "type": "card",
         "pos": [100, 100],
-        "state": ["facedown", "2"],
+        "state": ["faceup", "2"],
         "zone": "deck"
       },
       {
         "type": "card",
         "pos": [100, 100],
-        "state": ["facedown", "3"],
+        "state": ["faceup", "3"],
         "zone": "deck"
       },
       {
         "type": "card",
         "pos": [100, 100],
-        "state": ["facedown", "4"],
+        "state": ["faceup", "4"],
         "zone": "deck"
       },
       {
         "type": "card",
         "pos": [100, 100],
-        "state": ["facedown", "5"],
+        "state": ["faceup", "5"],
         "zone": "deck"
       }
     ]
