@@ -1,13 +1,13 @@
 {
   "data_type": "image_map",
   "image_mapping": {
-    "deck": "red_rect.png",
+    "deck": "deck.png",
     "playzone": "playzone.png",
     "piece": {
       "state_list": [
         { "face": ["faceup", "facedown"], "value": ["1", "2", "3", "4", "5"] }
       ],
-      "glance": "fadedown.png",
+      "glance": "facedown.png",
       "states": {
         "['facedown', '1']": "facedown.png",
         "['facedown', '2']": "facedown.png",
