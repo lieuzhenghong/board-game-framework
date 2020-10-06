@@ -6,7 +6,8 @@
       {
         "name": "deck",
         "glance_permissions": ["player_one"],
-        "pos": [100, 100]
+        "view_permissions": [],
+        "pos": [100, 0]
       },
       {
         "name": "playzone",
@@ -16,31 +17,31 @@
     "entities": [
       {
         "type": "card",
-        "pos": [100, 100],
+        "pos": [100, 0],
         "state": ["faceup", "1"],
         "zone": "deck"
       },
       {
         "type": "card",
-        "pos": [100, 100],
+        "pos": [100, 0],
         "state": ["faceup", "2"],
         "zone": "deck"
       },
       {
         "type": "card",
-        "pos": [100, 100],
+        "pos": [100, 0],
         "state": ["faceup", "3"],
         "zone": "deck"
       },
       {
         "type": "card",
-        "pos": [100, 100],
+        "pos": [100, 0],
         "state": ["faceup", "4"],
         "zone": "deck"
       },
       {
         "type": "card",
-        "pos": [100, 100],
+        "pos": [100, 0],
         "state": ["faceup", "5"],
         "zone": "deck"
       }
