@@ -3,7 +3,7 @@
   "image_mapping": {
     "deck": "deck.png",
     "playzone": "playzone.png",
-    "piece": {
+    "card": {
       "state_list": [
         { "face": ["faceup", "facedown"], "value": ["1", "2", "3", "4", "5"] }
       ],
