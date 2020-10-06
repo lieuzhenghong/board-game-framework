@@ -10,12 +10,19 @@ import * as express from "express";
 import * as http from "http";
 // import express from "express";
 
+// TODO try to get this working
+// import io = require("socket.io");
+// import express = require("express");
+// import http = require("http");
+
 const __dirname = process.cwd();
 
 console.log(express);
 
 //const app = express.default();
 const app = express["default"]();
+
+// const app = express();
 const server = http.createServer(app);
 
 app.get("/", (req, res) => {
@@ -36,17 +43,3 @@ app.get("/*", function (req, res, next) {
   //Send the requesting client the file.
   res.sendfile(__dirname + "/" + file);
 });
-
-/*
-const sio = io.listen(server);
-
-sio.set("authorization", function (handshakeData, callback) {
-  callback(null, true); // error first callback style
-});
-*/
-
-//Enter the game server code. The game server handles
-//client connections looking for a game, creating games,
-//leaving games, joining games and ending games when they leave.
-
-// import { game_server } from "game.server.js";
