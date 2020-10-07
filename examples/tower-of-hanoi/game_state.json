@@ -8,7 +8,7 @@
         "glance_permissions": ["player_one"],
         "view_permissions": ["player_one"],
         "move_from_permissions": ["player_one"],
-        "move_to": ["player_one"],
+        "move_to_permissions": ["player_one"],
         "pos": [0, 0]
       },
       {

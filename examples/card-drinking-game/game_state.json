@@ -30,7 +30,7 @@
       {
         "type": "card",
         "pos": [100, 0],
-        "state": ["faceup", "3"],
+        "state": ["facedown", "3"],
         "zone": "deck"
       },
       {

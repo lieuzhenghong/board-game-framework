@@ -5,10 +5,6 @@
     "zones": [
       {
         "name": "board",
-        "glance_permissions": ["player_one", "player_two"],
-        "view_permissions": ["player_one", "player_two"],
-        "move_from_permissions": ["player_one", "player_two"],
-        "move_to": ["player_one", "player_two"],
         "pos": [0, 0]
       }
     ],
@@ -45,43 +41,31 @@
       },
       {
         "type": "token",
-        "pos": [250, 0],
-        "state": ["orange"],
-        "zone": "board"
-      },
-      {
-        "type": "token",
-        "pos": [0, 450],
+        "pos": [0, 400],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [50, 450],
+        "pos": [50, 400],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [100, 450],
+        "pos": [100, 400],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [150, 450],
+        "pos": [150, 400],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [200, 450],
-        "state": ["blue"],
-        "zone": "board"
-      },
-      {
-        "type": "token",
-        "pos": [250, 450],
+        "pos": [200, 400],
         "state": ["blue"],
         "zone": "board"
       }
