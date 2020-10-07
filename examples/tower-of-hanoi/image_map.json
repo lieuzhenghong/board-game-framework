@@ -1,0 +1,22 @@
+{
+  "data_type": "image_map",
+  "image_mapping": {
+    "tower1": "tower.png",
+    "tower2": "tower.png",
+    "tower3": "tower.png",
+    "tower4": "tower.png",
+    "ring": {
+      "state_list": [
+        { "colour": ["red", "orange", "yellow", "green", "blue"] }
+      ],
+      "glance": "red.png",
+      "states": {
+        "red": "red.png",
+        "orange": "orange.png",
+        "yellow": "yellow.png",
+        "green": "green.png",
+        "blue": "blue.png"
+      }
+    }
+  }
+}

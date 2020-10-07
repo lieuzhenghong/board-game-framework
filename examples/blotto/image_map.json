@@ -1,0 +1,14 @@
+{
+  "data_type": "image_map",
+  "image_mapping": {
+    "zone": "ZONE.png",
+    "ring": {
+      "state_list": [{ "property": ["STATE1", "STATE2"] }],
+      "glance": "GLANCE.png",
+      "states": {
+        "STATE1": "STATE1.png",
+        "STATE2": "STATE2.png"
+      }
+    }
+  }
+}

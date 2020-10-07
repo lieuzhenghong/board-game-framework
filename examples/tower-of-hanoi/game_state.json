@@ -1,0 +1,60 @@
+{
+  "data_type": "game_state",
+  "game_state": {
+    "players": ["player_one"],
+    "zones": [
+      {
+        "name": "tower1",
+        "glance_permissions": ["player_one"],
+        "view_permissions": ["player_one"],
+        "move_from_permissions": ["player_one"],
+        "move_to": ["player_one"],
+        "pos": [0, 0]
+      },
+      {
+        "name": "tower2",
+        "pos": [125, 0]
+      },
+      {
+        "name": "tower3",
+        "pos": [250, 0]
+      },
+      {
+        "name": "tower4",
+        "pos": [375, 0]
+      }
+    ],
+    "entities": [
+      {
+        "type": "ring",
+        "pos": [10, 250],
+        "state": ["red"],
+        "zone": "tower1"
+      },
+      {
+        "type": "ring",
+        "pos": [10, 300],
+        "state": ["orange"],
+        "zone": "tower1"
+      },
+      {
+        "type": "ring",
+        "pos": [10, 350],
+        "state": ["yellow"],
+        "zone": "tower1"
+      },
+      {
+        "type": "ring",
+        "pos": [10, 400],
+        "state": ["green"],
+        "zone": "tower1"
+      },
+      {
+        "type": "ring",
+        "pos": [10, 450],
+        "state": ["blue"],
+        "zone": "tower1"
+      }
+    ]
+  }
+}
