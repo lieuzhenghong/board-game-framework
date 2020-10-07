@@ -51,38 +51,38 @@
       },
       {
         "type": "token",
-        "pos": [0, 450],
+        "pos": [0, 0],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [50, 450],
+        "pos": [50, 0],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [100, 450],
+        "pos": [100, 0],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [150, 450],
+        "pos": [150, 0],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [200, 450],
+        "pos": [200, 0],
         "state": ["blue"],
         "zone": "board"
       },
       {
         "type": "token",
-        "pos": [250, 450],
-        "state": ["blue"],
+        "pos": [250, 0],
+        "state": ["orange"],
         "zone": "board"
       }
     ]
