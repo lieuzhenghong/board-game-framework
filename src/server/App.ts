@@ -5,28 +5,11 @@
 
 const gameport = process.env.PORT || 4004;
 
-/*
-import * as io from "socket.io";
-import * as express from "express";
-import * as http from "http";
-// import express from "express";
-*/
-
-// TODO try to get this working
 const io = require("socket.io");
 const express = require("express");
 const http = require("http");
 
-// const __dirname = process.cwd();
 const __dirname__ = process.cwd();
-
-console.log(express);
-
-//const app = express.default();
-
-// This works
-//const app = express["default"]();
-
 const app = express();
 const server = http.createServer(app);
 
