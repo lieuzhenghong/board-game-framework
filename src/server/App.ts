@@ -5,29 +5,34 @@
 
 const gameport = process.env.PORT || 4004;
 
+/*
 import * as io from "socket.io";
 import * as express from "express";
 import * as http from "http";
 // import express from "express";
+*/
 
 // TODO try to get this working
-// import io = require("socket.io");
-// import express = require("express");
-// import http = require("http");
+const io = require("socket.io");
+const express = require("express");
+const http = require("http");
 
-const __dirname = process.cwd();
+// const __dirname = process.cwd();
+const __dirname__ = process.cwd();
 
 console.log(express);
 
 //const app = express.default();
-const app = express["default"]();
 
-// const app = express();
+// This works
+//const app = express["default"]();
+
+const app = express();
 const server = http.createServer(app);
 
 app.get("/", (req, res) => {
-  console.log("trying to load %s", __dirname + "/index.html");
-  res.sendfile("/index.html", { root: __dirname });
+  console.log("trying to load %s", __dirname__ + "/index.html");
+  res.sendfile("/index.html", { root: __dirname__ });
 });
 
 app.listen(gameport, () => {
@@ -41,5 +46,5 @@ app.get("/*", function (req, res, next) {
   //For debugging, we can track what files are requested.
   console.log("\t :: Express :: file requested : " + file);
   //Send the requesting client the file.
-  res.sendfile(__dirname + "/" + file);
+  res.sendfile(__dirname__ + "/" + file);
 });
