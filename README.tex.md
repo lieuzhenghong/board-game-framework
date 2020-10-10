@@ -114,7 +114,7 @@ The require syntax works only with CommonJS modules,
 and Node.js will only run it correctly if the nearest root `package.json` file
 has a "type": "commonjs" key-value.
 See the NodeJS docs for an explanation:
-https://nodejs.org/api/packages.html
+[link](https://nodejs.org/api/packages.html#packages_modules_packages)
 
 We had to put the package.json inside the server folder because
 if it was in the root folder, then all the client-side `.ts` files would

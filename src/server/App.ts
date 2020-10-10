@@ -7,7 +7,7 @@
 // and Node.js will only run it correctly if the package.json file
 // has a "type": "commonjs" key-value.
 // See the NodeJS docs for an explanation:
-// https://nodejs.org/api/packages.html
+// https://nodejs.org/api/packages.html#packages_modules_packages
 
 const express = require("express");
 const http = require("http");
