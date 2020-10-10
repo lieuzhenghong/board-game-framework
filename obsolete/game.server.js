@@ -27,7 +27,7 @@ var verbose = true;
 global.window = global.document = global;
 
 //Import shared game library code.
-require("./GameCore.js");
+require("../src/GameCore.js");
 
 //A simple wrapper for logging so we can toggle it,
 //and augment it for clarity.
