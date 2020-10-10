@@ -3,6 +3,12 @@
 // handles lobbies/client input etc
 */
 
+// The require syntax works only with CommonJS modules,
+// and Node.js will only run it correctly if the package.json file
+// has a "type": "commonjs" key-value.
+// See the NodeJS docs for an explanation:
+// https://nodejs.org/api/packages.html
+
 const express = require("express");
 const http = require("http");
 const webSocket = require("ws");
