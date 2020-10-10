@@ -226,8 +226,10 @@ export class GameState {
     //this.canvas.width = this.canvas.clientWidth;
     // this.canvas.height = this.canvas.clientHeight;
     // TODO FIXME how can we dynamically adjust the canvas size to the content?
-    this.canvas.width = 150;
-    this.canvas.height = 450;
+    //this.canvas.width = 150;
+    //this.canvas.height = 450;
+    this.canvas.width = 500;
+    this.canvas.height = 500;
 
     const zones = this.zones;
     const entities = this.entities;
