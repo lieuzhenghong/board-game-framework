@@ -98,7 +98,7 @@ abstract class GameCore {
   private server: boolean;
   private update_id;
   private viewport;
-  private socket;
+  protected socket: WebSocket;
 
   // GameCore methods
   public constructor(
@@ -106,7 +106,8 @@ abstract class GameCore {
     initial_state: string | GameState,
     imageMap: ImageMap | null,
     canvas: HTMLCanvasElement | null,
-    ctx: CanvasRenderingContext2D | null
+    ctx: CanvasRenderingContext2D | null,
+    socket: WebSocket
   ) {
     this.session_description = session_description;
 
@@ -126,6 +127,9 @@ abstract class GameCore {
         ctx
       );
     }
+
+    this.socket = socket;
+
     // Why do we need so many timers??
     this.local_timer = new Timer();
     this.local_timer.current_time = 0.016;
@@ -200,13 +204,20 @@ class ClientGameCore extends GameCore {
     initial_state: GameState | string,
     imageMap: ImageMap,
     canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
+    ctx: CanvasRenderingContext2D,
+    socket: WebSocket
   ) {
-    super(session_description, initial_state, imageMap, canvas, ctx);
+    super(session_description, initial_state, imageMap, canvas, ctx, socket);
     this.player = player;
     this._action_queue_ = [];
     this._actions_received_ = [];
     this._ui_state_ = UIState.Base;
+    this.socket.onmessage = (evt) => {
+      this._actions_received_ = this._actions_received_.concat(
+        JSON.parse(evt.data)
+      );
+      this._action_queue_ = []; // Clear those actions from the to be processed queue.
+    };
   }
 
   _add_action_to_server_core_queue_(action: ServerAction): void {
@@ -450,7 +461,8 @@ class ClientGameCore extends GameCore {
   role_specific_update(): void {
     // First, sort by timestamp
     // console.log("Role specific update called!");
-    this.process_actions_from_server();
+    this.send_actions_to_server();
+    // this.process_actions_from_server();
     console.log(
       `Actions processed. Current actions: ${this._actions_received_} `
     );
@@ -483,7 +495,14 @@ class ClientGameCore extends GameCore {
     this.game_state.render(this.player);
   }
 
+  send_actions_to_server(): void {
+    if (this._action_queue_.length > 0) {
+      this.socket.send(JSON.stringify(this._action_queue_));
+    }
+  }
+
   process_actions_from_server(): void {
+    // This is a setter for this._actions_received_
     this._action_queue_.forEach((action) => {
       this._actions_received_.push(action);
     });

@@ -32,6 +32,7 @@ wss.on("connection", (ws) => {
   ws.on("message", (message: string) => {
     ws.send(message); // Echo server
     console.log("Message received!");
+    console.log(message);
   });
 
   console.log("Connection established!");
