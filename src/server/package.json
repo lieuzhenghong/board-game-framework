@@ -1,5 +1,5 @@
 {
-  "type": "module",
+  "type": "commonjs",
   "name": "boardgame-engine",
   "author": "Lieu Zheng Hong",
   "description": "A framework for multiplayer 2d boardgame playing",
