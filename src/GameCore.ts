@@ -457,16 +457,24 @@ class ClientGameCore extends GameCore {
     }
   }
 
-  // Update the game state according to actions received by the server
   role_specific_update(): void {
-    // First, sort by timestamp
     // console.log("Role specific update called!");
     this.send_actions_to_server();
-    // this.process_actions_from_server();
-    console.log(
-      `Actions processed. Current actions: ${this._actions_received_} `
-    );
+    this.process_actions_from_server();
+    this.game_state.render(this.player);
+  }
+
+  send_actions_to_server(): void {
+    if (this._action_queue_.length > 0) {
+      this.socket.send(JSON.stringify(this._action_queue_));
+    }
+  }
+
+  process_actions_from_server(): void {
+    // Update the game state according to actions received by the server
+    // First, sort by timestamp
     this._actions_received_.sort((a, b) => a.time - b.time);
+    // Then, update the game state
     this._actions_received_.forEach((action) => {
       switch (action.action_type) {
         case "change_zone":
@@ -488,25 +496,8 @@ class ClientGameCore extends GameCore {
           );
       }
     });
-    // console.log("Stuff updated, now rendering..");
-    // console.log("The current player is ", this.player);
     // Clear all actions
     this._actions_received_ = [];
-    this.game_state.render(this.player);
-  }
-
-  send_actions_to_server(): void {
-    if (this._action_queue_.length > 0) {
-      this.socket.send(JSON.stringify(this._action_queue_));
-    }
-  }
-
-  process_actions_from_server(): void {
-    // This is a setter for this._actions_received_
-    this._action_queue_.forEach((action) => {
-      this._actions_received_.push(action);
-    });
-    this._action_queue_ = []; // Clear those actions from the to be processed queue.
   }
 }
 
