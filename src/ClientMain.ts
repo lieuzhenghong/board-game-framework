@@ -98,9 +98,15 @@ class ResourceLoader {
 async function init() {
   const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
   const ctx = canvas.getContext("2d");
+  /*
   const rootURL: string =
     "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/";
-  const gameUID: string = "tic-tac-toe";
+  */
+  const rootURL: string = "http://localhost:4004/examples/";
+  // const gameUID: string = "card-drinking-game";
+  // const gameUID: string = "tic-tac-toe";
+  //const gameUID: string = "blotto";
+  const gameUID: string = "tower-of-hanoi";
 
   const resourceLoader = new ResourceLoader();
   const gameStateJSON = await resourceLoader.fetchGameState(rootURL, gameUID);
@@ -110,9 +116,6 @@ async function init() {
     rootURL,
     gameUID
   );
-
-  // const gameStateJSON = await fetchGameState(rootURL, gameUID);
-  // const imageMapJSON = await fetchImageMap(rootURL, gameUID);
 
   const initialState = JSON.stringify({
     gameStateJSON: gameStateJSON,
