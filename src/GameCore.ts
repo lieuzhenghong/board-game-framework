@@ -151,7 +151,8 @@ class ClientGameCore extends GameCore {
   private _action_queue_: ServerAction[];
   private _actions_received_: ServerAction[];
   player: PlayerName;
-  private _dragged_entity_: Entity;
+  private _dragged_entity_: Entity; // entity that is currently in "drag mode"
+  private _selected_entity_ : Entity; // entity that the contextmenu refers to
 
   constructor(
     player: PlayerName,
@@ -246,10 +247,10 @@ class ClientGameCore extends GameCore {
     const menu_name = "";
     const menu_children = [
       new MenuItem("Change Zone", () =>
-        this.receive_context_menu_event("Change Zone")
+        this.receive_context_menu_event("Change Zone", ent.uid)
       ),
       new MenuItem("Change Position", () =>
-        this.receive_context_menu_event("Change Position")
+        this.receive_context_menu_event("Change Position", ent.uid)
       ),
       state_menu,
     ];
@@ -278,10 +279,13 @@ class ClientGameCore extends GameCore {
     } else {
       if (action_name === "Change Zone") {
         this._ui_state_ = UIState["Change Zone"];
-      } else if (action_name === "Change Position") {
+        this._selected_entity_ = this.game_state.get_entity_by_uid(ent_uid)
+      } 
+      else if (action_name === "Change Position") {
         this._ui_state_ = UIState["Change Position"];
-      } else {
-      }
+        this._selected_entity_ = this.game_state.get_entity_by_uid(ent_uid)
+      } 
+      else {}
     }
   }
 
@@ -301,8 +305,7 @@ class ClientGameCore extends GameCore {
     // How do we handle multiple entities being in the same click field?
     // How do we know which entity is "on top"?
     // Entities are rendered bottom-to-top first
-    const [active_entity] = ents_clicked.slice(-1); // Could be undefined
-    // console.log("Active entity: ", active_entity.uid);
+    let [active_entity] = ents_clicked.slice(-1); // Could be undefined
 
     // TODO we need to debounce!
     switch (this._ui_state_) {
@@ -382,18 +385,15 @@ class ClientGameCore extends GameCore {
           clicked_zones.slice(-1)[0].move_to_permissions.includes(this.player)
           // short circuit evaluation: if length = 0, we won't try to slice
         ) {
-          // Send off a changeZone action
-          /*
-          );
-          */
           this._add_action_to_server_core_queue_({
             time: this.local_timer.current_time,
             action_type: "change_zone",
-            entity_uid: active_entity.uid,
+            entity_uid: this._selected_entity_.uid,
             payload: { zone: clicked_zones[0].name },
           });
-        } else {
           this._ui_state_ = UIState["Base"];
+          // Reset the selected entity
+          this._selected_entity_ = null;
         }
         break;
       case "Change Position":
@@ -404,11 +404,13 @@ class ClientGameCore extends GameCore {
           this._add_action_to_server_core_queue_({
             time: this.local_timer.current_time,
             action_type: "change_pos",
-            entity_uid: active_entity.uid,
+            entity_uid: this._selected_entity_.uid,
             payload: { pos: mouse_point },
           });
         }
         this._ui_state_ = UIState["Base"];
+        // Reset the selected entity
+        this._selected_entity_ = null;
         break;
     }
   }
@@ -439,17 +441,20 @@ class ClientGameCore extends GameCore {
             this.player,
             action.payload["zone"]
           );
+          break;
         case "change_pos":
           this.game_state.changeEntityPos(
             action.entity_uid,
             this.player,
             action.payload["pos"]
           );
+          break;
         case "change_state":
           this.game_state.changeEntityStatePartial(
             action.entity_uid,
             action.payload
           );
+          break;
       }
     });
     // Clear all actions
