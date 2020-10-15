@@ -370,6 +370,7 @@ class ClientGameCore extends GameCore {
         if (click_type !== -1) {
           this._ui_state_ = UIState["Base"];
         }
+        break;
       case "Change Zone":
         console.log("We are in the change zone mode");
         // look at what zone the cursor is in
