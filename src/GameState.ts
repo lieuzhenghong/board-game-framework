@@ -132,7 +132,7 @@ export class GameState {
   // change the entity's state from ["down", "J"] to ["up", "J"]
   changeEntityStatePartial(uid: EntUID, property_kv_pair: object): void {
     // First, get the StateList of the entity
-    const ent = this._entity_by_uid(uid);
+    const ent = this.get_entity_by_uid(uid);
     // Make a (shallow) copy of the entity's state
     let new_state = [...ent.state];
     ent.stateList.forEach((esEnum, i) => {
@@ -161,7 +161,7 @@ export class GameState {
     // Leaving this for now because you need to pass which player
     // is moving inside the entity zone
 
-    const old_zone_name: string = this._entity_by_uid(uid).zone;
+    const old_zone_name: string = this.get_entity_by_uid(uid).zone;
     const old_zone: Zone = this.zone_an_entity_belongs_to(old_zone_name);
     const new_zone: Zone = this.zone_an_entity_belongs_to(new_zone_name);
 
@@ -178,7 +178,7 @@ export class GameState {
   changeEntityPos(uid: EntUID, player: PlayerName, new_pos: Point): void {
     // TODO think about whether "move_from" permissions
     // means moving in terms of changing state or just moving the object
-    const old_zone_name: string = this._entity_by_uid(uid).zone;
+    const old_zone_name: string = this.get_entity_by_uid(uid).zone;
     const old_zone: Zone = this.zone_an_entity_belongs_to(old_zone_name);
 
     if (old_zone.move_from_permissions.includes(player))
@@ -189,7 +189,7 @@ export class GameState {
   }
 
   // Utility function to get the entity given a EntUID
-  _entity_by_uid(uid: EntUID): Entity {
+  get_entity_by_uid(uid: EntUID): Entity {
     return this.entities.filter((entity) => entity.uid === uid)[0];
   }
 
