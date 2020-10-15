@@ -136,7 +136,9 @@ export class GameState {
     // Make a (shallow) copy of the entity's state
     let new_state = [...ent.state];
     ent.stateList.forEach((esEnum, i) => {
-      if (Object.keys(ent.stateList)[0] === Object.keys(property_kv_pair)[0]) {
+      // esEnum looks like Object {colour: ["red", "orange"]}
+      // Object.keys(esEnum) looks like ["colour"]
+      if (Object.keys(esEnum)[0] === Object.keys(property_kv_pair)[0]) {
         new_state[i] = Object.values(property_kv_pair)[0];
       }
     });
