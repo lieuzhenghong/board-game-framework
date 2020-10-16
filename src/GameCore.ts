@@ -2,7 +2,7 @@ import { GameState } from "./GameState.js";
 import { Entity, EntUID, EntStateEnum } from "./Entity.js";
 import { UIState, UIAction } from "./UI.js";
 import { ImageMap, Point, PlayerName, ServerAction } from "./Interfaces.js";
-import { drawMenu, MenuItem, SubMenu } from "./Menu.js";
+import { drawMenu, MenuItem, SubMenu, closeMenu} from "./Menu.js";
 
 var fixed_time_digits = 3;
 function fixed(value: number, digits: number) {
@@ -287,7 +287,10 @@ class ClientGameCore extends GameCore {
       } 
       else {}
     }
+    // Whatever we do, we need to hide the Menu object here
+    closeMenu()
   }
+
 
   receive_ui_event(ui_action: UIAction) {
     // We receive the UI action and send actions to the server
@@ -372,6 +375,16 @@ class ClientGameCore extends GameCore {
         console.log("We are in the Entity UI mode");
         if (click_type !== -1) {
           this._ui_state_ = UIState["Base"];
+          console.log("Return to Base Mode")
+          console.log(this._ui_state_);
+          // FIXME
+          // You can't call closeMenu() here 
+          // and the reason you can't call is that once you set 
+          // display: none,
+          // the addEventListeners won't run.
+          // This runs before the addEventListeners
+          // Ditto for visibility: hidden;
+          // closeMenu(); 
         }
         break;
       case "Change Zone":

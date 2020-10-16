@@ -50,6 +50,8 @@ export function drawMenu(menu: SubMenu, point: Point): HTMLElement {
 
   const context_menu_DOM_elem: HTMLElement = document.getElementById('context-menu');
   context_menu_DOM_elem.style.display = "block"
+  context_menu_DOM_elem.style.top = (point.y).toString() + "px"
+  context_menu_DOM_elem.style.left = (point.x).toString() + "px"
   let root_menu_DOM_elem: HTMLElement = document.createElement("div")
   context_menu_DOM_elem.innerHTML = ''; // reset the context menu
   context_menu_DOM_elem.appendChild(root_menu_DOM_elem)
@@ -63,6 +65,10 @@ export function drawMenu(menu: SubMenu, point: Point): HTMLElement {
     // Render top element
     const new_menu_item = document.createElement("div")
     new_menu_item.appendChild(document.createTextNode(top[0].name))
+
+    // The top element is either a MenuItem or a SubMenu.
+    // If it is a MenuItem we make sure to add the onclick callback function.
+
     if (isMenuItem(top[0])) {
       // new_menu_item.onclick(this, top[0].callback)
       new_menu_item.addEventListener('click',
@@ -70,8 +76,10 @@ export function drawMenu(menu: SubMenu, point: Point): HTMLElement {
     }
     top[1].appendChild(new_menu_item)
 
-
+    // Otherwise if it's a SubMenu we make sure to render all its children.
+    // We also make sure to give it the SubMenu class
     if (isSubMenu(top[0])) {
+      new_menu_item.className = 'submenu'
       top[0].children.map((child, idx) => {
         queue.push([child, new_menu_item, idx, top[3] + 1])
       })
@@ -84,7 +92,7 @@ export function drawMenu(menu: SubMenu, point: Point): HTMLElement {
   return root_menu_DOM_elem;
 }
 
-export function deleteMenu() {
-  // TODO
-  // Will think about how to do this
+export function closeMenu(): void {
+  const context_menu_DOM_elem: HTMLElement = document.getElementById('context-menu');
+  context_menu_DOM_elem.style.visibility = "none"
 }

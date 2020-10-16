@@ -106,10 +106,10 @@ async function init() {
     "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/";
   */
   const rootURL: string = "http://localhost:4004/examples/";
-  // const gameUID: string = "card-drinking-game";
+  const gameUID: string = "card-drinking-game";
   // const gameUID: string = "tic-tac-toe";
   // const gameUID: string = "blotto";
-  const gameUID: string = "tower-of-hanoi";
+  // const gameUID: string = "tower-of-hanoi";
 
   const resourceLoader = new ResourceLoader();
   const gameStateJSON = await resourceLoader.fetchGameState(rootURL, gameUID);
