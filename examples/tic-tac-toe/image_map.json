@@ -16,8 +16,8 @@
       "state_list": [{ "shape": ["nought", "cross"] }],
       "glance": "nought.png",
       "states": {
-        "['nought']": "nought.png",
-        "['cross']": "cross.png"
+        "nought": "nought.png",
+        "cross": "cross.png"
       }
     }
   }

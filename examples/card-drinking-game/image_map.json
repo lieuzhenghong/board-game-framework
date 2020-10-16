@@ -1,0 +1,25 @@
+{
+  "data_type": "image_map",
+  "image_mapping": {
+    "deck": "deck.png",
+    "playzone": "playzone.png",
+    "card": {
+      "state_list": [
+        { "face": ["faceup", "facedown"], "value": ["1", "2", "3", "4", "5"] }
+      ],
+      "glance": "facedown.png",
+      "states": {
+        "facedown,1": "facedown.png",
+        "facedown,2": "facedown.png",
+        "facedown,3": "facedown.png",
+        "facedown,4": "facedown.png",
+        "facedown,5": "facedown.png",
+        "faceup,1": "1.png",
+        "faceup,2": "2.png",
+        "faceup,3": "3.png",
+        "faceup,4": "4.png",
+        "faceup,5": "5.png"
+      }
+    }
+  }
+}

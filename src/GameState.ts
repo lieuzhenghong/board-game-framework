@@ -11,6 +11,7 @@ export class GameState {
   playerList: Array<PlayerName>; // not creating a Player class for now
   zones: Array<Zone>;
   imageMap: ImageMap;
+  // imageMap: Promise<ImageMap>;
   entities: Array<Entity>;
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
@@ -21,6 +22,7 @@ export class GameState {
   constructor(
     gameStateJSON: JSON,
     imageMapJSON: JSON,
+    imageMap: ImageMap,
     rootURL: string,
     gameUID: string,
     canvas: HTMLCanvasElement,
@@ -28,132 +30,78 @@ export class GameState {
   ) {
     // loadState loads players, zones, imageMaps, entities
     this.canvas = canvas;
+    this.initialiseCanvas();
     this.ctx = ctx;
     this.rootURL = rootURL;
     this.gameUID = gameUID;
-    // Take note: this.loadState depends on this.rootURL and this.gameUID
-    // so it must be called after assignment of this.rootURL and this.gameUID
-    this.loadState(gameStateJSON, imageMapJSON);
+    this.imageMap = imageMap;
+    this.zones = this.initialiseZones(gameStateJSON, imageMapJSON);
+    this.entities = this.initialiseEntities(gameStateJSON, imageMapJSON);
+
+    /*
+    this.loadImages(imageMapJSON, rootURL, gameUID).then((value) => {
+      this.imageMap = value;
+      console.log("GameState object initialised");
+    });
+    */
   }
 
-  async loadState(j: JSON, im: JSON) {
-    // load state into this object
-    // First load the players
-    let imageMapPromise: Promise<ImageMap> = this.loadImages(
-      im,
-      this.rootURL,
-      this.gameUID
-    );
-    this.playerList = j["game_state"]["players"];
-    this.zones = j["game_state"]["zones"].map((z: object) => {
-      new Zone(
-        this.playerList,
-        z["name"],
-        z["image"],
-        z["pos"],
-        // the following permissions might be undefined
-        // which will default to all permissions
-        z["move_to_permissions"],
-        z["move_from_permissions"],
-        z["view_permissions"],
-        z["glance_permissions"]
+  initialiseCanvas() {
+    // Do nothing for now
+    if (this.canvas !== null) {
+    }
+  }
+
+  initialiseEntities(gameStateJSON: JSON, imageMapJSON: JSON): Array<Entity> {
+    const j = gameStateJSON;
+    const im = imageMapJSON;
+    let entities = [];
+
+    j["game_state"]["entities"].forEach((e: object, i: number) => {
+      const image_map_entity = im["image_mapping"][e["type"]]; // "piece" : {...}
+      entities.push(
+        new Entity(
+          i, // 0
+          e["type"], // "piece"
+          image_map_entity["state_list"], // [{'shape': ["nought", "cross"]}]
+          image_map_entity["states"], // {"['nought']" : "nought.png", "['cross']: "cross.png"}
+          e["state"], // ["nought"] Should be an array of Strings, also called EntState
+          image_map_entity["states"][e["state"].toString()], // "nought.png", a String
+          image_map_entity["glance"],
+          e["zone"],
+          { x: e["pos"][0], y: e["pos"][1] }
+        )
       );
     });
-    // Load all images and bitmap them
-    this.imageMap = await imageMapPromise;
-    // Now initialise all entities
 
-    // Before initialising all entities, we have to compute the
-    // entity state map and entity state list for each type of entity
-
-    function lookUpImage(s: string, d: object): string {
-      return d[s];
-    }
-
-    this.entities = j["game_state"]["entities"].forEach(
-      (e: object, i: number) => {
-        new Entity(
-          i,
-          e["type"],
-          im[e["type"]]["state_list"],
-          im[e["type"]]["states"],
-          e["state"],
-          lookUpImage(e["state"], im[e["type"]]["states"]),
-          im[e["type"]]["glance"],
-          e["zone"],
-          e["pos"]
-        );
-      }
-    );
+    return entities;
   }
 
-  generateImageURLs(
-    image_map_json: JSON,
-    rootURL: string,
-    gameUID: string
-  ): Array<string> {
-    let image_urls: Array<string> = [];
-    const image_mapping = image_map_json["image_mapping"];
-
-    Object.keys(image_mapping).forEach((key, index) => {
-      // key: the name of the object key
-      // index: the ordinal position of the key within the object
-
-      // here we're dealing with an entity
-      image_urls.push(image_mapping[key]["glance"]); // Load the glance image
-
-      if (image_mapping[key] instanceof Object) {
-        // Look for the states object
-        Object.keys(image_mapping[key]["states"]).forEach(
-          (stateString: string) => {
-            image_urls.push(image_mapping[key]["states"][stateString]);
-          }
-        );
-      } else {
-        image_urls.push(image_mapping[key]);
-      }
+  initialiseZones(gameStateJSON: JSON, imageMapJSON: JSON): Array<Zone> {
+    const j = gameStateJSON;
+    const im = imageMapJSON;
+    this.playerList = j["game_state"]["players"];
+    let zones: Array<Zone> = [];
+    j["game_state"]["zones"].forEach((z: object) => {
+      const pos: Point = z["pos"];
+      zones.push(
+        new Zone(
+          this.playerList,
+          z["name"],
+          im["image_mapping"][z["name"]], // get the image associated with the name
+          { x: pos[0], y: pos[1] },
+          //new Point(z["pos"][0], z["pos"][1]),
+          // z["pos"],
+          // the following permissions might be undefined
+          // which will default to all permissions
+          z["move_to_permissions"],
+          z["move_from_permissions"],
+          z["view_permissions"],
+          z["glance_permissions"]
+        )
+      );
     });
-
-    image_urls = [...new Set(image_urls)];
-
-    // And finally modify the relative filepaths to become absolute paths
-    const img_url_dir = rootURL + gameUID + "/img/";
-    const abs_image_urls = image_urls.map((url) => img_url_dir + url);
-
-    return abs_image_urls;
-  }
-
-  async loadImages(
-    image_map_json: JSON,
-    rootURL: string,
-    gameUID: string
-  ): Promise<ImageMap> {
-    console.log("Loading Images...");
-
-    const image_urls = this.generateImageURLs(image_map_json, rootURL, gameUID);
-
-    async function fillImageMap(url: string): Promise<[string, ImageBitmap]> {
-      const response = await fetch(url);
-      const blob: Blob = await response.blob();
-      const imgbitmap: ImageBitmap = await createImageBitmap(blob);
-      return [url, imgbitmap];
-    }
-
-    const imageMapPromises: Array<Promise<
-      [string, ImageBitmap]
-    >> = image_urls.map(async (u: string) => fillImageMap(u));
-
-    const imageMapTuples = await Promise.all(imageMapPromises);
-
-    let imageMap: ImageMap = {}; // ImageMap is just a dictionary
-
-    imageMapTuples.forEach((tuple) => {
-      imageMap[tuple[0]] = tuple[1];
-    });
-
-    console.log(imageMap);
-
-    return imageMap;
+    return zones;
   }
 
   applyAction(
@@ -184,11 +132,13 @@ export class GameState {
   // change the entity's state from ["down", "J"] to ["up", "J"]
   changeEntityStatePartial(uid: EntUID, property_kv_pair: object): void {
     // First, get the StateList of the entity
-    const ent = this._entity_by_uid(uid);
+    const ent = this.get_entity_by_uid(uid);
     // Make a (shallow) copy of the entity's state
     let new_state = [...ent.state];
     ent.stateList.forEach((esEnum, i) => {
-      if (Object.keys(ent.stateList)[0] === Object.keys(property_kv_pair)[0]) {
+      // esEnum looks like Object {colour: ["red", "orange"]}
+      // Object.keys(esEnum) looks like ["colour"]
+      if (Object.keys(esEnum)[0] === Object.keys(property_kv_pair)[0]) {
         new_state[i] = Object.values(property_kv_pair)[0];
       }
     });
@@ -211,7 +161,7 @@ export class GameState {
     // Leaving this for now because you need to pass which player
     // is moving inside the entity zone
 
-    const old_zone_name: string = this._entity_by_uid(uid).zone;
+    const old_zone_name: string = this.get_entity_by_uid(uid).zone;
     const old_zone: Zone = this.zone_an_entity_belongs_to(old_zone_name);
     const new_zone: Zone = this.zone_an_entity_belongs_to(new_zone_name);
 
@@ -228,7 +178,7 @@ export class GameState {
   changeEntityPos(uid: EntUID, player: PlayerName, new_pos: Point): void {
     // TODO think about whether "move_from" permissions
     // means moving in terms of changing state or just moving the object
-    const old_zone_name: string = this._entity_by_uid(uid).zone;
+    const old_zone_name: string = this.get_entity_by_uid(uid).zone;
     const old_zone: Zone = this.zone_an_entity_belongs_to(old_zone_name);
 
     if (old_zone.move_from_permissions.includes(player))
@@ -239,7 +189,7 @@ export class GameState {
   }
 
   // Utility function to get the entity given a EntUID
-  _entity_by_uid(uid: EntUID): Entity {
+  get_entity_by_uid(uid: EntUID): Entity {
     return this.entities.filter((entity) => entity.uid === uid)[0];
   }
 
@@ -266,6 +216,23 @@ export class GameState {
     // TODO think about how to render the special UI (e.g. glowing entities,
     // glowing zones
     // Need to pass it a UI state?
+
+    // console.log("Render function called!");
+    /*
+    console.log(this.canvas.clientWidth);
+    console.log(this.canvas.clientHeight);
+    console.log(this.canvas.width);
+    console.log(this.canvas.height);
+    */
+
+    //this.canvas.width = this.canvas.clientWidth;
+    // this.canvas.height = this.canvas.clientHeight;
+    // TODO FIXME how can we dynamically adjust the canvas size to the content?
+    //this.canvas.width = 150;
+    //this.canvas.height = 450;
+    this.canvas.width = 500;
+    this.canvas.height = 500;
+
     const zones = this.zones;
     const entities = this.entities;
 
@@ -275,8 +242,12 @@ export class GameState {
       this.ctx.drawImage(image_bitmap, zone.pos.x, zone.pos.y);
     });
 
+    // console.log("Zones should be drawn");
+
     // Now draw all entities
     entities.forEach((entity: Entity) => {
+      // Show the entity if and only if the entity is in a
+      // zone that the player has permission to glance or view
       const ent_zone = this.zone_an_entity_belongs_to(entity.zone);
       if (
         ent_zone.view_permissions.includes(player_name) &&
@@ -288,8 +259,9 @@ export class GameState {
         const entityImage: ImageBitmap = this.imageMap[entity.glance_image];
         this.ctx.drawImage(entityImage, entity.pos.x, entity.pos.y);
       } else {
-        // do nothing
       }
     });
+
+    // console.log("Entities should be drawn");
   }
 }

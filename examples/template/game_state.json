@@ -1,0 +1,28 @@
+{
+  "data_type": "game_state",
+  "game_state": {
+    "players": ["player_one"],
+    "zones": [
+      {
+        "name": "ZONE1",
+        "glance_permissions": ["player_one"],
+        "view_permissions": ["player_one"],
+        "move_from_permissions": ["player_one"],
+        "move_to": ["player_one"],
+        "pos": [0, 0]
+      },
+      {
+        "name": "ZONE2",
+        "pos": [125, 0]
+      }
+    ],
+    "entities": [
+      {
+        "type": "TYPE",
+        "pos": [10, 250],
+        "state": ["STATE1"],
+        "zone": "ZONE1"
+      }
+    ]
+  }
+}

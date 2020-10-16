@@ -15,13 +15,13 @@ Tabletop Simulator, Tabletopia etc. but none of them really gave me what I wante
 
 1. Get rendering
 2. Get representation of game state to exist and be consistent throughout server and client
-Encapsulate game state and actions into a class
-What the netcode will need to do: take a game state, modify it by an action, check the validity of that action, return a game state
-If we have a game state and action class
-and we have gameState.apply(action) which returns True or False if the new gameState is valid/otherwise or just gameState
-Client sends a list of actions it wants the server to look at
-Server takes list of actions from clients and applies those. It keeps track of which actions it's already applied, and applies only the actions it hasn't already seen before and are valid.
-It modifies the game state to that point and sends back all the actions that are accepted
+   Encapsulate game state and actions into a class
+   What the netcode will need to do: take a game state, modify it by an action, check the validity of that action, return a game state
+   If we have a game state and action class
+   and we have gameState.apply(action) which returns True or False if the new gameState is valid/otherwise or just gameState
+   Client sends a list of actions it wants the server to look at
+   Server takes list of actions from clients and applies those. It keeps track of which actions it's already applied, and applies only the actions it hasn't already seen before and are valid.
+   It modifies the game state to that point and sends back all the actions that are accepted
 
 ### Netcode
 
@@ -58,24 +58,23 @@ Second, we need to display the context-sensitive UI depending on the object.
 
 ### Game state
 
-
 ### UI
 
 ## Formal-ish description of board state
 
-The below is 
+The below is
 
 Three different elements: zones, players, and entities.
 
-An entity has a *property* and can be in a *zone*. An entity is a chess piece,
+An entity has a _property_ and can be in a _zone_. An entity is a chess piece,
 a card, a die, a Scrabble tile, a piece of paper, etc.
 
 A zone contains entities. A zone is a private hand, the game board, a bag, etc.
 
-Players have *permissions* to see/move entities to and from zones. To move
-an entity from a zone is an *action*.
+Players have _permissions_ to see/move entities to and from zones. To move
+an entity from a zone is an _action_.
 
-A *game state* $G$ is a list of 3-tuples $<Entity, Zone, State>$, where `State`
+A _game state_ $G$ is a list of 3-tuples $<Entity, Zone, State>$, where `State`
 is itself a dictionary of key-value pairs denoting the state of the entity.
 
 **Action set**. There are three possible actions that any player can do:
@@ -84,7 +83,7 @@ is itself a dictionary of key-value pairs denoting the state of the entity.
 - moving an entity from one zone to another;
 - changing the state of an entity.
 
-An *action* is a function that takes a game state G and returns another:
+An _action_ is a function that takes a game state G and returns another:
 
 $$f:G \rightarrow G$$
 
@@ -93,14 +92,32 @@ state from
 
 $$\{<card1, Hand, \{face: up\}>\} \rightarrow \{<card1, Hand, \{face: down\}>\}$$
 
-and revealing a card by flipping it face-up would be 
+and revealing a card by flipping it face-up would be
 
 $$\{<card1, Board, \{face: down\}>\} \rightarrow \{<card1, Board, \{face: up\}>\}$$
 
-Finally, the *history* is a sequence of game states.
+Finally, the _history_ is a sequence of game states.
 
 ### Some examples of board games in the <Entity, Zone, State> representation
 
-
 ## Game state
 
+## FAQ
+
+### Why is the package.json inside the server folder?
+
+There are two types of JS modules, broadly speaking:
+ES modules (run in-browser) that use the `import` syntax,
+and CommonJS modules (run on Node.js) that use the `require` syntax.
+
+The require syntax works only with CommonJS modules,
+and Node.js will only run it correctly if the nearest root `package.json` file
+has a "type": "commonjs" key-value.
+See the NodeJS docs for an explanation:
+[link](https://nodejs.org/api/packages.html#packages_modules_packages)
+
+We had to put the package.json inside the server folder because
+if it was in the root folder, then all the client-side `.ts` files would
+be compiled incorrectly as CommonJS files.
+And if we had changed the "type" key to "module" then that would make
+the `App.ts` CommonJS file fail to compile.

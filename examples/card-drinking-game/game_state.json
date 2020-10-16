@@ -1,0 +1,50 @@
+{
+  "data_type": "game_state",
+  "game_state": {
+    "players": ["player_one", "player_two"],
+    "zones": [
+      {
+        "name": "deck",
+        "glance_permissions": ["player_one"],
+        "view_permissions": [],
+        "pos": [100, 0]
+      },
+      {
+        "name": "playzone",
+        "pos": [0, 0]
+      }
+    ],
+    "entities": [
+      {
+        "type": "card",
+        "pos": [100, 0],
+        "state": ["faceup", "1"],
+        "zone": "deck"
+      },
+      {
+        "type": "card",
+        "pos": [100, 0],
+        "state": ["faceup", "2"],
+        "zone": "deck"
+      },
+      {
+        "type": "card",
+        "pos": [100, 0],
+        "state": ["facedown", "3"],
+        "zone": "deck"
+      },
+      {
+        "type": "card",
+        "pos": [100, 0],
+        "state": ["faceup", "4"],
+        "zone": "deck"
+      },
+      {
+        "type": "card",
+        "pos": [100, 0],
+        "state": ["faceup", "5"],
+        "zone": "deck"
+      }
+    ]
+  }
+}

@@ -33,11 +33,13 @@ export class UIHandler {
     this.ctx = ctx;
     this.virtualCanvasSize = virtualCanvasSize;
     this.clientCore = clientCore;
-    window.addEventListener("click", this._handle_mouse_event);
-    window.addEventListener("mousemove", this._handle_mouse_event);
+    window.addEventListener("contextmenu", (e) => e.preventDefault());
+    // window.addEventListener("click", this._handle_mouse_event_.bind(this));
+    window.addEventListener("mousedown", this._handle_mouse_event_.bind(this));
+    // window.addEventListener("mousemove", this._handle_mouse_event_.bind(this));
   }
 
-  _handle_mouse_event(e: MouseEvent): UIAction {
+  _handle_mouse_event_(e: MouseEvent): UIAction {
     // send a UIAction to the ClientCore object
     // a UIAction is the [event type : String, Point, button_clicked]
 
@@ -47,12 +49,25 @@ export class UIHandler {
       x: e.clientX - cvsRect.x,
       y: e.clientY - cvsRect.y,
     };
+
+    // Fix me --- handle canvas scaling in the future
+    /*
     const mouse: Point = {
       x: (translated.x * this.virtualCanvasSize) / this.canvas.width,
       y: (translated.x * this.virtualCanvasSize) / this.canvas.height,
     };
+    */
+    const mouse: Point = {
+      x: translated.x,
+      y: translated.y,
+    };
 
-    if (e.type === "click") {
+    console.log(mouse);
+
+    console.log(e.type);
+
+    //if (e.type === "click") {
+    if (e.type === "mousedown") {
       tuple = [e.type, mouse, e.button];
     } else {
       tuple = [e.type, mouse, -1];

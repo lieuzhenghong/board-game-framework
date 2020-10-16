@@ -1,0 +1,14 @@
+{
+  "data_type": "image_map",
+  "image_mapping": {
+    "board": "board.png",
+    "token": {
+      "state_list": [{ "colour": ["orange", "blue"] }],
+      "glance": "orange.png",
+      "states": {
+        "orange": "orange.png",
+        "blue": "blue.png"
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "data_type": "game_state",
+  "game_state": {
+    "players": ["player_one", "player_two"],
+    "zones": [
+      {
+        "name": "board",
+        "glance_permissions": ["player_one", "player_two"],
+        "view_permissions": ["player_one", "player_two"],
+        "move_from_permissions": ["player_one", "player_two"],
+        "move_to": ["player_one", "player_two"],
+        "pos": [0, 0]
+      }
+    ],
+    "entities": [
+      {
+        "type": "token",
+        "pos": [0, 0],
+        "state": ["orange"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [50, 0],
+        "state": ["orange"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [100, 0],
+        "state": ["orange"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [150, 0],
+        "state": ["orange"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [200, 0],
+        "state": ["orange"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [250, 0],
+        "state": ["orange"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [0, 0],
+        "state": ["blue"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [50, 0],
+        "state": ["blue"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [100, 0],
+        "state": ["blue"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [150, 0],
+        "state": ["blue"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [200, 0],
+        "state": ["blue"],
+        "zone": "board"
+      },
+      {
+        "type": "token",
+        "pos": [250, 0],
+        "state": ["orange"],
+        "zone": "board"
+      }
+    ]
+  }
+}
