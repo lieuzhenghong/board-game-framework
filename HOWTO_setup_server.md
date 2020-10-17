@@ -1,7 +1,9 @@
 # How to set up a local server that others can remotely access
 
-**Prerequisites**: You must register with ngrok and install it
-Also you must install localtunnel: `sudo npm install -g localtunnel`
+**Prerequisites**:
+
+- You must register with ngrok and install it
+- Also you must install localtunnel: `sudo npm install -g localtunnel`
 
 1. Run `ngrok http 4005` to set up port forwarding
 2. That will give you a url like the following:
