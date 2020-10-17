@@ -28,3 +28,16 @@ and requests.
 - setting up the websockets
 - menus
 - hosting assets, maybe
+
+# Bugs
+
+- Menu should close after clicking
+
+# New features
+
+- Adjustable and scalable canvas size
+
+# Things to think about
+
+- Right now a hacked client can see everything despite no view/glance permissions:
+  is that something we (eventually) want to fix?
