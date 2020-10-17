@@ -12,11 +12,14 @@
 const express = require("express");
 const http = require("http");
 const webSocket = require("ws");
+const cors = require("cors");
 
 const gameport = process.env.PORT || 4004;
 const __dirname__ = process.cwd();
 const app = express();
 const server = http.createServer(app);
+
+app.use(cors());
 
 app.get("/", (req, res) => {
   console.log("trying to load %s", __dirname__ + "/index.html");
