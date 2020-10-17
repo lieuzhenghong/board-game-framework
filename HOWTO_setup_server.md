@@ -3,6 +3,8 @@
 **Prerequisites**:
 
 - You must register with ngrok and install it
+  - Go to [https://ngrok.com/download](https://ngrok.com/download)
+    and follow the instructions there
 - Also you must install localtunnel: `sudo npm install -g localtunnel`
 
 1. Run `ngrok http 4005` to set up port forwarding
