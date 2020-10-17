@@ -37,9 +37,13 @@ app.get("/*", function (req, res, next) {
 });
 
 const wss = new webSocket.Server({ port: 4005 });
+const clients = [];
 wss.on("connection", (ws) => {
+  clients.push(ws);
   ws.on("message", (message: string) => {
-    ws.send(message); // Echo server
+    clients.map((ws) => {
+      ws.send(message); // Echo server
+    })
     console.log("Message received!");
     console.log(message);
   });
