@@ -97,7 +97,9 @@ class ResourceLoader {
 
 async function init() {
   // Create a websocket to the server
-  const socket = new WebSocket(`ws://${window.location.hostname}:4005`);
+  // const socket = new WebSocket(`ws://${window.location.hostname}:4005`);
+  // const socket = new WebSocket('ws://stale-bobcat-33.loca.lt')
+  const socket = new WebSocket('wss://852ba6e17b59.ngrok.io')
 
   const canvas = document.getElementById("game-canvas") as HTMLCanvasElement;
   const ctx = canvas.getContext("2d");
@@ -105,7 +107,8 @@ async function init() {
   const rootURL: string =
     "https://raw.githubusercontent.com/lieuzhenghong/board-game-framework/master/examples/";
   */
-  const rootURL: string = `http://${window.location.hostname}/examples/`;
+  const rootURL: string = `https://${window.location.hostname}/examples/`;
+  console.log(rootURL)
   const gameUID: string = "card-drinking-game";
   // const gameUID: string = "tic-tac-toe";
   // const gameUID: string = "blotto";
