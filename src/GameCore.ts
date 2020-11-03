@@ -136,7 +136,20 @@ class ServerGameCore extends GameCore {
   // The ServerGameCore is an object on a Node.js server.
   // It should receive a list of actions from all clients.
   // Its job is to take all of these actions and return
-  // the authoritative state of
+  // the authoritative state of the game
+
+  clients: WebSocket[]
+
+  constructor(
+    session_description: JSON,
+    initial_state: string,
+    socket: WebSocket,
+    clients: WebSocket[] 
+  ) {
+    super(session_description, initial_state, null, null, null, socket);
+    this.clients = clients
+  }
+  
   role_specific_update(): void {
     // pass
   }
@@ -475,4 +488,5 @@ class ClientGameCore extends GameCore {
   }
 }
 
-export { ClientGameCore };
+export { ClientGameCore , ServerGameCore };
+

@@ -13,6 +13,8 @@ const express = require("express");
 const http = require("http");
 const webSocket = require("ws");
 const cors = require("cors");
+const gamecore = require("../GameCore")
+// import { ServerGameCore } from "../GameCore.js";
 
 const gameport = process.env.PORT || 4004;
 const __dirname__ = process.cwd();
@@ -38,8 +40,33 @@ app.get("/*", function (req, res, next) {
 
 const wss = new webSocket.Server({ port: 4005 });
 const clients = [];
+let serverGameCore; 
+
+function buildInitialState(gameUID: string):string {
+  // TODO refactor this
+  const rootURL = '../../examples'
+  const gameStateJSON = require(rootURL + gameUID + "/game_state.json");
+  const imageMapJSON = require(rootURL + gameUID + "/image_map.json");
+  
+  const initialState = JSON.stringify({
+    gameStateJSON: gameStateJSON,
+    imageMapJSON: imageMapJSON,
+    rootURL: rootURL,
+    gameUID: gameUID,
+  });
+  return initialState
+}
+
 wss.on("connection", (ws) => {
   clients.push(ws);
+  if (clients.length == 1) {
+    const initialState = buildInitialState('card-drinking-game')
+    serverGameCore = new gamecore.ServerGameCore(null, initialState, ws, clients)
+  }
+  else {
+    // We should be using a setter here not just pushing to the value
+    serverGameCore.clients.push(ws)
+  }
   ws.on("message", (message: string) => {
     clients.map((ws) => {
       ws.send(message); // Echo server
