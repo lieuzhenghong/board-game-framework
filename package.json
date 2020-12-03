@@ -1,0 +1,28 @@
+{
+  "name": "board-game-framework",
+  "version": "1.0.0",
+  "description": "Board game engine that lets anyone prototype and play any board game",
+  "main": "index.html",
+  "directories": {
+    "doc": "doc",
+    "example": "examples"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^14.14.10",
+    "typescript": "^4.1.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lieuzhenghong/board-game-framework.git"
+  },
+  "author": "Lieu Zheng Hong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lieuzhenghong/board-game-framework/issues"
+  },
+  "homepage": "https://github.com/lieuzhenghong/board-game-framework#readme"
+}
