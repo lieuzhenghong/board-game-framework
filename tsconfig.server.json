@@ -1,9 +1,6 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"extends": "./tsconfig.json",
-		"exclude": [
-			"src/server"
-		]
-	}
+	"extends": "./tsconfig.json",
+	"exclude": [
+		"src/client"
+	]
 }
